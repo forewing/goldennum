@@ -17,7 +17,7 @@ type Room struct {
 	RoomHistorys []RoomHistory
 
 	Interval   int
-	RountNow   int
+	RoundNow   int
 	RoundTotal int
 }
 
@@ -28,7 +28,7 @@ type RoomHistory struct {
 	RoomID uint
 
 	Round     int
-	Goldennum float64
+	GoldenNum float64
 }
 
 const (
@@ -49,7 +49,7 @@ func (r *Room) Runner(ch chan int) {
 				return
 			}
 		default:
-			if r.RountNow >= r.RoundTotal {
+			if r.RoundNow >= r.RoundTotal {
 				r.Stop()
 				return
 			}
@@ -58,8 +58,9 @@ func (r *Room) Runner(ch chan int) {
 				r.Interval = roomIntervalDefault
 			}
 			time.Sleep(time.Duration(r.Interval) * time.Second)
-			log.Printf("Info: [models] *Room.Runner, room tick, %v\n", r.String())
-			// TODO: implement game logic and save model here
+
+			// log.Printf("Info: [models] *Room.Runner, room tick, %v\n", r.String())
+			ok := r.tick()
 
 			var r2 Room
 			if result := Db.First(&r2, r.ID); result.Error != nil {
@@ -67,7 +68,10 @@ func (r *Room) Runner(ch chan int) {
 			} else {
 				*r = r2
 			}
-			r.RountNow++
+
+			if ok {
+				r.RoundNow++
+			}
 			if result := Db.Save(r); result.Error != nil {
 				log.Printf("Error: [models] *Room.Runner, save: %v\n", result.Error)
 			}
@@ -108,7 +112,7 @@ func (r *Room) Stop() bool {
 
 // String return formated room info
 func (r *Room) String() string {
-	return fmt.Sprintf("ID: %v, Round: %v/%v", r.ID, r.RountNow, r.RoundTotal)
+	return fmt.Sprintf("ID: %v, Round: %v/%v", r.ID, r.RoundNow, r.RoundTotal)
 }
 
 // GetUsers return room's users

@@ -40,7 +40,7 @@ func RoomCreate(c *gin.Context) {
 
 	room := models.Room{
 		Interval:   data.Interval,
-		RountNow:   0,
+		RoundNow:   0,
 		RoundTotal: data.RoundTotal,
 	}
 	if err := models.Db.Create(&room).Error; err != nil {

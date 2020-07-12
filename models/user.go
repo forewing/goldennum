@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/jinzhu/gorm"
@@ -75,6 +76,11 @@ func UserSubmitValidate(submit float64) bool {
 // Auth auth user
 func (u *User) Auth(password string) error {
 	return bcrypt.CompareHashAndPassword([]byte(u.Hashed), []byte(password))
+}
+
+// String return formatted user info
+func (u *User) String() string {
+	return fmt.Sprintf("ID: %v, Name: %v", u.ID, u.Name)
 }
 
 // UserNew build a new user

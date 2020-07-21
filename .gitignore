@@ -6,6 +6,8 @@
 *.dylib
 goldennum
 
+output/
+
 # Test binary, built with `go test -c`
 *.test
 
@@ -16,7 +18,8 @@ goldennum
 # vendor/
 
 # Config
-config.yml
+conf/config.yml
+.env
 
 # database
 sqlite3.db

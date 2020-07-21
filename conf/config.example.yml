@@ -1,0 +1,12 @@
+debug: true
+bind: "localhost:8080"
+admin: "admin"
+password: "password"
+
+db:
+  type: "sqlite3"
+  path: "file::memory:?cache=shared"
+  addr: "localhost:3306"
+  user: "goldennum"
+  password: "goldennum"
+  dbname: "goldennum"

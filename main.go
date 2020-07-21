@@ -1,6 +1,8 @@
 package main
 
 import (
+	"net/http"
+
 	"github.com/forewing/goldennum/config"
 	"github.com/forewing/goldennum/models"
 	"github.com/forewing/goldennum/views"
@@ -24,6 +26,16 @@ func main() {
 	}
 
 	r := gin.Default()
+	r.LoadHTMLGlob("templates/*")
+	{
+		r.Static("/static", "statics")
+		r.StaticFile("/favicon.ico", "statics/favicon.ico")
+
+		r.GET("/", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "index.html", gin.H{})
+		})
+	}
+
 	{
 		r.GET("/rooms", views.RoomList)
 		r.GET("/room/:roomid", views.RoomInfo)
@@ -34,9 +46,9 @@ func main() {
 	}
 
 	// rAdmin := r.Group("/admin") // for test only
-	rAdmin := r.Group("", gin.BasicAuth(adminAcconts))
+	rAdmin := r.Group("/admin", gin.BasicAuth(adminAcconts))
 	{
-		rAdmin.GET("", views.AdminIndex)
+		rAdmin.GET("/", views.AdminIndex)
 		rAdmin.POST("/room", views.RoomCreate)
 		rAdmin.DELETE("/room/:roomid", views.RoomStop)
 		rAdmin.PUT("/room/:roomid", views.RoomStart)

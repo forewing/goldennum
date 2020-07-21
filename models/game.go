@@ -105,7 +105,7 @@ func (r *Room) tick() bool {
 		log.Printf("Error: [models] *Room.tick, fail to save roomHistory, %+v\n", roomHistory)
 	}
 
-	log.Printf("Info: [models] *Room.tick, room tick success, %v, len: %v, goldenNum: %v, minDiff: %v, maxDiff: %v",
+	log.Printf("Info: [models] *Room.tick, success, %v, len: %v, goldenNum: %v, minDiff: %v, maxDiff: %v",
 		r.String(), userNum, goldenNum, minDiff, maxDiff)
 
 	return true

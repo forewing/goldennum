@@ -62,6 +62,7 @@ func UserCreate(c *gin.Context) {
 		return
 	}
 	models.Db.Save(&user)
+	c.JSON(http.StatusOK, user)
 }
 
 // UserInfo show user info

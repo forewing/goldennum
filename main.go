@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	adminAcconts gin.Accounts = gin.Accounts{}
+	adminAccounts gin.Accounts = gin.Accounts{}
 )
 
 func main() {
@@ -19,7 +19,7 @@ func main() {
 	models.Load()
 	defer models.Close()
 
-	adminAcconts[conf.Admin] = conf.Password
+	adminAccounts[conf.Admin] = conf.Password
 
 	if !conf.Debug {
 		gin.SetMode(gin.ReleaseMode)
@@ -45,10 +45,10 @@ func main() {
 		r.POST("/user/:userid", views.UserSubmit)
 	}
 
-	// rAdmin := r.Group("/admin") // for test only
-	rAdmin := r.Group("/admin", gin.BasicAuth(adminAcconts))
+	// rAdmin := r.Group("") // for test only
+	rAdmin := r.Group("", gin.BasicAuth(adminAccounts))
 	{
-		rAdmin.GET("/", views.AdminIndex)
+		rAdmin.GET("/admin", views.AdminIndex)
 		rAdmin.POST("/room", views.RoomCreate)
 		rAdmin.DELETE("/room/:roomid", views.RoomStop)
 		rAdmin.PUT("/room/:roomid", views.RoomStart)

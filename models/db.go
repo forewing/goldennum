@@ -35,7 +35,7 @@ func Load() {
 		Db, err = gorm.Open("sqlite3", conf.Db.Path)
 	case "mysql":
 		url := fmt.Sprintf("%v:%v@(%v)/%v?charset=utf8mb4&parseTime=True&loc=Local",
-			conf.Db.User, conf.Db.Password, conf.Db.Addr, conf.Db.Dbname)
+			conf.Db.User, conf.Db.Password, conf.Db.Addr, conf.Db.DbName)
 		Db, err = gorm.Open("mysql", url)
 	default:
 		log.Println("Error: [models] Load db config not found or invalid, using sqlite3 in memory")

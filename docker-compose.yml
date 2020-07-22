@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  server:
+    build: .
+    entrypoint: dumb-init bash -c 'while !</dev/tcp/db/3306; do sleep 1; done; ./goldennum'
+    env_file:
+      .env
+    ports:
+      - 8080:8080
+    restart: unless-stopped
+    links:
+      - db
+
+  db:
+    image: mysql:5
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - ./db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=goldennum
+      - MYSQL_USER=goldennum
+      - MYSQL_PASSWORD=goldennum
+      - MYSQL_DATABASE=goldennum
+    restart: unless-stopped

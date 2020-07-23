@@ -1,12 +1,16 @@
-FROM ubuntu:18.04
+FROM golang:1.14 AS builder
+WORKDIR /build
+COPY . /build/
+RUN CGO_ENABLED=0 ./build.sh
 
-RUN apt-get update -yq && \
-    apt-get install dumb-init
+FROM alpine:3
+RUN apk add --no-cache \
+    bash \
+    dumb-init
 
 WORKDIR /app
-
-COPY output /app/
-
+COPY --from=builder /build/output /app/
 EXPOSE 8080
 
-ENTRYPOINT [ "dumb-init", "./goldennum" ]
+ENTRYPOINT [ "dumb-init", "--" ]
+CMD ["/app/goldennum"]

@@ -17,7 +17,6 @@ jobs:
     - name: Build and push Docker images
       uses: docker/build-push-action@v1
       with:
-        cache_froms: golang:1.14,alpine:3
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         repository: forewing/goldennum

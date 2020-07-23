@@ -3,7 +3,7 @@ version: '3'
 services:
   server:
     build: .
-    entrypoint: dumb-init bash -c 'while !</dev/tcp/db/3306; do sleep 1; done; ./goldennum'
+    command: bash -c 'while !</dev/tcp/db/3306; do sleep 1; done; /app/goldennum'
     env_file:
       .env
     ports:

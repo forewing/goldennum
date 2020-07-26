@@ -1,5 +1,8 @@
 # Go! Goldennum!
 
+[![CI](https://github.com/forewing/goldennum/workflows/CI/badge.svg)](https://github.com/forewing/goldennum/actions?query=workflow%3ACI)
+[![Docker](https://github.com/forewing/goldennum/workflows/Docker/badge.svg)](https://hub.docker.com/r/forewing/goldennum)
+
 ## Usage
 
 ### Config

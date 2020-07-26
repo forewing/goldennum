@@ -27,4 +27,4 @@ jobs:
         name: ci
         path: ./output
     - name: Test
-      run: go test -v .
+      run: go test -cover -race ./...

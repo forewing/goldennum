@@ -24,3 +24,6 @@ conf/config.yml
 # database
 sqlite3.db
 db
+
+# Packr
+*-packr.go

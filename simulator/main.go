@@ -2,13 +2,17 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"math/rand"
 	"net/http"
+	"sync"
 	"sync/atomic"
 	"time"
+
+	"golang.org/x/time/rate"
 )
 
 type user struct {
@@ -27,18 +31,26 @@ const (
 	userURL  = baseURL + "user/"
 	usersURL = baseURL + "users/"
 
-	roomInterval = 10
+	roomInterval = 15
 	roomRounds   = 60
 
-	userTotal = 100
+	userTotal = 400
 )
 
 var (
 	roomID    int
 	userCount int64
+
+	limiter *rate.Limiter = rate.NewLimiter(80, 5)
 )
 
 func mustPostJSON(url string, body interface{}, auth bool) map[string]interface{} {
+	ctx, cancel := context.WithTimeout(context.Background(), roomInterval*time.Second)
+	defer cancel()
+	if err := limiter.Wait(ctx); err != nil {
+		panic(err)
+	}
+
 	str, err := json.Marshal(body)
 	if err != nil {
 		panic("json.Marshal fail")
@@ -123,19 +135,28 @@ func main() {
 	roomCreate()
 
 	users := make(map[int]*user)
+	usersLock := sync.Mutex{}
+	var usersWg sync.WaitGroup
 	for i := 0; i < userTotal; i++ {
-		u := userRegister()
-		if u.id == 0 {
-			continue
-		}
-		users[u.id] = &u
-		fmt.Println(u)
+		usersWg.Add(1)
+		go func() {
+			defer usersWg.Done()
+			u := userRegister()
+			if u.id == 0 {
+				return
+			}
+			usersLock.Lock()
+			defer usersLock.Unlock()
+			users[u.id] = &u
+			fmt.Println(u)
+		}()
 	}
+	usersWg.Wait()
 
 	for i := 0; i < roomRounds; i++ {
 		next := time.Now().Add(roomInterval * time.Second)
 		for _, u := range users {
-			u.submit()
+			go u.submit()
 		}
 		time.Sleep(time.Until(next))
 	}

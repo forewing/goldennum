@@ -45,6 +45,8 @@ const (
 
 	userSubmitMin = 0.0
 	userSubmitMax = 100.0
+
+	uesrPassBcryptCost = bcrypt.DefaultCost
 )
 
 // UserNameValidate validate user name
@@ -85,7 +87,7 @@ func (u *User) String() string {
 
 // UserNew build a new user
 func UserNew(roomid uint, name, pass string) (*User, error) {
-	hashed, err := bcrypt.GenerateFromPassword([]byte(pass), bcrypt.DefaultCost)
+	hashed, err := bcrypt.GenerateFromPassword([]byte(pass), uesrPassBcryptCost)
 	if err != nil {
 		log.Printf("Error: [models] UserNew, bcrypt: %v\n", err)
 		return nil, err

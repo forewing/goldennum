@@ -21,6 +21,13 @@ jobs:
       uses: actions/setup-go@v2
       with:
         go-version: ${{ env.go-version }}
+    - name: Cache Go Packages
+      uses: actions/cache@v2
+      with:
+        path: ~/go
+        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-
     - name: Build
       run: |
         chmod +x build.sh

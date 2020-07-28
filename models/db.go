@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/8treenet/gcache"
+	"github.com/8treenet/gcache/option"
 	"github.com/forewing/goldennum/config"
 	"github.com/jinzhu/gorm"
 
@@ -47,6 +49,13 @@ func Load() {
 	}
 
 	Db.AutoMigrate(&User{}, &UserHistory{}, &Room{}, &RoomHistory{})
+
+	if len(conf.Db.Redis) != 0 {
+		opt := option.DefaultOption{}
+		opt.Level = option.LevelModel
+		opt.AsyncWrite = true
+		gcache.AttachDB(Db, &opt, &option.RedisOption{Addr: conf.Db.Redis})
+	}
 }
 
 // Close Db

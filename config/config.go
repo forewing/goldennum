@@ -26,6 +26,7 @@ type Db struct {
 	User     string `yaml:"user"`
 	Password string `yaml:"password"`
 	DbName   string `yaml:"dbname"`
+	Redis    string `yaml:"redis"`
 }
 
 const (
@@ -44,6 +45,7 @@ const (
 	envDbUser     = "DB_USER"
 	envDbPassword = "DB_PASSWORD"
 	envDbDbName   = "DB_NAME"
+	envDbRedis    = "DB_REDIS"
 )
 
 var savedConfig *Config
@@ -83,6 +85,7 @@ func loadFromEnv() *Config {
 			User:     os.Getenv(envDbUser),
 			Password: os.Getenv(envDbPassword),
 			DbName:   os.Getenv(envDbDbName),
+			Redis:    os.Getenv(envDbRedis),
 		},
 	}
 

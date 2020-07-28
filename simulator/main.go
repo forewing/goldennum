@@ -131,6 +131,11 @@ func (u *user) submit() {
 	fmt.Println(u.id, submit1, submit2)
 }
 
+func getInfo() {
+	time.Sleep(time.Millisecond * time.Duration(rand.Intn(roomInterval*1000)))
+	http.Get(fmt.Sprintf(roomURL+"%v", roomID))
+}
+
 func main() {
 	roomCreate()
 
@@ -157,6 +162,7 @@ func main() {
 		next := time.Now().Add(roomInterval * time.Second)
 		for _, u := range users {
 			go u.submit()
+			go getInfo()
 		}
 		time.Sleep(time.Until(next))
 	}

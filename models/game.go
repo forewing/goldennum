@@ -33,9 +33,26 @@ func calculateScoreGet(min, max, submit, goldenNum float64, userNum int) int {
 }
 
 func (r *Room) tick() bool {
+	workerValue, ok := roomWorkers.Load(r.ID)
+	if !ok {
+		return false
+	}
+	var worker *roomWorker
+	if worker, ok = workerValue.(*roomWorker); !ok {
+		return false
+	}
+
 	userAll := r.GetUsers(true)
 	var users []*User
 	for i := range userAll {
+		userAll[i].Submit1 = userSubmitInvalid
+		userAll[i].Submit2 = userSubmitInvalid
+		if submitValue, ok := worker.submit.Load(userAll[i].ID); ok {
+			if submit, ok := submitValue.(userSubmit); ok {
+				userAll[i].Submit1 = submit.s1
+				userAll[i].Submit2 = submit.s2
+			}
+		}
 		if UserSubmitValidate(userAll[i].Submit1) && UserSubmitValidate(userAll[i].Submit2) {
 			users = append(users, &userAll[i])
 		}
@@ -79,8 +96,10 @@ func (r *Room) tick() bool {
 		}
 		userHistorys = append(userHistorys, history)
 
-		user.Submit1 = -1
-		user.Submit2 = -1
+		worker.submit.Store(user.ID, userSubmit{
+			s1: userSubmitInvalid,
+			s2: userSubmitInvalid,
+		})
 	}
 
 	for _, user := range users {

@@ -112,11 +112,8 @@ func UserSubmit(c *gin.Context) {
 		c.String(http.StatusBadRequest, "")
 		return
 	}
-	user.Submit1 = data.Submit1
-	user.Submit2 = data.Submit2
-	if result := models.Db.Save(&user); result.Error != nil {
-		log.Printf("Error: [views] UserSubmit, save: %v\n", result.Error)
-		c.String(http.StatusInternalServerError, "")
+	if err := user.Submit(data.Submit1, data.Submit2); err != nil {
+		c.String(http.StatusNotFound, err.Error())
 		return
 	}
 	c.String(http.StatusOK, "")

@@ -114,6 +114,7 @@ func UserSubmit(c *gin.Context) {
 	}
 	if err := user.Submit(data.Submit1, data.Submit2); err != nil {
 		c.String(http.StatusNotFound, err.Error())
+		return
 	}
 	c.String(http.StatusOK, "")
 }

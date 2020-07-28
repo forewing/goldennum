@@ -10,3 +10,4 @@ db:
   user: "goldennum"
   password: "goldennum"
   dbname: "goldennum"
+  redis:

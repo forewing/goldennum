@@ -11,6 +11,7 @@ services:
     restart: unless-stopped
     links:
       - db
+      - redis
 
   db:
     image: mysql:5
@@ -23,3 +24,11 @@ services:
       - MYSQL_PASSWORD=goldennum
       - MYSQL_DATABASE=goldennum
     restart: unless-stopped
+    #ports:
+    #  - 3306:3306
+
+  redis:
+    image: redis:6-alpine
+    restart: unless-stopped
+    #ports:
+    #  - 6379:6379

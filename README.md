@@ -5,25 +5,64 @@
 
 ## Usage
 
-### Config
-
-1. Default config file is `conf/config.yml`, you may rename `conf/config.example.yml` and edit it as you prefer.
-
-2. You may override the default config file path by setting environment variable `CONFIG_PATH`
-
-3. You may also use environment variable as config by setting `USE_ENV_CONFIG=true`, see `example.env` for detail.
-
 ### Build
 
-1. Use `build.sh` to produce binary as `output/goldennum`. The script is as simple as running `go build` and move the binary to `output/`.
+1. Install [packr2](https://github.com/gobuffalo/packr/tree/master/v2)
 
-### Running
+```
+go get github.com/gobuffalo/packr/v2/packr2
+```
 
-1. `run.sh` will export all environment variable from `.env`, you may rename `example.env` and edit it as you prefer.
+2. Build resource files
 
-## Database
+```
+packr2
+```
 
-> NOTICE: default settings use in memory sqlite, which means you will lost all of the data after restart the program. You should change sqlite path to file path or use mysql instead for data persistence.
+3. Build project
+
+```
+go build
+```
+
+### Run
+
+```
+./goldennum -h                   
+Usage of ./goldennum:
+  -admin string
+        Admin username. (default "admin")
+  -bind string
+        Bind address. (default "localhost:8080")
+  -conf string
+        Config file path. If set, will only use file config.
+  -dbaddr string
+        Mysql server address. (default "localhost:3306")
+  -dbname string
+        Database name. (default "goldennum")
+  -dbpass string
+        Database password. (default "goldennum")
+  -dbpath string
+        Path to sqlite3 database. (default "./sqlite3.db")
+  -dbtype string
+        [sqlite3, mysql] (default "sqlite3")
+  -dbuser string
+        Database username. (default "goldennum")
+  -debug
+        Set debug mode.
+  -password string
+        Admin password.
+  -redis string
+        Redis address, redis disabled if not set
+```
+
+1. By default, server read all configs from command line flags.
+
+2. If flag `-conf={FILE}` is set, server will load configs from `{FILE}` instead of flags. Refer to `conf/config.example.yml` for detail.
+
+3. If environment variable `USE_ENV_CONFIG=true` is set, non-empty environment variable will override corresponding fields. Refer to `example.env` for detail.
+
+4. If `password` not set, a safe random token will be used.
 
 ## API
 

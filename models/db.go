@@ -20,7 +20,8 @@ var (
 )
 
 const (
-	defaultDbConfig = "file::memory:?cache=shared"
+	// defaultDbConfig = "file::memory:?cache=shared"
+	defaultDbConfig = "./sqlite3.db"
 )
 
 // Load init Db from config
@@ -40,7 +41,7 @@ func Load() {
 			conf.Db.User, conf.Db.Password, conf.Db.Addr, conf.Db.DbName)
 		Db, err = gorm.Open("mysql", url)
 	default:
-		log.Println("Error: [models] Load db config not found or invalid, using sqlite3 in memory")
+		log.Println("Error: [models] Load db config not found or invalid, using ", defaultDbConfig)
 		Db, err = gorm.Open("sqlite3", defaultDbConfig)
 	}
 

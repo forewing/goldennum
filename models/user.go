@@ -15,12 +15,13 @@ type User struct {
 	RoomID       uint
 	UserHistorys []UserHistory
 
-	Hashed string
+	Name  string
+	Score int
 
-	Name    string
-	Score   int
-	Submit1 float64
-	Submit2 float64
+	Hashed string `json:"-"`
+
+	Submit1 float64 `gorm:"-" json:"-"`
+	Submit2 float64 `gorm:"-" json:"-"`
 }
 
 // UserHistory holds user history
@@ -36,6 +37,11 @@ type UserHistory struct {
 	Submit2  float64
 }
 
+type userSubmit struct {
+	s1 float64
+	s2 float64
+}
+
 const (
 	userNameMinLength = 1
 	userNameMaxLength = 32
@@ -43,8 +49,9 @@ const (
 	userPassMinLength = 8
 	userPassMaxLength = 32
 
-	userSubmitMin = 0.0
-	userSubmitMax = 100.0
+	userSubmitMin     = 0.0
+	userSubmitMax     = 100.0
+	userSubmitInvalid = -1.0
 
 	uesrPassBcryptCost = bcrypt.DefaultCost
 )
@@ -93,12 +100,10 @@ func UserNew(roomid uint, name, pass string) (*User, error) {
 		return nil, err
 	}
 	user := User{
-		RoomID:  roomid,
-		Name:    name,
-		Hashed:  string(hashed),
-		Score:   0,
-		Submit1: -1,
-		Submit2: -1,
+		RoomID: roomid,
+		Name:   name,
+		Hashed: string(hashed),
+		Score:  0,
 	}
 	return &user, nil
 }
@@ -106,8 +111,6 @@ func UserNew(roomid uint, name, pass string) (*User, error) {
 // FilterInfo delete secret info
 func (u *User) FilterInfo(secret bool) {
 	if !secret {
-		u.Submit1 = -1
-		u.Submit2 = -1
 		u.Hashed = ""
 	}
 }
@@ -118,4 +121,18 @@ func (u *User) GetHistory() (history []UserHistory) {
 		log.Printf("Error: [models] *User.GetHistory, %v\n", result.Error)
 	}
 	return
+}
+
+// Submit user input
+func (u *User) Submit(s1, s2 float64) error {
+	if value, ok := roomWorkers.Load(u.RoomID); ok {
+		if worker, ok := value.(*roomWorker); ok {
+			worker.submit.Store(u.ID, userSubmit{
+				s1: s1,
+				s2: s2,
+			})
+			return nil
+		}
+	}
+	return fmt.Errorf("Room %v closed", u.RoomID)
 }

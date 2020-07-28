@@ -31,13 +31,17 @@ type RoomHistory struct {
 	GoldenNum float64
 }
 
+type roomWorker struct {
+	ch     chan int
+	submit sync.Map
+}
+
 const (
 	roomIntervalDefault = 10
 )
 
 var (
-	roomChans     = make(map[uint]chan int)
-	roomChansLock sync.Mutex
+	roomWorkers sync.Map
 )
 
 // Runner of room
@@ -81,30 +85,28 @@ func (r *Room) Runner(ch chan int) {
 
 // Start the room
 func (r *Room) Start() bool {
-	roomChansLock.Lock()
-	defer roomChansLock.Unlock()
-
-	if _, ok := roomChans[r.ID]; ok {
+	worker := &roomWorker{
+		ch: make(chan int),
+	}
+	if _, ok := roomWorkers.LoadOrStore(r.ID, worker); ok {
 		log.Printf("Error: [models] *Room.Start, room already open, ID: %v\n", r.ID)
 		return false
 	}
+
 	log.Printf("Info: [models] *Room.Start, room open, ID: %v\n", r.ID)
-	ch := make(chan int)
-	roomChans[r.ID] = ch
-	go r.Runner(ch)
+	go r.Runner(worker.ch)
 	return true
 }
 
 // Stop the room
 func (r *Room) Stop() bool {
-	roomChansLock.Lock()
-	defer roomChansLock.Unlock()
-
-	if ch, ok := roomChans[r.ID]; ok && ch != nil {
-		close(ch)
-		delete(roomChans, r.ID)
-		log.Printf("Info: [models] *Room.Stop, room stop, %v\n", r.String())
-		return true
+	if value, ok := roomWorkers.Load(r.ID); ok {
+		defer roomWorkers.Delete(r.ID)
+		if worker, ok := value.(*roomWorker); ok && worker.ch != nil {
+			close(worker.ch)
+			log.Printf("Info: [models] *Room.Stop, room stop, %v\n", r.String())
+			return true
+		}
 	}
 	log.Printf("Error: [models] *Room.Stop, room already closed, ID: %v\n", r.ID)
 	return false

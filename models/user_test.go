@@ -141,20 +141,16 @@ func TestUserString(t *testing.T) {
 
 func TestUserNew(t *testing.T) {
 	expected := &User{
-		RoomID:  1,
-		Name:    "user1",
-		Score:   0,
-		Submit1: -1,
-		Submit2: -1,
+		RoomID: 1,
+		Name:   "user1",
+		Score:  0,
 	}
 
 	ret, _ := UserNew(1, "user1", "password")
 	if expected.RoomID != ret.RoomID ||
 		expected.Name != ret.Name ||
 		bcrypt.CompareHashAndPassword([]byte(ret.Hashed), []byte("password")) != nil ||
-		expected.Score != ret.Score ||
-		expected.Submit1 != ret.Submit1 ||
-		expected.Submit2 != ret.Submit2 {
+		expected.Score != ret.Score {
 		t.Errorf("UserNew(%v, %v, %v) = %+v; expected: %+v", 1, "user1", "password", ret, expected)
 	}
 }
@@ -166,13 +162,13 @@ func TestUserFilterInfo(t *testing.T) {
 		secret bool
 	}{
 		{
-			User{Submit1: 1.1, Submit2: 2.2, Hashed: "string"},
-			User{Submit1: 1.1, Submit2: 2.2, Hashed: "string"},
+			User{Hashed: "string"},
+			User{Hashed: "string"},
 			true,
 		},
 		{
-			User{Submit1: 1.1, Submit2: 2.2, Hashed: "string"},
-			User{Submit1: -1, Submit2: -1, Hashed: ""},
+			User{Hashed: "string"},
+			User{Hashed: ""},
 			false,
 		},
 	}
@@ -180,9 +176,7 @@ func TestUserFilterInfo(t *testing.T) {
 	for _, test := range tests {
 		saved := test.u0
 		test.u0.FilterInfo(test.secret)
-		if test.u0.Submit1 != test.ut.Submit1 ||
-			test.u0.Submit2 != test.ut.Submit2 ||
-			test.u0.Hashed != test.ut.Hashed {
+		if test.u0.Hashed != test.ut.Hashed {
 			t.Errorf("%+v.FilterInfo(%v) = %+v; expected: %+v", saved, test.secret, test.u0, test.ut)
 		}
 	}

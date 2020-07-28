@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"math/rand"
 	"net/http"
 	"sync"
@@ -45,15 +46,15 @@ var (
 )
 
 func mustPostJSON(url string, body interface{}, auth bool) map[string]interface{} {
-	ctx, cancel := context.WithTimeout(context.Background(), roomInterval*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), roomInterval*time.Second/2)
 	defer cancel()
 	if err := limiter.Wait(ctx); err != nil {
-		panic(err)
+		log.Panicf("limiter.Wait failed:%v", err)
 	}
 
 	str, err := json.Marshal(body)
 	if err != nil {
-		panic("json.Marshal fail")
+		log.Panicf("json.Marshal fail: %v", err)
 	}
 
 	req, _ := http.NewRequest("POST", url, bytes.NewBuffer([]byte(str)))
@@ -62,14 +63,18 @@ func mustPostJSON(url string, body interface{}, auth bool) map[string]interface{
 		req.SetBasicAuth(authUser, authPass)
 	}
 	resp, err := http.DefaultClient.Do(req)
-	if err != nil || resp.StatusCode != http.StatusOK {
-		panic("http.Post fail")
+	if err != nil {
+		log.Panicf("http.Post fail, error: %v", err)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		log.Panicf("http.Post fail, resp: %+v", resp)
 	}
 
 	jsonMap := make(map[string]interface{})
 	jsonStr, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		panic("ioutil.ReadAll fail")
+		log.Panicf("ioutil.ReadAll fail: %v", err)
 	}
 
 	err = json.Unmarshal([]byte(jsonStr), &jsonMap)
@@ -93,7 +98,7 @@ func roomCreate() {
 func userRegister() user {
 	defer func() {
 		if err := recover(); err != nil {
-			fmt.Println(err)
+			log.Println("register failed: ", err)
 		}
 	}()
 	id := int(atomic.AddInt64(&userCount, 1))
@@ -115,7 +120,7 @@ func userRegister() user {
 func (u *user) submit() {
 	defer func() {
 		if err := recover(); err != nil {
-			fmt.Println(err)
+			log.Println("submit failed: ", err)
 		}
 	}()
 
@@ -128,12 +133,19 @@ func (u *user) submit() {
 	}
 
 	mustPostJSON(userURL+fmt.Sprintf("%v", u.id), body, false)
-	fmt.Println(u.id, submit1, submit2)
+	log.Println(u.id, submit1, submit2)
 }
 
 func getInfo() {
-	time.Sleep(time.Millisecond * time.Duration(rand.Intn(roomInterval*1000)))
-	http.Get(fmt.Sprintf(roomURL+"%v", roomID))
+	time.Sleep(time.Millisecond * time.Duration(rand.Intn(roomInterval*500)))
+	ctx, cancel := context.WithTimeout(context.Background(), roomInterval*time.Second/2)
+	defer cancel()
+	if err := limiter.Wait(ctx); err == nil {
+		resp, err := http.Get(fmt.Sprintf(roomURL+"%v", roomID))
+		if err == nil {
+			defer resp.Body.Close()
+		}
+	}
 }
 
 func main() {
@@ -153,7 +165,7 @@ func main() {
 			usersLock.Lock()
 			defer usersLock.Unlock()
 			users[u.id] = &u
-			fmt.Println(u)
+			log.Println(u)
 		}()
 	}
 	usersWg.Wait()

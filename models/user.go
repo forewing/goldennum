@@ -3,14 +3,17 @@ package models
 import (
 	"fmt"
 	"log"
+	"time"
 
-	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
 )
 
 // User hold user info
 type User struct {
-	gorm.Model
+	ID        uint       `gorm:"primary_key"`
+	CreatedAt time.Time  `json:"-"`
+	UpdatedAt time.Time  `json:"-"`
+	DeletedAt *time.Time `sql:"index" json:"-"`
 
 	RoomID       uint
 	UserHistorys []UserHistory
@@ -26,7 +29,9 @@ type User struct {
 
 // UserHistory holds user history
 type UserHistory struct {
-	gorm.Model
+	ID        uint       `gorm:"primary_key"`
+	CreatedAt time.Time  `json:"-"`
+	DeletedAt *time.Time `sql:"index" json:"-"`
 
 	UserID uint
 

@@ -3,6 +3,7 @@ package models
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/8treenet/gcache"
 	"github.com/8treenet/gcache/option"
@@ -17,6 +18,14 @@ import (
 var (
 	// Db saves database
 	Db *gorm.DB
+
+	mySQLMaxOpenConns    = 150
+	mySQLMaxIdlePrec     = 0.25
+	mySQLConnMaxLifetime = time.Minute * 5
+
+	sqliteMaxOpenConns    = 1
+	sqliteMaxIdleConns    = 1
+	sqliteConnMaxLifetime = time.Hour * 1
 )
 
 const (
@@ -47,6 +56,24 @@ func Load() {
 
 	if err != nil {
 		panic(err)
+	}
+
+	Db.DB().SetMaxOpenConns(mySQLMaxOpenConns)
+	Db.DB().SetMaxIdleConns(int(float64(mySQLMaxOpenConns) * mySQLMaxIdlePrec))
+	Db.DB().SetConnMaxLifetime(mySQLConnMaxLifetime)
+	if conf.Db.Type == "sqlite3" {
+		Db.DB().SetMaxOpenConns(sqliteMaxOpenConns)
+		Db.DB().SetMaxIdleConns(sqliteMaxIdleConns)
+		Db.DB().SetConnMaxLifetime(sqliteConnMaxLifetime)
+	}
+	if conf.Db.MaxConns > 0 {
+		Db.DB().SetMaxOpenConns(conf.Db.MaxConns)
+	}
+	if conf.Db.MaxIdles > 0 {
+		Db.DB().SetMaxIdleConns(conf.Db.MaxIdles)
+	}
+	if conf.Db.ConnLife > 0 {
+		Db.DB().SetConnMaxLifetime(time.Second * time.Duration(conf.Db.ConnLife))
 	}
 
 	Db.AutoMigrate(&User{}, &UserHistory{}, &Room{}, &RoomHistory{})

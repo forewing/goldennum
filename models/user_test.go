@@ -6,8 +6,6 @@ import (
 	"testing"
 
 	"golang.org/x/crypto/bcrypt"
-
-	"github.com/jinzhu/gorm"
 )
 
 func testNewUser(t *testing.T, roomID uint, score int, submit1, submit2 float64) *User {
@@ -129,8 +127,8 @@ func TestUserString(t *testing.T) {
 
 	for _, test := range tests {
 		u := User{
-			Model: gorm.Model{ID: test.id},
-			Name:  test.name,
+			ID:   test.id,
+			Name: test.name,
 		}
 		r := u.String()
 		if r != test.result {

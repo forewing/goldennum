@@ -11,3 +11,6 @@ db:
   password: "goldennum"
   dbname: "goldennum"
   redis:
+  max_conns:
+  max_idles:
+  conn_life:

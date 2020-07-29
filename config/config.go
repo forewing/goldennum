@@ -141,6 +141,9 @@ func (c *Config) completeFromEnv() {
 	if os.Getenv(envDebug) == "true" {
 		c.Debug = true
 	}
+	if s := os.Getenv(envBind); len(s) > 0 {
+		c.Bind = s
+	}
 	if s := os.Getenv(envAdmin); len(s) > 0 {
 		c.Admin = s
 	}

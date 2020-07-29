@@ -5,13 +5,14 @@ import (
 	"log"
 	"sync"
 	"time"
-
-	"github.com/jinzhu/gorm"
 )
 
 // Room hold user info
 type Room struct {
-	gorm.Model
+	ID        uint       `gorm:"primary_key"`
+	CreatedAt time.Time  `json:"-"`
+	UpdatedAt time.Time  `json:"-"`
+	DeletedAt *time.Time `sql:"index" json:"-"`
 
 	Users        []User
 	RoomHistorys []RoomHistory
@@ -23,7 +24,9 @@ type Room struct {
 
 // RoomHistory holds room history
 type RoomHistory struct {
-	gorm.Model
+	ID        uint       `gorm:"primary_key"`
+	CreatedAt time.Time  `json:"-"`
+	DeletedAt *time.Time `sql:"index" json:"-"`
 
 	RoomID uint
 

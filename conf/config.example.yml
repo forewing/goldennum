@@ -5,11 +5,11 @@ password: "password"
 
 db:
   type: "sqlite3"
-  path: "file::memory:?cache=shared"
-  addr: "localhost:3306"
+  path: "./sqlite3.db"
+  addr: "0.0.0.0:3306"
   user: "goldennum"
   password: "goldennum"
-  dbname: "goldennum"
+  db_name: "goldennum"
   redis:
   max_conns:
   max_idles:

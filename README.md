@@ -33,27 +33,27 @@ Usage of ./goldennum:
   -admin string
         Admin username. (default "admin")
   -bind string
-        Bind address. (default "localhost:8080")
+        Bind address. (default "0.0.0.0:8080")
   -conf string
-        Config file path. If set, will only use file config.
-  -dbaddr string
+        Config file path. If set, load config from file instead.
+  -db-addr string
         Mysql server address. (default "localhost:3306")
-  -dbname string
+  -db-name string
         Database name. (default "goldennum")
-  -dbpass string
+  -db-pass string
         Database password. (default "goldennum")
-  -dbpath string
+  -db-path string
         Path to sqlite3 database. (default "./sqlite3.db")
-  -dbtype string
+  -db-type string
         [sqlite3, mysql] (default "sqlite3")
-  -dbuser string
+  -db-user string
         Database username. (default "goldennum")
   -debug
         Set debug mode.
   -password string
-        Admin password.
+        Admin password. Random if empty.
   -redis string
-        Redis address, redis disabled if not set
+        Redis address, redis disabled if not set.
 ```
 
 1. By default, server read all configs from command line flags.

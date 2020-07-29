@@ -28,7 +28,7 @@ type Db struct {
 	Addr     string `yaml:"addr"`
 	User     string `yaml:"user"`
 	Password string `yaml:"password"`
-	DbName   string `yaml:"dbname"`
+	DbName   string `yaml:"db_name"`
 	Redis    string `yaml:"redis"`
 	MaxConns int    `yaml:"max_conns"`
 	MaxIdles int    `yaml:"max_idles"`
@@ -58,17 +58,17 @@ const (
 )
 
 var (
-	flagConf     = flag.String("conf", "", "Config file path. If set, will only use file config.")
+	flagConf     = flag.String("conf", "", "Config file path. If set, load config from file instead.")
 	flagDebug    = flag.Bool("debug", false, "Set debug mode.")
-	flagBind     = flag.String("bind", "localhost:8080", "Bind address.")
+	flagBind     = flag.String("bind", "0.0.0.0:8080", "Bind address.")
 	flagAdmin    = flag.String("admin", "admin", "Admin username.")
-	flagPassword = flag.String("password", "", "Admin password.")
-	flagDbType   = flag.String("dbtype", "sqlite3", "[sqlite3, mysql]")
-	flagDbPath   = flag.String("dbpath", "./sqlite3.db", "Path to sqlite3 database.")
-	flagDbAddr   = flag.String("dbaddr", "localhost:3306", "Mysql server address.")
-	flagDbUser   = flag.String("dbuser", "goldennum", "Database username.")
-	flagDbPass   = flag.String("dbpass", "goldennum", "Database password.")
-	flagDbName   = flag.String("dbname", "goldennum", "Database name.")
+	flagPassword = flag.String("password", "", "Admin password. Random if empty.")
+	flagDbType   = flag.String("db-type", "sqlite3", "[sqlite3, mysql]")
+	flagDbPath   = flag.String("db-path", "./sqlite3.db", "Path to sqlite3 database.")
+	flagDbAddr   = flag.String("db-addr", "localhost:3306", "Mysql server address.")
+	flagDbUser   = flag.String("db-user", "goldennum", "Database username.")
+	flagDbPass   = flag.String("db-pass", "goldennum", "Database password.")
+	flagDbName   = flag.String("db-name", "goldennum", "Database name.")
 	flagRedis    = flag.String("redis", "", "Redis address, redis disabled if not set.")
 )
 

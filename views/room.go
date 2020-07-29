@@ -123,3 +123,17 @@ func RoomStop(c *gin.Context) {
 func RoomUpdate(c *gin.Context) {
 
 }
+
+// RoomSync return time until next tick
+func RoomSync(c *gin.Context) {
+	roomid, err := utils.ParseInt64FromParamOrErr(c, "roomid", "RoomInfo")
+	if err != nil {
+		return
+	}
+	duration, err := models.RoomUntilNextTick(uint(roomid))
+	if err != nil {
+		c.String(http.StatusNotFound, err.Error())
+		return
+	}
+	c.String(http.StatusOK, "%.0f", duration.Seconds())
+}

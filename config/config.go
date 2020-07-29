@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"strconv"
 
 	"github.com/forewing/goldennum/utils"
 	"gopkg.in/yaml.v2"
@@ -29,6 +30,9 @@ type Db struct {
 	Password string `yaml:"password"`
 	DbName   string `yaml:"dbname"`
 	Redis    string `yaml:"redis"`
+	MaxConns int    `yaml:"max_conns"`
+	MaxIdles int    `yaml:"max_idles"`
+	ConnLife int    `yaml:"conn_life"`
 }
 
 const (
@@ -48,6 +52,9 @@ const (
 	envDbPassword   = "DB_PASSWORD"
 	envDbDbName     = "DB_NAME"
 	envDbRedis      = "REDIS"
+	envDbMaxConns   = "MAX_CONNS"
+	envDbMaxIdles   = "MAX_IDLES"
+	envDbConnLife   = "CONN_LIFE"
 )
 
 var (
@@ -86,6 +93,7 @@ func Load() *Config {
 	savedConfig.completeFromEnv()
 
 	savedConfig.complete()
+	configLoaded = true
 	log.Printf("Info: [config] Load: %+v\n", savedConfig)
 	return &savedConfig
 }
@@ -159,6 +167,15 @@ func (c *Config) completeFromEnv() {
 	}
 	if s := os.Getenv(envDbRedis); len(s) > 0 {
 		c.Db.Redis = s
+	}
+	if n, err := strconv.ParseInt(os.Getenv(envDbMaxConns), 10, 64); err == nil {
+		c.Db.MaxConns = int(n)
+	}
+	if n, err := strconv.ParseInt(os.Getenv(envDbMaxIdles), 10, 64); err == nil {
+		c.Db.MaxIdles = int(n)
+	}
+	if n, err := strconv.ParseInt(os.Getenv(envDbConnLife), 10, 64); err == nil {
+		c.Db.ConnLife = int(n)
 	}
 }
 

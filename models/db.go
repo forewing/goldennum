@@ -24,7 +24,7 @@ var (
 	mySQLConnMaxLifetime = time.Minute * 5
 
 	sqliteMaxOpenConns    = 1
-	sqliteMaxIdleCoons    = 1
+	sqliteMaxIdleConns    = 1
 	sqliteConnMaxLifetime = time.Hour * 1
 )
 
@@ -63,8 +63,17 @@ func Load() {
 	Db.DB().SetConnMaxLifetime(mySQLConnMaxLifetime)
 	if conf.Db.Type == "sqlite3" {
 		Db.DB().SetMaxOpenConns(sqliteMaxOpenConns)
-		Db.DB().SetMaxIdleConns(sqliteMaxIdleCoons)
+		Db.DB().SetMaxIdleConns(sqliteMaxIdleConns)
 		Db.DB().SetConnMaxLifetime(sqliteConnMaxLifetime)
+	}
+	if conf.Db.MaxConns > 0 {
+		Db.DB().SetMaxOpenConns(conf.Db.MaxConns)
+	}
+	if conf.Db.MaxIdles > 0 {
+		Db.DB().SetMaxIdleConns(conf.Db.MaxIdles)
+	}
+	if conf.Db.ConnLife > 0 {
+		Db.DB().SetConnMaxLifetime(time.Second * time.Duration(conf.Db.ConnLife))
 	}
 
 	Db.AutoMigrate(&User{}, &UserHistory{}, &Room{}, &RoomHistory{})

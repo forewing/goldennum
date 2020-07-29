@@ -50,6 +50,7 @@ func main() {
 	{
 		r.GET("/rooms", views.RoomList)
 		r.GET("/room/:roomid", views.RoomInfo)
+		r.GET("/sync/:roomid", views.RoomSync)
 
 		r.POST("/users/:roomid", views.UserCreate)
 		r.GET("/user/:userid", views.UserInfo)

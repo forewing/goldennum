@@ -35,8 +35,9 @@ type RoomHistory struct {
 }
 
 type roomWorker struct {
-	ch     chan int
-	submit sync.Map
+	ch       chan int
+	nextTime time.Time
+	submit   sync.Map
 }
 
 const (
@@ -48,10 +49,10 @@ var (
 )
 
 // Runner of room
-func (r *Room) Runner(ch chan int) {
+func (r *Room) Runner(worker *roomWorker) {
 	for {
 		select {
-		case _, ok := <-ch:
+		case _, ok := <-worker.ch:
 			if !ok {
 				return
 			}
@@ -64,7 +65,9 @@ func (r *Room) Runner(ch chan int) {
 				log.Printf("Error: [models] *Room.Runner, room interval invalid: %v <= 0\n", r.Interval)
 				r.Interval = roomIntervalDefault
 			}
-			time.Sleep(time.Duration(r.Interval) * time.Second)
+			duration := time.Duration(r.Interval) * time.Second
+			worker.nextTime = time.Now().Add(duration)
+			time.Sleep(duration)
 
 			// log.Printf("Info: [models] *Room.Runner, room tick, %v\n", r.String())
 			ok := r.tick()
@@ -97,7 +100,7 @@ func (r *Room) Start() bool {
 	}
 
 	log.Printf("Info: [models] *Room.Start, room open, ID: %v\n", r.ID)
-	go r.Runner(worker.ch)
+	go r.Runner(worker)
 	return true
 }
 
@@ -142,4 +145,16 @@ func (r *Room) GetHistory() (history []RoomHistory) {
 		log.Printf("Error: [models] *Room.GetHistory, %v\n", result.Error)
 	}
 	return
+}
+
+// RoomUntilNextTick return time until next tick
+func RoomUntilNextTick(id uint) (time.Duration, error) {
+	if value, ok := roomWorkers.Load(id); ok {
+		if worker, ok := value.(*roomWorker); ok {
+			if !worker.nextTime.IsZero() {
+				return time.Until(worker.nextTime), nil
+			}
+		}
+	}
+	return 0, fmt.Errorf("room %v not found or stopped", id)
 }

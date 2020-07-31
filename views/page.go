@@ -1,23 +1,46 @@
 package views
 
 import (
+	"html/template"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gobuffalo/packr/v2"
 )
 
 const (
-	templateIndex = 1
+	templateHeader = "header.html"
+	templateFooter = "footer.html"
+	templateIndex  = "index.html"
 )
 
 var (
-	// Templates name lookup table
-	Templates map[int]string = map[int]string{
-		templateIndex: "index.html",
+	templatesBox = packr.New("templates", "../templates")
+
+	templates []string = []string{
+		templateHeader,
+		templateFooter,
+		templateIndex,
 	}
 )
 
+// LoadTemplate reutrn templates
+func LoadTemplate() (*template.Template, error) {
+	t := template.New("")
+	for _, name := range templates {
+		str, err := templatesBox.FindString(name)
+		if err != nil {
+			return nil, err
+		}
+		t, err = t.New(name).Parse(string(str))
+		if err != nil {
+			return nil, err
+		}
+	}
+	return t, nil
+}
+
 // PageIndex render index
 func PageIndex(c *gin.Context) {
-	c.HTML(http.StatusOK, Templates[templateIndex], gin.H{})
+	c.HTML(http.StatusOK, templateIndex, gin.H{})
 }

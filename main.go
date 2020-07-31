@@ -1,8 +1,6 @@
 package main
 
 import (
-	"html/template"
-
 	"github.com/forewing/goldennum/config"
 	"github.com/forewing/goldennum/models"
 	"github.com/forewing/goldennum/views"
@@ -11,8 +9,7 @@ import (
 )
 
 var (
-	staticsBox   = packr.New("statics", "./statics")
-	templatesBox = packr.New("templates", "./templates")
+	staticsBox = packr.New("statics", "./statics")
 
 	adminAccounts gin.Accounts = gin.Accounts{}
 )
@@ -32,7 +29,7 @@ func main() {
 	r := gin.Default()
 
 	// pages
-	t, err := loadTemplate()
+	t, err := views.LoadTemplate()
 	if err != nil {
 		panic(err)
 	}
@@ -73,19 +70,4 @@ func main() {
 	} else {
 		r.Run(conf.Bind)
 	}
-}
-
-func loadTemplate() (*template.Template, error) {
-	t := template.New("")
-	for _, name := range views.Templates {
-		str, err := templatesBox.FindString(name)
-		if err != nil {
-			return nil, err
-		}
-		t, err = t.New(name).Parse(string(str))
-		if err != nil {
-			return nil, err
-		}
-	}
-	return t, nil
 }

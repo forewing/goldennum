@@ -15,7 +15,7 @@ type Room struct {
 	DeletedAt *time.Time `sql:"index" json:"-"`
 
 	Users        []User
-	RoomHistorys []RoomHistory
+	RoomHistorys []RoomHistory `json:",omitempty"`
 
 	Interval   int
 	RoundNow   int
@@ -24,7 +24,7 @@ type Room struct {
 
 // RoomHistory holds room history
 type RoomHistory struct {
-	ID        uint       `gorm:"primary_key"`
+	ID        uint       `gorm:"primary_key" json:"-"`
 	CreatedAt time.Time  `json:"-"`
 	DeletedAt *time.Time `sql:"index" json:"-"`
 

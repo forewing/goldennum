@@ -32,6 +32,8 @@ go build
 Usage of ./goldennum:
   -admin string
         Admin username. (default "admin")
+  -base-url string
+        Base URL. If you are using reverse proxy to redirect "//PUBLIC_HOST/PREFIX/uri" to "//REAL_HOST/url", it should be set to "/PREFIX"
   -bind string
         Bind address. (default "0.0.0.0:8080")
   -conf string

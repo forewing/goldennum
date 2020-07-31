@@ -1,17 +1,21 @@
 package views
 
 import (
+	"fmt"
 	"html/template"
 	"net/http"
+
+	"github.com/forewing/goldennum/config"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gobuffalo/packr/v2"
 )
 
 const (
-	templateHeader = "header.html"
-	templateFooter = "footer.html"
-	templateIndex  = "index.html"
+	templateHeader  = "header.html"
+	templateFooter  = "footer.html"
+	templateBaseURL = "base_url.html"
+	templateIndex   = "index.html"
 )
 
 var (
@@ -23,6 +27,11 @@ var (
 		templateIndex,
 	}
 )
+
+func generateBaseURL() string {
+	c := config.Load()
+	return fmt.Sprintf("{{ define \"%v\" }}%v{{ end }}", templateBaseURL, c.BaseURL)
+}
 
 // LoadTemplate reutrn templates
 func LoadTemplate() (*template.Template, error) {
@@ -37,7 +46,7 @@ func LoadTemplate() (*template.Template, error) {
 			return nil, err
 		}
 	}
-	return t, nil
+	return t.New(templateBaseURL).Parse(generateBaseURL())
 }
 
 // PageIndex render index

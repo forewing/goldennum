@@ -16,6 +16,7 @@ const (
 
 	templateHeader = "header.html"
 	templateFooter = "footer.html"
+	templateNavbar = "navbar.html"
 	templateIndex  = "index.html"
 )
 
@@ -25,6 +26,7 @@ var (
 	templates []string = []string{
 		templateHeader,
 		templateFooter,
+		templateNavbar,
 		templateIndex,
 	}
 )

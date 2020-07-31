@@ -12,10 +12,11 @@ import (
 )
 
 const (
-	templateHeader  = "header.html"
-	templateFooter  = "footer.html"
-	templateBaseURL = "base_url.html"
-	templateIndex   = "index.html"
+	templateBaseURL = "base_url"
+
+	templateHeader = "header.html"
+	templateFooter = "footer.html"
+	templateIndex  = "index.html"
 )
 
 var (

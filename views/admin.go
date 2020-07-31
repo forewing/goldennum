@@ -5,5 +5,5 @@ import (
 )
 
 func AdminIndex(c *gin.Context) {
-	c.String(200, "fuck")
+	c.JSON(200, "fuck")
 }

@@ -14,11 +14,11 @@ func getUserByIDOrErr(userid int64, c *gin.Context, caller string) (*models.User
 	var user models.User
 	if result := models.Db.First(&user, userid); result.RecordNotFound() {
 		log.Printf("Info: [views] getUserByIDOrErr, caller: %v, ID: %v, %v\n", caller, userid, result.Error)
-		c.String(http.StatusNotFound, "")
+		c.JSON(http.StatusNotFound, "")
 		return nil, result.Error
 	} else if result.Error != nil {
 		log.Printf("Error: [views] getUserByIDOrErr, ID: %v, %v\n", userid, result.Error)
-		c.String(http.StatusInternalServerError, "")
+		c.JSON(http.StatusInternalServerError, "")
 		return nil, result.Error
 	}
 
@@ -35,16 +35,16 @@ func UserCreate(c *gin.Context) {
 	var data userCreateModel
 	if err := c.BindJSON(&data); err != nil {
 		log.Printf("Info: [views] UserCreate, %v\n", err)
-		c.String(http.StatusBadRequest, err.Error())
+		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
 	if !models.UserNameValidate(data.Username) {
 		log.Printf("Info: [views] UserCreate, invalid username: %v\n", data.Username)
-		c.String(http.StatusBadRequest, "invalid username")
+		c.JSON(http.StatusBadRequest, "invalid username")
 	}
 	if !models.UserPassValidate(data.Password) {
 		log.Printf("Info: [views] UserCreate, invalid password, len: %v\n", len(data.Password))
-		c.String(http.StatusBadRequest, "invalid password")
+		c.JSON(http.StatusBadRequest, "invalid password")
 	}
 
 	roomid, err := utils.ParseInt64FromParamOrErr(c, "roomid", "UserCreate")
@@ -58,7 +58,7 @@ func UserCreate(c *gin.Context) {
 
 	user, err := models.UserNew(room.ID, data.Username, data.Password)
 	if err != nil {
-		c.String(http.StatusInternalServerError, "fail to create user")
+		c.JSON(http.StatusInternalServerError, "fail to create user")
 		return
 	}
 	models.Db.Save(&user)
@@ -99,22 +99,22 @@ func UserSubmit(c *gin.Context) {
 	var data userSubmitModel
 	if err := c.BindJSON(&data); err != nil {
 		log.Printf("Info: [views] UserSubmit, %v\n", err)
-		c.String(http.StatusBadRequest, err.Error())
+		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
 	if err := user.Auth(data.Password); err != nil {
 		log.Printf("Info: [views] UserSubmit, auth: %v\n", err)
-		c.String(http.StatusUnauthorized, "")
+		c.JSON(http.StatusUnauthorized, "")
 		return
 	}
 	if !models.UserSubmitValidate(data.Submit1) || !models.UserSubmitValidate(data.Submit2) {
 		log.Printf("Info: [views] UserSubmit, submit: %v, %v\n", data.Submit1, data.Submit2)
-		c.String(http.StatusBadRequest, "")
+		c.JSON(http.StatusBadRequest, "")
 		return
 	}
 	if err := user.Submit(data.Submit1, data.Submit2); err != nil {
-		c.String(http.StatusNotFound, err.Error())
+		c.JSON(http.StatusNotFound, err.Error())
 		return
 	}
-	c.String(http.StatusOK, "")
+	c.JSON(http.StatusOK, "")
 }

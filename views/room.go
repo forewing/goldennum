@@ -1,6 +1,7 @@
 package views
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -18,11 +19,11 @@ func getRoomByIDOrErr(roomid int64, c *gin.Context, caller string) (*models.Room
 	var room models.Room
 	if result := models.Db.First(&room, roomid); result.RecordNotFound() {
 		log.Printf("Info: [views] getRoomByIDOrErr, caller: %v, ID: %v, %v\n", caller, roomid, result.Error)
-		c.String(http.StatusNotFound, "")
+		c.JSON(http.StatusNotFound, "")
 		return nil, result.Error
 	} else if result.Error != nil {
 		log.Printf("Error: [views] getRoomByIDOrErr, ID: %v, %v\n", roomid, result.Error)
-		c.String(http.StatusInternalServerError, "")
+		c.JSON(http.StatusInternalServerError, "")
 		return nil, result.Error
 	}
 
@@ -34,7 +35,7 @@ func RoomCreate(c *gin.Context) {
 	var data roomCreateModel
 	if err := c.BindJSON(&data); err != nil {
 		log.Printf("Info: [views] RoomCreate, %v\n", err)
-		c.String(http.StatusBadRequest, err.Error())
+		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -45,7 +46,7 @@ func RoomCreate(c *gin.Context) {
 	}
 	if err := models.Db.Create(&room).Error; err != nil {
 		log.Printf("Error: [views] RoomCreate, %v\n", err)
-		c.String(http.StatusInternalServerError, "")
+		c.JSON(http.StatusInternalServerError, "")
 		return
 	}
 	log.Printf("Info: [views] RoomCreate, create room, %+v\n", room)
@@ -63,7 +64,7 @@ func RoomList(c *gin.Context) {
 	rooms := []models.Room{}
 	if err := models.Db.Find(&rooms).Error; err != nil {
 		log.Printf("Error: [views] RoomList, %v\n", err)
-		c.String(http.StatusInternalServerError, "")
+		c.JSON(http.StatusInternalServerError, "")
 		return
 	}
 	log.Printf("Info: [views] RoomList, len: %v\n", len(rooms))
@@ -96,9 +97,9 @@ func RoomStart(c *gin.Context) {
 		return
 	}
 	if room.Start() {
-		c.String(http.StatusOK, "")
+		c.JSON(http.StatusOK, "")
 	} else {
-		c.String(http.StatusBadRequest, "")
+		c.JSON(http.StatusBadRequest, "")
 	}
 }
 
@@ -113,9 +114,9 @@ func RoomStop(c *gin.Context) {
 		return
 	}
 	if room.Stop() {
-		c.String(http.StatusOK, "")
+		c.JSON(http.StatusOK, "")
 	} else {
-		c.String(http.StatusBadRequest, "")
+		c.JSON(http.StatusBadRequest, "")
 	}
 }
 
@@ -132,8 +133,8 @@ func RoomSync(c *gin.Context) {
 	}
 	duration, err := models.RoomUntilNextTick(uint(roomid))
 	if err != nil {
-		c.String(http.StatusNotFound, err.Error())
+		c.JSON(http.StatusNotFound, err.Error())
 		return
 	}
-	c.String(http.StatusOK, "%.0f", duration.Seconds())
+	c.JSON(http.StatusOK, fmt.Sprintf("%.0f", duration.Seconds()))
 }

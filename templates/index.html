@@ -23,6 +23,8 @@
 					<p>
 						TODO
 					</p>
+					<hr>
+					<dashboard></dashboard>
 				</div>
 			</div>
 		</div>
@@ -30,6 +32,9 @@
 
 	{{ template "footer.html" . }}
 	<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+
+	{{ template "components/dashboard.html" . }}
+	<script src='{{ template "base_url" . }}/statics/index.js'></script>
 </body>
 
 </html>

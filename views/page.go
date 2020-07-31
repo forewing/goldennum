@@ -18,6 +18,8 @@ const (
 	templateFooter = "footer.html"
 	templateNavbar = "navbar.html"
 	templateIndex  = "index.html"
+
+	componentDashboard = "components/dashboard.html"
 )
 
 var (
@@ -28,6 +30,8 @@ var (
 		templateFooter,
 		templateNavbar,
 		templateIndex,
+
+		componentDashboard,
 	}
 )
 

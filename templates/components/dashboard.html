@@ -1,0 +1,23 @@
+<script type="text/x-template" id="dashboard-component">
+    <div class="data-charts">
+        <button type="button" class="btn btn-outline-info btn-block" v-on:click="refreshRoom">Refresh</button>
+        <div class="row">
+            <div class="col">
+                <div style="width:100%;">
+                    <canvas ref="numberHistory"></canvas>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col">
+                <div style="width:100%;">
+                    <canvas ref="userRank"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="data">{{`{{ data }}`}}</div>
+    </div>
+</script>
+
+<script src='{{ template "base_url" . }}/statics/components/dashboard.js'></script>

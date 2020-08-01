@@ -30,7 +30,6 @@ type Db struct {
 	User     string `yaml:"user"`
 	Password string `yaml:"password"`
 	DbName   string `yaml:"db_name"`
-	Redis    string `yaml:"redis"`
 	MaxConns int    `yaml:"max_conns"`
 	MaxIdles int    `yaml:"max_idles"`
 	ConnLife int    `yaml:"conn_life"`
@@ -53,7 +52,6 @@ const (
 	envDbUser       = "DB_USER"
 	envDbPassword   = "DB_PASSWORD"
 	envDbDbName     = "DB_NAME"
-	envDbRedis      = "REDIS"
 	envDbMaxConns   = "MAX_CONNS"
 	envDbMaxIdles   = "MAX_IDLES"
 	envDbConnLife   = "CONN_LIFE"
@@ -72,7 +70,6 @@ var (
 	flagDbUser   = flag.String("db-user", "goldennum", "Database username.")
 	flagDbPass   = flag.String("db-pass", "goldennum", "Database password.")
 	flagDbName   = flag.String("db-name", "goldennum", "Database name.")
-	flagRedis    = flag.String("redis", "", "Redis address, redis disabled if not set.")
 )
 
 var (
@@ -117,7 +114,6 @@ func (c *Config) loadFromFlag() {
 			User:     *flagDbUser,
 			Password: *flagDbPass,
 			DbName:   *flagDbName,
-			Redis:    *flagRedis,
 		},
 	}
 }
@@ -174,9 +170,6 @@ func (c *Config) completeFromEnv() {
 	}
 	if s := os.Getenv(envDbDbName); len(s) > 0 {
 		c.Db.DbName = s
-	}
-	if s := os.Getenv(envDbRedis); len(s) > 0 {
-		c.Db.Redis = s
 	}
 	if n, err := strconv.ParseInt(os.Getenv(envDbMaxConns), 10, 64); err == nil {
 		c.Db.MaxConns = int(n)

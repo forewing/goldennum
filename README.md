@@ -54,8 +54,6 @@ Usage of ./goldennum:
         Set debug mode.
   -password string
         Admin password. Random if empty.
-  -redis string
-        Redis address, redis disabled if not set.
 ```
 
 1. By default, server read all configs from command line flags.

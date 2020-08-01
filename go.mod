@@ -3,7 +3,6 @@ module github.com/forewing/goldennum
 go 1.14
 
 require (
-	github.com/8treenet/gcache v1.1.8
 	github.com/gin-gonic/gin v1.6.3
 	github.com/gobuffalo/packr/v2 v2.8.0
 	github.com/jinzhu/gorm v1.9.15

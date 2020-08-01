@@ -19,7 +19,7 @@ const (
 	templateNavbar = "navbar.html"
 	templateIndex  = "index.html"
 
-	componentDashboard = "components/dashboard.html"
+	componentDashboard = "dashboard.html"
 )
 
 var (

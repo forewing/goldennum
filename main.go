@@ -1,6 +1,9 @@
 package main
 
 import (
+	"log"
+	"os"
+
 	"github.com/forewing/goldennum/config"
 	"github.com/forewing/goldennum/models"
 	"github.com/forewing/goldennum/views"
@@ -8,8 +11,13 @@ import (
 	"github.com/gobuffalo/packr/v2"
 )
 
+const (
+	staticsPath   = "./statics"
+	templatesPath = "./templates"
+)
+
 var (
-	staticsBox = packr.New("statics", "./statics")
+	staticsBox = packr.New("statics", staticsPath)
 
 	adminAccounts gin.Accounts = gin.Accounts{}
 )
@@ -29,17 +37,25 @@ func main() {
 	r := gin.Default()
 
 	// pages
-	t, err := views.LoadTemplate()
-	if err != nil {
-		panic(err)
+	if conf.Debug && canLiveReload(templatesPath) {
+		log.Println("[main] templates use live reload")
+		r.LoadHTMLGlob(templatesPath + "/*")
+	} else {
+		t, err := views.LoadTemplate()
+		if err != nil {
+			panic(err)
+		}
+		r.SetHTMLTemplate(t)
 	}
-	r.SetHTMLTemplate(t)
 	{
 		r.GET("/", views.PageIndex)
 	}
 
 	// static files
-	{
+	if conf.Debug && canLiveReload(staticsPath) {
+		log.Println("[main] statics use live reload")
+		r.Static("/statics", staticsPath)
+	} else {
 		r.StaticFS("/statics", staticsBox)
 	}
 
@@ -70,4 +86,13 @@ func main() {
 	} else {
 		r.Run(conf.Bind)
 	}
+}
+
+func canLiveReload(path string) bool {
+	if _, err := os.Stat(path); err != nil {
+		if os.IsNotExist(err) {
+			return false
+		}
+	}
+	return true
 }

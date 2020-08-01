@@ -28,7 +28,7 @@ go build
 ### Run
 
 ```
-./goldennum -h                   
+./goldennum -h
 Usage of ./goldennum:
   -admin string
         Admin username. (default "admin")
@@ -69,3 +69,7 @@ Usage of ./goldennum:
 ## API
 
 TODO
+
+## Development Guide
+
+- When `conf.Debug` is set to `true`, and the program can access `./templates` & `./statics`, it will live reload those files.

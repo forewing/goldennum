@@ -1,7 +1,8 @@
 package main
 
 import (
-	"html/template"
+	"log"
+	"os"
 
 	"github.com/forewing/goldennum/config"
 	"github.com/forewing/goldennum/models"
@@ -10,9 +11,13 @@ import (
 	"github.com/gobuffalo/packr/v2"
 )
 
+const (
+	staticsPath   = "./statics"
+	templatesPath = "./templates"
+)
+
 var (
-	staticsBox   = packr.New("statics", "./statics")
-	templatesBox = packr.New("templates", "./templates")
+	staticsBox = packr.New("statics", staticsPath)
 
 	adminAccounts gin.Accounts = gin.Accounts{}
 )
@@ -32,17 +37,25 @@ func main() {
 	r := gin.Default()
 
 	// pages
-	t, err := loadTemplate()
-	if err != nil {
-		panic(err)
+	if conf.Debug && canLiveReload(templatesPath) {
+		log.Println("[main] templates use live reload")
+		r.LoadHTMLGlob(templatesPath + "/*")
+	} else {
+		t, err := views.LoadTemplate()
+		if err != nil {
+			panic(err)
+		}
+		r.SetHTMLTemplate(t)
 	}
-	r.SetHTMLTemplate(t)
 	{
 		r.GET("/", views.PageIndex)
 	}
 
 	// static files
-	{
+	if conf.Debug && canLiveReload(staticsPath) {
+		log.Println("[main] statics use live reload")
+		r.Static("/statics", staticsPath)
+	} else {
 		r.StaticFS("/statics", staticsBox)
 	}
 
@@ -55,6 +68,7 @@ func main() {
 		r.POST("/users/:roomid", views.UserCreate)
 		r.GET("/user/:userid", views.UserInfo)
 		r.POST("/user/:userid", views.UserSubmit)
+		r.PUT("/user/:userid", views.UserAuth)
 	}
 
 	// admin API
@@ -75,17 +89,11 @@ func main() {
 	}
 }
 
-func loadTemplate() (*template.Template, error) {
-	t := template.New("")
-	for _, name := range views.Templates {
-		str, err := templatesBox.FindString(name)
-		if err != nil {
-			return nil, err
-		}
-		t, err = t.New(name).Parse(string(str))
-		if err != nil {
-			return nil, err
+func canLiveReload(path string) bool {
+	if _, err := os.Stat(path); err != nil {
+		if os.IsNotExist(err) {
+			return false
 		}
 	}
-	return t, nil
+	return true
 }

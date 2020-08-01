@@ -17,6 +17,7 @@ type Config struct {
 	Bind     string `yaml:"bind"`
 	Admin    string `yaml:"admin"`
 	Password string `yaml:"password"`
+	BaseURL  string `yaml:"base_url"`
 
 	Db Db
 }
@@ -45,6 +46,7 @@ const (
 	envBind         = "BIND"
 	envAdmin        = "ADMIN"
 	envPassword     = "PASSWORD"
+	envBaseURL      = "BASE_URL"
 	envDbType       = "DB_TYPE"
 	envDbPath       = "DB_PATH"
 	envDbAddr       = "DB_ADDR"
@@ -63,6 +65,7 @@ var (
 	flagBind     = flag.String("bind", "0.0.0.0:8080", "Bind address.")
 	flagAdmin    = flag.String("admin", "admin", "Admin username.")
 	flagPassword = flag.String("password", "", "Admin password. Random if empty.")
+	flagBaseURL  = flag.String("base-url", "", "Base URL. If you are using reverse proxy to redirect \"//PUBLIC_HOST/PREFIX/uri\" to \"//REAL_HOST/url\", it should be set to \"/PREFIX\"")
 	flagDbType   = flag.String("db-type", "sqlite3", "[sqlite3, mysql]")
 	flagDbPath   = flag.String("db-path", "./sqlite3.db", "Path to sqlite3 database.")
 	flagDbAddr   = flag.String("db-addr", "localhost:3306", "Mysql server address.")
@@ -106,6 +109,7 @@ func (c *Config) loadFromFlag() {
 		Bind:     *flagBind,
 		Admin:    *flagAdmin,
 		Password: *flagPassword,
+		BaseURL:  *flagBaseURL,
 		Db: Db{
 			Type:     *flagDbType,
 			Path:     *flagDbPath,
@@ -149,6 +153,9 @@ func (c *Config) completeFromEnv() {
 	}
 	if s := os.Getenv(envPassword); len(s) > 0 {
 		c.Password = s
+	}
+	if s := os.Getenv(envBaseURL); len(s) > 0 {
+		c.BaseURL = s
 	}
 	if s := os.Getenv(envDbType); len(s) > 0 {
 		c.Db.Type = s

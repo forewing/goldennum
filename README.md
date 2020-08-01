@@ -28,10 +28,12 @@ go build
 ### Run
 
 ```
-./goldennum -h                   
+./goldennum -h
 Usage of ./goldennum:
   -admin string
         Admin username. (default "admin")
+  -base-url string
+        Base URL. If you are using reverse proxy to redirect "//PUBLIC_HOST/PREFIX/uri" to "//REAL_HOST/url", it should be set to "/PREFIX"
   -bind string
         Bind address. (default "0.0.0.0:8080")
   -conf string
@@ -67,3 +69,7 @@ Usage of ./goldennum:
 ## API
 
 TODO
+
+## Development Guide
+
+- When `conf.Debug` is set to `true`, and the program can access `./templates` & `./statics`, it will live reload those files.

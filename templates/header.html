@@ -1,0 +1,13 @@
+{{ define "header.html" }}
+<meta charset="utf-8" />
+<meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, shrink-to-fit=yes">
+<link rel="icon" type="image/x-icon" href='{{ template "base_url" . }}/statics/favicon.ico' />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/open-iconic@1.1.1/font/css/open-iconic-bootstrap.min.css">
+<link rel="stylesheet" href='{{ template "base_url" . }}/statics/main.css'>
+<script>
+    const BASE_URL = `{{ template "base_url" . }}`;
+</script>
+<script src='{{ template "base_url" . }}/statics/common.js'></script>
+{{ end }}

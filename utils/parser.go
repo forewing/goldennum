@@ -12,7 +12,7 @@ func ParseInt64FromParamOrErr(c *gin.Context, key string, caller string) (int64,
 	num, err := strconv.ParseInt(c.Param(key), 10, 0)
 	if err != nil {
 		log.Printf("Info: [utils] %v-ParseInt64FromParamOrErr, %v\n", caller, err)
-		c.String(http.StatusBadRequest, err.Error())
+		c.JSON(http.StatusBadRequest, err.Error())
 		return -1, err
 	}
 	return num, nil

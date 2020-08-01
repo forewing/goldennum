@@ -25,7 +25,7 @@ var (
 
 	sqliteMaxOpenConns    = 1
 	sqliteMaxIdleConns    = 1
-	sqliteConnMaxLifetime = time.Hour * 1
+	sqliteConnMaxLifetime = time.Second * -1
 )
 
 const (

@@ -16,7 +16,7 @@ type User struct {
 	DeletedAt *time.Time `sql:"index" json:"-"`
 
 	RoomID       uint
-	UserHistorys []UserHistory
+	UserHistorys []UserHistory `json:",omitempty"`
 
 	Name  string
 	Score int
@@ -29,7 +29,7 @@ type User struct {
 
 // UserHistory holds user history
 type UserHistory struct {
-	ID        uint       `gorm:"primary_key"`
+	ID        uint       `gorm:"primary_key" json:"-"`
 	CreatedAt time.Time  `json:"-"`
 	DeletedAt *time.Time `sql:"index" json:"-"`
 
@@ -111,13 +111,6 @@ func UserNew(roomid uint, name, pass string) (*User, error) {
 		Score:  0,
 	}
 	return &user, nil
-}
-
-// FilterInfo delete secret info
-func (u *User) FilterInfo(secret bool) {
-	if !secret {
-		u.Hashed = ""
-	}
 }
 
 // GetHistory return user's history

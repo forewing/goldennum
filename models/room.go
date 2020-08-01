@@ -15,7 +15,7 @@ type Room struct {
 	DeletedAt *time.Time `sql:"index" json:"-"`
 
 	Users        []User
-	RoomHistorys []RoomHistory
+	RoomHistorys []RoomHistory `json:",omitempty"`
 
 	Interval   int
 	RoundNow   int
@@ -24,7 +24,7 @@ type Room struct {
 
 // RoomHistory holds room history
 type RoomHistory struct {
-	ID        uint       `gorm:"primary_key"`
+	ID        uint       `gorm:"primary_key" json:"-"`
 	CreatedAt time.Time  `json:"-"`
 	DeletedAt *time.Time `sql:"index" json:"-"`
 
@@ -124,18 +124,10 @@ func (r *Room) String() string {
 }
 
 // GetUsers return room's users
-func (r *Room) GetUsers(secret bool) (users []User) {
+func (r *Room) GetUsers() (users []User) {
 	if result := Db.Model(r).Related(&users); result.Error != nil {
 		log.Printf("Error: [models] *Room.GetUsers, %v\n", result.Error)
-		return
 	}
-
-	if !secret {
-		for i := range users {
-			users[i].FilterInfo(false)
-		}
-	}
-
 	return
 }
 

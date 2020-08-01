@@ -2,6 +2,7 @@ debug: true
 bind: "localhost:8080"
 admin: "admin"
 password: "password"
+base_url:
 
 db:
   type: "sqlite3"

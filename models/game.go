@@ -42,7 +42,7 @@ func (r *Room) tick() bool {
 		return false
 	}
 
-	userAll := r.GetUsers(true)
+	userAll := r.GetUsers()
 	var users []*User
 	for i := range userAll {
 		userAll[i].Submit1 = userSubmitInvalid

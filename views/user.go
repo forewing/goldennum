@@ -75,7 +75,7 @@ func UserInfo(c *gin.Context) {
 	if err != nil {
 		return
 	}
-	user.FilterInfo(false)
+	// if user.Auth()
 	user.UserHistorys = user.GetHistory()
 	c.JSON(http.StatusOK, user)
 }

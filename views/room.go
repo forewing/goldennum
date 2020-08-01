@@ -81,7 +81,7 @@ func RoomInfo(c *gin.Context) {
 	if err != nil {
 		return
 	}
-	room.Users = room.GetUsers(false)
+	room.Users = room.GetUsers()
 	room.RoomHistorys = room.GetHistory()
 	c.JSON(http.StatusOK, room)
 }

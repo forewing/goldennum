@@ -113,13 +113,6 @@ func UserNew(roomid uint, name, pass string) (*User, error) {
 	return &user, nil
 }
 
-// FilterInfo delete secret info
-func (u *User) FilterInfo(secret bool) {
-	if !secret {
-		u.Hashed = ""
-	}
-}
-
 // GetHistory return user's history
 func (u *User) GetHistory() (history []UserHistory) {
 	if result := Db.Model(u).Related(&history); result.Error != nil {

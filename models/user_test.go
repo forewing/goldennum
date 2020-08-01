@@ -153,33 +153,6 @@ func TestUserNew(t *testing.T) {
 	}
 }
 
-func TestUserFilterInfo(t *testing.T) {
-	tests := []struct {
-		u0     User
-		ut     User
-		secret bool
-	}{
-		{
-			User{Hashed: "string"},
-			User{Hashed: "string"},
-			true,
-		},
-		{
-			User{Hashed: "string"},
-			User{Hashed: ""},
-			false,
-		},
-	}
-
-	for _, test := range tests {
-		saved := test.u0
-		test.u0.FilterInfo(test.secret)
-		if test.u0.Hashed != test.ut.Hashed {
-			t.Errorf("%+v.FilterInfo(%v) = %+v; expected: %+v", saved, test.secret, test.u0, test.ut)
-		}
-	}
-}
-
 func TestUserGetHistory(t *testing.T) {
 	r := testNewRoom(t, 10, 10)
 	u := testNewUser(t, r.ID, 10, 1.1, 2.2)

@@ -5,6 +5,7 @@ const URL_ROOM_SYNC = BASE_URL + "/sync/"
 const URL_USER_CREATE = BASE_URL + "/users/"
 const URL_USER_INFO = BASE_URL + "/user/"
 const URL_USER_SUBMIT = BASE_URL + "/user/"
+const URL_USER_AUTH = BASE_URL + "/user/"
 
 function jsonResponseHandler(response) {
     if (!response.ok) {
@@ -17,6 +18,17 @@ async function fetchPostData(url, data) {
     const response = await fetch(url, {
         body: JSON.stringify(data),
         method: 'POST',
+        headers: new Headers({
+            'Content-Type': 'application/json'
+        }),
+    });
+    return jsonResponseHandler(response);
+}
+
+async function fetchPutData(url, data) {
+    const response = await fetch(url, {
+        body: JSON.stringify(data),
+        method: 'PUT',
         headers: new Headers({
             'Content-Type': 'application/json'
         }),
@@ -59,5 +71,11 @@ function postUserSubmit(userId, password, submit1, submit2) {
         Password: String(password),
         Submit1: parseFloat(submit1),
         Submit2: parseFloat(submit2),
+    })
+}
+
+function putUserAuth(userId, password) {
+    return fetchPutData(URL_USER_AUTH + parseInt(userId), {
+        Password: String(password)
     })
 }

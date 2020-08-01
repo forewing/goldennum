@@ -118,3 +118,31 @@ func UserSubmit(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, "")
 }
+
+type userAuthModel struct {
+	Password string `json:"Password" binding:"required"`
+}
+
+// UserAuth check user credential
+func UserAuth(c *gin.Context) {
+	userid, err := utils.ParseInt64FromParamOrErr(c, "userid", "UserAuth")
+	if err != nil {
+		return
+	}
+	user, err := getUserByIDOrErr(userid, c, "UserAuth")
+	if err != nil {
+		return
+	}
+	var data userAuthModel
+	if err := c.BindJSON(&data); err != nil {
+		log.Printf("Info: [views] UserAuth, %v\n", err)
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+	if err := user.Auth(data.Password); err != nil {
+		log.Printf("Info: [views] UserAuth, auth: %v\n", err)
+		c.JSON(http.StatusUnauthorized, "")
+		return
+	}
+	c.JSON(http.StatusOK, "")
+}

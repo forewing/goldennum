@@ -68,6 +68,7 @@ func main() {
 		r.POST("/users/:roomid", views.UserCreate)
 		r.GET("/user/:userid", views.UserInfo)
 		r.POST("/user/:userid", views.UserSubmit)
+		r.PUT("/user/:userid", views.UserAuth)
 	}
 
 	// admin API

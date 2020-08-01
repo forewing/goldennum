@@ -1,4 +1,4 @@
-const KEY_ROOM_ID = "roomId";
+const KEY_SAVED_ROOM_ID = "savedRoomId";
 const URL_ROOM_LIST = BASE_URL + "/rooms/"
 const URL_ROOM_INFO = BASE_URL + "/room/"
 const URL_ROOM_SYNC = BASE_URL + "/sync/"

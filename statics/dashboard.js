@@ -3,6 +3,13 @@ Vue.component('dashboard', {
     template: "#dashboard-component",
     data: function () {
         return {
+            data: null,
+            roomId: 1,
+            intervalId: null,
+            startStopButtonText: "Start",
+            nextTick: Date.now(),
+            countDown: 0,
+            historyLength: 0,
             roomHistoryCtx: null,
             roomHistoryChart: null,
             roomHistoryData: {
@@ -19,6 +26,10 @@ Vue.component('dashboard', {
                     }]
                 },
                 options: {
+                    animation: {
+                        duration: 750,
+                        easing: 'easeOutBounce',
+                    },
                     legend: false,
                     responsive: true,
                     title: {
@@ -103,13 +114,59 @@ Vue.component('dashboard', {
         }
     },
     methods: {
-        refreshRoomAction() {
-            localStorage.setItem(KEY_ROOM_ID, 1);
-            const roomId = localStorage.getItem(KEY_ROOM_ID);
-            if (!roomId) {
+        updateRoomId(id) {
+            this.roomId = id;
+            this.refreshWorker();
+        },
+        updateHistoryLength(len) {
+            this.historyLength = len;
+            this.refreshRoom(this.data.RoomHistorys);
+        },
+        refreshTimeOut() {
+            if (this.nextTick > Date.now()) {
+                this.countDown = parseInt((this.nextTick - Date.now()) / 1000);
+            } else {
+                this.countDown = 0;
+            }
+            setTimeout(this.refreshTimeOut, 1000);
+        },
+        setTimeout(func, timeout) {
+            this.startStopButtonText = "Stop";
+            this.intervalId = setTimeout(func, timeout);
+            this.nextTick = Date.now() + timeout;
+        },
+        clearTimeout() {
+            this.startStopButtonText = "Start";
+            clearInterval(this.intervalId);
+            this.intervalId = null;
+        },
+        toggleRefresh() {
+            if (this.intervalId == null) {
+                this.setTimeout(this.syncRefresh, 100);
+                return;
+            }
+            clearInterval(this.intervalId);
+            this.clearTimeout();
+        },
+        syncRefresh() {
+            if (this.intervalId == null) {
+                return;
+            }
+            this.refreshWorker();
+            getRoomSync(this.roomId).then(data => {
+                const time = parseInt(data) + 1;
+                this.setTimeout(this.syncRefresh, time * 1000);
+            }).catch(error => {
+                this.setTimeout(this.syncRefresh, 5000);
+            })
+        },
+        refreshWorker() {
+            const roomId = parseInt(this.roomId);
+            if (typeof (roomId) != "number" || roomId <= 0) {
                 return;
             }
             getRoomInfo(roomId).then(data => {
+                this.data = data;
                 this.refreshRoom(data.RoomHistorys);
                 this.refreshUser(data.Users);
             }).catch(error => {
@@ -123,7 +180,15 @@ Vue.component('dashboard', {
             this.roomHistoryChart.data.labels = [];
             this.roomHistoryChart.data.datasets[0].data = [];
             data.sort((a, b) => a.Round - b.Round);
-            for (const history of data) {
+            let leftBound = 0;
+            let rightBound = data.length;
+            if (this.historyLength > 0) {
+                leftBound = rightBound - this.historyLength;
+            }
+            if (leftBound < 0) {
+                leftBound = 0;
+            }
+            for (const history of data.slice(leftBound, rightBound)) {
                 if (history.Round == null || history.GoldenNum == null) {
                     continue;
                 }
@@ -162,6 +227,12 @@ Vue.component('dashboard', {
         this.roomHistoryChart = new Chart(this.roomHistoryCtx, this.roomHistoryData);
         this.userRankCtx = this.$refs.userRank.getContext('2d');
         this.userRankChart = new Chart(this.userRankCtx, this.userRankData);
+        let savedRoomId = parseInt(localStorage.getItem(KEY_SAVED_ROOM_ID));
+        if (savedRoomId > 0) {
+            this.roomId = savedRoomId
+        }
         this.updateUserChartSize();
+        this.toggleRefresh();
+        this.refreshTimeOut();
     },
 })

@@ -4,6 +4,8 @@ var app = new Vue({
 
     },
     methods: {
-
+        updateDashboardRoomId(id) {
+            this.$refs.panelDashboard.updateRoomId(id);
+        },
     }
 })

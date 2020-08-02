@@ -3,6 +3,14 @@
 [![CI](https://github.com/forewing/goldennum/workflows/CI/badge.svg)](https://github.com/forewing/goldennum/actions?query=workflow%3ACI)
 [![Docker](https://github.com/forewing/goldennum/workflows/Docker/badge.svg)](https://hub.docker.com/r/forewing/goldennum)
 
+## Ideas
+
+[MSRA News: Golden Number Game](https://www.msra.cn/zh-cn/news/features/golden-number-game)
+
+## Rules
+
+There are N players, begin a competition round of Goldennum. Every round, every player submits 2 float numbers in the open interval (0, 100) to the server. At the end of the round, the server will calculate the average of the numbers submitted during this round as AVG. Then the Goldennum of the round is calculated as AVG * 0.618. For every submitted number, if it is the closest number to the Goldennum, the submitter gets N-2 points, if it is the furthest number from the Goldennum, the submitter gets -2 points, otherwise, the submitter gets no points. After the rounds ends, player with the most points wins the game.
+
 ## Preview
 
 ![preview](https://github.com/forewing/images/raw/master/goldennum-desktop.png)
@@ -75,3 +83,9 @@ TODO
 ## Development Guide
 
 - When `conf.Debug` is set to `true`, and the program can access `./templates` & `./statics`, it will live reload those files.
+
+## Thanks
+
+- [Nanjing University Microsoft Student Club](https://github.com/njumsc) for sending me to MSC Summer Camp, 2018, where I met the game.
+
+- [Zhanglv0413](https://github.com/Zhanglv0413) for designing the [logo](./statics/favicon.ico).

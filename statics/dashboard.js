@@ -9,6 +9,7 @@ Vue.component('dashboard', {
             startStopButtonText: "Start",
             nextTick: Date.now(),
             countDown: 0,
+            errorMessage: "",
             historyLength: 0,
             roomHistoryCtx: null,
             roomHistoryChart: null,
@@ -166,12 +167,24 @@ Vue.component('dashboard', {
                 return;
             }
             getRoomInfo(roomId).then(data => {
+                this.errorMessage = "";
                 this.data = data;
+                this.saveUserScores(data.Users);
                 this.refreshRoom(data.RoomHistorys);
                 this.refreshUser(data.Users);
             }).catch(error => {
+                this.errorMessage = error.error;
+                error.data.then(data => this.errorMessage += data.length > 0 ? ", " + data : "")
                 console.error(error);
             });
+        },
+        saveUserScores(data) {
+            for (const user of data) {
+                if (user.ID == null || user.Score == null) {
+                    continue;
+                }
+                localStorage.setItem(KEY_USER_SCORE_PREFIX + user.ID, user.Score);
+            }
         },
         refreshRoom(data) {
             if (!data) {
@@ -227,10 +240,7 @@ Vue.component('dashboard', {
         this.roomHistoryChart = new Chart(this.roomHistoryCtx, this.roomHistoryData);
         this.userRankCtx = this.$refs.userRank.getContext('2d');
         this.userRankChart = new Chart(this.userRankCtx, this.userRankData);
-        let savedRoomId = parseInt(localStorage.getItem(KEY_SAVED_ROOM_ID));
-        if (savedRoomId > 0) {
-            this.roomId = savedRoomId
-        }
+        this.roomId = getSavedRoomId();
         this.updateUserChartSize();
         this.toggleRefresh();
         this.refreshTimeOut();

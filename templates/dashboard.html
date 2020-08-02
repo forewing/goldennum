@@ -3,6 +3,7 @@
 <div class="data-charts">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h2" id="dashboard">Dashboard</h1>
+        <p class="mb-0">Current Room: {{ "{{ roomId }}" }} | Next Tick: {{ "{{ countDown }}" }}s</p>
         <div class="btn-toolbar mb-2 mb-md-0">
             <div class="btn-group mr-2">
                 <button class="btn btn-sm btn-outline-secondary" v-on:click="toggleRefresh">{{ "{{ startStopButtonText }}" }}</button>
@@ -24,8 +25,7 @@
             </div>
         </div>
     </div>
-    <p>Current Room: {{ "{{ roomId }}" }}</p>
-    <p>Next Tick: {{ "{{ countDown }}" }}s</p>
+    <p class="text-danger">{{ "{{ errorMessage }}" }}</p>
     <div class="row">
         <div class="col">
             <div style="width:100%;">

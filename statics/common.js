@@ -1,4 +1,27 @@
-const KEY_SAVED_ROOM_ID = "savedRoomId";
+const KEY_SAVED_ROOM_ID = "SAVED_ROOM_ID";
+const KEY_SAVED_USER_ID = "SAVED_USER_ID";
+const KEY_SAVED_PASSWORD = "SAVED_PASSWORD";
+const KEY_SAVED_SIGNED_IN = "SAVED_SIGNED_IN";
+const KEY_USER_SCORE_PREFIX = "USER_SCORE_";
+
+function getSavedRoomId() {
+    let savedRoomId = parseInt(localStorage.getItem(KEY_SAVED_ROOM_ID));
+    if (savedRoomId > 0) {
+        return savedRoomId;
+    }
+    console.error(`getSavedRoomId invalid: ${savedRoomId}`);
+    return 1;
+}
+
+function setSavedRoomId(id) {
+    if (parseInt(id) > 0) {
+        localStorage.setItem(KEY_SAVED_ROOM_ID, id);
+        return true;
+    }
+    console.error(`setSavedRoomId invalid: ${id}`)
+    return false;
+}
+
 const URL_ROOM_LIST = BASE_URL + "/rooms/"
 const URL_ROOM_INFO = BASE_URL + "/room/"
 const URL_ROOM_SYNC = BASE_URL + "/sync/"
@@ -9,7 +32,10 @@ const URL_USER_AUTH = BASE_URL + "/user/"
 
 function jsonResponseHandler(response) {
     if (!response.ok) {
-        throw Error(response.statusText)
+        throw {
+            error: response.statusText,
+            data: response.json(),
+        }
     }
     return response.json()
 }

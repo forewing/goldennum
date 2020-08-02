@@ -1,5 +1,6 @@
 body {
     font-size: .875rem;
+    padding-top: 80px;
     padding-bottom: 100px;
 }
 
@@ -55,7 +56,7 @@ body {
    */
 
 [role="main"] {
-    padding-top: 80px;
+    padding-top: 0px;
     /* Space for fixed navbar */
 }
 

@@ -1,0 +1,66 @@
+{{ define "user_panel.html" }}
+<ul class="nav flex-column mb-0">
+    <li class="nav-item mx-1" v-if="!signedIn">
+        <div class="btn-group d-flex" role="group">
+            <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#userSignInModal"
+                v-on:click="fillSignInModal">Sign in</button>
+            <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#userSignUpModal"
+                v-on:click="fillSignUpModal">Sign up</button>
+        </div>
+    </li>
+    <div v-if="signedIn">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col" colspan="2">USER INFO</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">ID</th>
+                    <td>{{ "{{ userId }}" }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Name</th>
+                    <td>{{ "{{ userName }}" }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Score</th>
+                    <td>{{ "{{ userScore }}" }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <li class="nav-item mx-1">
+            <button type="button" class="btn btn-outline-danger btn-block" v-on:click="signOut">Sign out</button>
+        </li>
+    </div>
+</ul>
+<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1">
+    <span>Room</span>
+</h6>
+<div class="input-group mb-3 px-auto">
+    <input type="number" min="0" class="form-control ml-1" placeholder="Room ID" v-model="inputRoomId">
+    <div class="input-group-append mr-1">
+        <button class="btn btn-outline-secondary" type="button" v-on:click='updateRoomId(null)'>Set</button>
+    </div>
+</div>
+<div v-if="signedIn">
+    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1">
+        <span>Submit</span>
+    </h6>
+    <ul class="nav flex-column mb-2">
+        <li class="nav-item mx-1">
+            <input type="number" min="0" max="100" class="form-control" placeholder="Submit 1" v-model="submitInput1">
+        </li>
+        <li class="nav-item mx-1 mb-2">
+            <input type="number" min="0" max="100" class="form-control" placeholder="Submit 2" v-model="submitInput2">
+        </li>
+        <li class="nav-item mx-1 mb-2">
+            <button type="button" class="btn btn-outline-success btn-block" v-on:click="submitUserInput">Submit</button>
+        </li>
+        <li class="nav-item mb-2 mx-2 text-danger" v-for="error in errorMessages">
+            {{ "{{ error }}" }}
+        </li>
+    </ul>
+</div>
+{{ end }}

@@ -19,8 +19,21 @@
 		<div class="container-fluid">
 			<div class="row">
 				<nav class="col-md-2 d-none d-md-block bg-light sidebar">
-					{{ template "user_sidebar.html" . }}
+					<div class="sidebar-sticky">
+						<h4 class="d-flex justify-content-between align-items-center px-2 mt-4 mb-2">
+							<span>Control Panel</span>
+						</h4>
+						{{ template "user_panel.html" . }}
+					</div>
 				</nav>
+				<div class="d-md-none col">
+					<div class="card">
+						<h3 class="card-title pt-3 pl-4 mb-2">Control Panel</h3>
+						<div class=" card-body">
+							{{ template "user_panel.html" . }}
+						</div>
+					</div>
+				</div>
 				<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
 					<dashboard ref="panelDashboard"></dashboard>
 				</main>

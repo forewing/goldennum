@@ -14,10 +14,12 @@ import (
 const (
 	templateBaseURL = "base_url"
 
-	templateHeader = "header.html"
-	templateFooter = "footer.html"
-	templateNavbar = "navbar.html"
-	templateIndex  = "index.html"
+	templateHeader      = "header.html"
+	templateFooter      = "footer.html"
+	templateNavbar      = "navbar.html"
+	templateIndex       = "index.html"
+	templateUserSidebar = "user_sidebar.html"
+	templateUserModals  = "user_modals.html"
 
 	componentDashboard = "dashboard.html"
 )
@@ -30,6 +32,7 @@ var (
 		templateFooter,
 		templateNavbar,
 		templateIndex,
+		templateUserSidebar,
 
 		componentDashboard,
 	}

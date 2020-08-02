@@ -15,33 +15,11 @@
 	{{ template "navbar.html" . }}
 
 	<div id="app">
+		{{ template "user_modals.html" . }}
 		<div class="container-fluid">
 			<div class="row">
 				<nav class="col-md-2 d-none d-md-block bg-light sidebar">
-					<div class="sidebar-sticky">
-						<ul class="nav flex-column">
-							<li class="nav-item">
-								<a class="nav-link active" href="#dashboard">
-									Dashboard
-								</a>
-							</li>
-						</ul>
-						<h6
-							class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-							<span>Panel</span>
-						</h6>
-						<ul class="nav flex-column mb-2">
-							<li class="nav-item">
-								<a class="nav-link" href="#" v-on:click="updateDashboardRoomId(null)">
-									Change Room ID (for development only now)
-								</a>
-							</li>
-							<li class="nav-item">
-								<input ref="tempRoomIdInput" class="form-control" type="text" placeholder="Room ID"
-									aria-label="RoomId">
-							</li>
-						</ul>
-					</div>
+					{{ template "user_sidebar.html" . }}
 				</nav>
 				<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
 					<dashboard ref="panelDashboard"></dashboard>

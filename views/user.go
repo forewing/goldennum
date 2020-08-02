@@ -147,5 +147,5 @@ func UserAuth(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, "")
 		return
 	}
-	c.JSON(http.StatusOK, "")
+	c.JSON(http.StatusOK, user)
 }

@@ -2,6 +2,7 @@ const KEY_SAVED_ROOM_ID = "SAVED_ROOM_ID";
 const KEY_SAVED_USER_ID = "SAVED_USER_ID";
 const KEY_SAVED_PASSWORD = "SAVED_PASSWORD";
 const KEY_SAVED_SIGNED_IN = "SAVED_SIGNED_IN";
+const KEY_USER_SCORE_PREFIX = "USER_SCORE_";
 
 function getSavedRoomId() {
     let savedRoomId = parseInt(localStorage.getItem(KEY_SAVED_ROOM_ID));

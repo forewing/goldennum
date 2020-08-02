@@ -169,6 +169,7 @@ Vue.component('dashboard', {
             getRoomInfo(roomId).then(data => {
                 this.errorMessage = "";
                 this.data = data;
+                this.saveUserScores(data.Users);
                 this.refreshRoom(data.RoomHistorys);
                 this.refreshUser(data.Users);
             }).catch(error => {
@@ -176,6 +177,14 @@ Vue.component('dashboard', {
                 error.data.then(data => this.errorMessage += data.length > 0 ? ", " + data : "")
                 console.error(error);
             });
+        },
+        saveUserScores(data) {
+            for (const user of data) {
+                if (user.ID == null || user.Score == null) {
+                    continue;
+                }
+                localStorage.setItem(KEY_USER_SCORE_PREFIX + user.ID, user.Score);
+            }
         },
         refreshRoom(data) {
             if (!data) {

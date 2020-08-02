@@ -33,6 +33,7 @@ var (
 		templateNavbar,
 		templateIndex,
 		templateUserSidebar,
+		templateUserModals,
 
 		componentDashboard,
 	}

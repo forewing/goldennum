@@ -3,6 +3,10 @@
 [![CI](https://github.com/forewing/goldennum/workflows/CI/badge.svg)](https://github.com/forewing/goldennum/actions?query=workflow%3ACI)
 [![Docker](https://github.com/forewing/goldennum/workflows/Docker/badge.svg)](https://hub.docker.com/r/forewing/goldennum)
 
+## Preview
+
+![preview](https://github.com/forewing/images/raw/master/goldennum-desktop.png)
+
 ## Usage
 
 ### Build

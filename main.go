@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"os"
 
 	"github.com/forewing/goldennum/config"
@@ -9,6 +8,7 @@ import (
 	"github.com/forewing/goldennum/views"
 	"github.com/gin-gonic/gin"
 	"github.com/gobuffalo/packr/v2"
+	"go.uber.org/zap"
 )
 
 const (
@@ -23,6 +23,8 @@ var (
 )
 
 func main() {
+	defer setLogger()()
+
 	conf := config.Load()
 
 	models.Load()
@@ -38,7 +40,7 @@ func main() {
 
 	// pages
 	if conf.Debug && canLiveReload(templatesPath) {
-		log.Println("[main] templates use live reload")
+		zap.S().Debugf("templates use live reload")
 		r.LoadHTMLGlob(templatesPath + "/*")
 	} else {
 		t, err := views.LoadTemplate()
@@ -53,7 +55,7 @@ func main() {
 
 	// static files
 	if conf.Debug && canLiveReload(staticsPath) {
-		log.Println("[main] statics use live reload")
+		zap.S().Debugf("statics use live reload")
 		r.Static("/statics", staticsPath)
 	} else {
 		r.StaticFS("/statics", staticsBox)
@@ -96,4 +98,14 @@ func canLiveReload(path string) bool {
 		}
 	}
 	return true
+}
+
+func setLogger() func() error {
+	conf := zap.NewDevelopmentConfig()
+	logger, err := conf.Build(zap.AddStacktrace(zap.ErrorLevel))
+	if err != nil {
+		panic(err)
+	}
+	zap.ReplaceGlobals(logger)
+	return logger.Sync
 }

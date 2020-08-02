@@ -1,8 +1,9 @@
 package models
 
 import (
-	"log"
 	"math"
+
+	"go.uber.org/zap"
 )
 
 const (
@@ -60,7 +61,7 @@ func (r *Room) tick() bool {
 
 	userNum := len(users)
 	if userNum < tickMinUserCount {
-		log.Printf("Info: [models] *Room.tick, no enough valid users, %v, len: %v\n", r.String(), userNum)
+		zap.S().Warnf("*Room.tick, no enough valid users, %v, len: %v", r.String(), userNum)
 		return false
 	}
 
@@ -104,13 +105,13 @@ func (r *Room) tick() bool {
 
 	for _, user := range users {
 		if err := Db.Save(user).Error; err != nil {
-			log.Printf("Error: [models] *Room.tick, fail to save user, %v\n", user.String())
+			zap.S().Errorf("*Room.tick, fail to save user: %v", user.String())
 		}
 	}
 
 	for _, history := range userHistorys {
 		if err := Db.Save(history).Error; err != nil {
-			log.Printf("Error: [models] *Room.tick, fail to save userHistory, %+v\n", *history)
+			zap.S().Errorf("*Room.tick, fail to save userHistory, %+v", *history)
 		}
 	}
 
@@ -121,10 +122,10 @@ func (r *Room) tick() bool {
 	}
 
 	if err := Db.Save(&roomHistory).Error; err != nil {
-		log.Printf("Error: [models] *Room.tick, fail to save roomHistory, %+v\n", roomHistory)
+		zap.S().Errorf("*Room.tick, fail to save roomHistory, %+v", roomHistory)
 	}
 
-	log.Printf("Info: [models] *Room.tick, success, %v, len: %v, goldenNum: %v, minDiff: %v, maxDiff: %v",
+	zap.S().Infof("*Room.tick, success, %v, len: %v, goldenNum: %v, minDiff: %v, maxDiff: %v",
 		r.String(), userNum, goldenNum, minDiff, maxDiff)
 
 	return true

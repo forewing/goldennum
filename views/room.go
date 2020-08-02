@@ -2,8 +2,9 @@ package views
 
 import (
 	"fmt"
-	"log"
 	"net/http"
+
+	"go.uber.org/zap"
 
 	"github.com/forewing/goldennum/models"
 	"github.com/forewing/goldennum/utils"
@@ -18,11 +19,11 @@ type roomCreateModel struct {
 func getRoomByIDOrErr(roomid int64, c *gin.Context, caller string) (*models.Room, error) {
 	var room models.Room
 	if result := models.Db.First(&room, roomid); result.RecordNotFound() {
-		log.Printf("Info: [views] getRoomByIDOrErr, caller: %v, ID: %v, %v\n", caller, roomid, result.Error)
+		zap.S().Warnf("getRoomByIDOrErr, caller: %v, ID: %v, %v", caller, roomid, result.Error)
 		c.JSON(http.StatusNotFound, "")
 		return nil, result.Error
 	} else if result.Error != nil {
-		log.Printf("Error: [views] getRoomByIDOrErr, ID: %v, %v\n", roomid, result.Error)
+		zap.S().Errorf("getRoomByIDOrErr, ID: %v, %v", roomid, result.Error)
 		c.JSON(http.StatusInternalServerError, "")
 		return nil, result.Error
 	}
@@ -34,7 +35,7 @@ func getRoomByIDOrErr(roomid int64, c *gin.Context, caller string) (*models.Room
 func RoomCreate(c *gin.Context) {
 	var data roomCreateModel
 	if err := c.BindJSON(&data); err != nil {
-		log.Printf("Info: [views] RoomCreate, %v\n", err)
+		zap.S().Warnf("RoomCreate, %v", err)
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
@@ -45,11 +46,11 @@ func RoomCreate(c *gin.Context) {
 		RoundTotal: data.RoundTotal,
 	}
 	if err := models.Db.Create(&room).Error; err != nil {
-		log.Printf("Error: [views] RoomCreate, %v\n", err)
+		zap.S().Errorf("RoomCreate, %v", err)
 		c.JSON(http.StatusInternalServerError, "")
 		return
 	}
-	log.Printf("Info: [views] RoomCreate, create room, %+v\n", room)
+	zap.S().Infof("RoomCreate, create room, %+v", room)
 
 	room.Start()
 
@@ -63,11 +64,11 @@ func RoomCreate(c *gin.Context) {
 func RoomList(c *gin.Context) {
 	rooms := []models.Room{}
 	if err := models.Db.Find(&rooms).Error; err != nil {
-		log.Printf("Error: [views] RoomList, %v\n", err)
+		zap.S().Errorf("RoomList, %v", err)
 		c.JSON(http.StatusInternalServerError, "")
 		return
 	}
-	log.Printf("Info: [views] RoomList, len: %v\n", len(rooms))
+	zap.S().Infof("RoomList, len: %v", len(rooms))
 	c.JSON(http.StatusOK, rooms)
 }
 
@@ -129,12 +130,15 @@ func RoomUpdate(c *gin.Context) {
 func RoomSync(c *gin.Context) {
 	roomid, err := utils.ParseInt64FromParamOrErr(c, "roomid", "RoomInfo")
 	if err != nil {
+		zap.S().Warnf("RoomSync, %v", err)
 		return
 	}
 	duration, err := models.RoomUntilNextTick(uint(roomid))
 	if err != nil {
+		zap.S().Warnf("RoomSync, %v", err)
 		c.JSON(http.StatusNotFound, err.Error())
 		return
 	}
+	zap.S().Infof("RoomSync, %v", duration.String())
 	c.JSON(http.StatusOK, fmt.Sprintf("%.0f", duration.Seconds()))
 }

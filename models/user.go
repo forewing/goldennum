@@ -2,8 +2,9 @@ package models
 
 import (
 	"fmt"
-	"log"
 	"time"
+
+	"go.uber.org/zap"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -101,7 +102,7 @@ func (u *User) String() string {
 func UserNew(roomid uint, name, pass string) (*User, error) {
 	hashed, err := bcrypt.GenerateFromPassword([]byte(pass), uesrPassBcryptCost)
 	if err != nil {
-		log.Printf("Error: [models] UserNew, bcrypt: %v\n", err)
+		zap.S().Errorf("UserNew, bcrypt: %v", err)
 		return nil, err
 	}
 	user := User{
@@ -116,7 +117,7 @@ func UserNew(roomid uint, name, pass string) (*User, error) {
 // GetHistory return user's history
 func (u *User) GetHistory() (history []UserHistory) {
 	if result := Db.Model(u).Related(&history); result.Error != nil {
-		log.Printf("Error: [models] *User.GetHistory, %v\n", result.Error)
+		zap.S().Errorf("*User.GetHistory, %v", result.Error)
 	}
 	return
 }

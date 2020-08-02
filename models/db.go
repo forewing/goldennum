@@ -2,8 +2,9 @@ package models
 
 import (
 	"fmt"
-	"log"
 	"time"
+
+	"go.uber.org/zap"
 
 	"github.com/forewing/goldennum/config"
 	"github.com/jinzhu/gorm"
@@ -34,7 +35,7 @@ const (
 // Load init Db from config
 func Load() {
 	if Db != nil {
-		log.Panicln("[models] Load init twice")
+		zap.S().Panicf("load init twice")
 	}
 
 	conf := config.Load()
@@ -48,7 +49,7 @@ func Load() {
 			conf.Db.User, conf.Db.Password, conf.Db.Addr, conf.Db.DbName)
 		Db, err = gorm.Open("mysql", url)
 	default:
-		log.Println("Error: [models] Load db config not found or invalid, using ", defaultDbConfig)
+		zap.S().Errorf("load db config not found or invalid, using: %v", defaultDbConfig)
 		Db, err = gorm.Open("sqlite3", defaultDbConfig)
 	}
 

@@ -2,9 +2,10 @@ package models
 
 import (
 	"fmt"
-	"log"
 	"sync"
 	"time"
+
+	"go.uber.org/zap"
 )
 
 // Room hold user info
@@ -62,19 +63,18 @@ func (r *Room) Runner(worker *roomWorker) {
 				return
 			}
 			if r.Interval <= 0 {
-				log.Printf("Error: [models] *Room.Runner, room interval invalid: %v <= 0\n", r.Interval)
+				zap.S().Errorf("*Room.Runner, room interval invalid: %v <= 0", r.Interval)
 				r.Interval = roomIntervalDefault
 			}
 			duration := time.Duration(r.Interval) * time.Second
 			worker.nextTime = time.Now().Add(duration)
 			time.Sleep(duration)
 
-			// log.Printf("Info: [models] *Room.Runner, room tick, %v\n", r.String())
 			ok := r.tick()
 
 			var r2 Room
 			if result := Db.First(&r2, r.ID); result.Error != nil {
-				log.Printf("Error: [models] *Room.Runner, load: %v\n", result.Error)
+				zap.S().Errorf("*Room.Runner, load: %v", result.Error)
 			} else {
 				*r = r2
 			}
@@ -83,7 +83,7 @@ func (r *Room) Runner(worker *roomWorker) {
 				r.RoundNow++
 			}
 			if result := Db.Save(r); result.Error != nil {
-				log.Printf("Error: [models] *Room.Runner, save: %v\n", result.Error)
+				zap.S().Errorf("*Room.Runner, save: %v", result.Error)
 			}
 		}
 	}
@@ -95,11 +95,11 @@ func (r *Room) Start() bool {
 		ch: make(chan int),
 	}
 	if _, ok := roomWorkers.LoadOrStore(r.ID, worker); ok {
-		log.Printf("Error: [models] *Room.Start, room already open, ID: %v\n", r.ID)
+		zap.S().Errorf("*Room.Start, room already open, ID: %v", r.ID)
 		return false
 	}
 
-	log.Printf("Info: [models] *Room.Start, room open, ID: %v\n", r.ID)
+	zap.S().Infof("*Room.Start, room open, ID: %v", r.ID)
 	go r.Runner(worker)
 	return true
 }
@@ -110,11 +110,11 @@ func (r *Room) Stop() bool {
 		defer roomWorkers.Delete(r.ID)
 		if worker, ok := value.(*roomWorker); ok && worker.ch != nil {
 			close(worker.ch)
-			log.Printf("Info: [models] *Room.Stop, room stop, %v\n", r.String())
+			zap.S().Infof("*Room.Stop, room stop, %v", r.String())
 			return true
 		}
 	}
-	log.Printf("Error: [models] *Room.Stop, room already closed, ID: %v\n", r.ID)
+	zap.S().Errorf("*Room.Stop, room already closed, ID: %v", r.ID)
 	return false
 }
 
@@ -126,7 +126,7 @@ func (r *Room) String() string {
 // GetUsers return room's users
 func (r *Room) GetUsers() (users []User) {
 	if result := Db.Model(r).Related(&users); result.Error != nil {
-		log.Printf("Error: [models] *Room.GetUsers, %v\n", result.Error)
+		zap.S().Errorf("*Room.GetUsers, %v", result.Error)
 	}
 	return
 }
@@ -134,7 +134,7 @@ func (r *Room) GetUsers() (users []User) {
 // GetHistory return room's history
 func (r *Room) GetHistory() (history []RoomHistory) {
 	if result := Db.Model(r).Related(&history); result.Error != nil {
-		log.Printf("Error: [models] *Room.GetHistory, %v\n", result.Error)
+		zap.S().Errorf("*Room.GetHistory, %v", result.Error)
 	}
 	return
 }

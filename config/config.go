@@ -3,9 +3,10 @@ package config
 import (
 	"flag"
 	"io/ioutil"
-	"log"
 	"os"
 	"strconv"
+
+	"go.uber.org/zap"
 
 	"github.com/forewing/goldennum/utils"
 	"gopkg.in/yaml.v2"
@@ -94,12 +95,12 @@ func Load() *Config {
 
 	savedConfig.complete()
 	configLoaded = true
-	log.Printf("Info: [config] Load: %+v\n", savedConfig)
+	zap.S().Infof("loaded: %+v", savedConfig)
 	return &savedConfig
 }
 
 func (c *Config) loadFromFlag() {
-	log.Println("[config] loadFromFlag")
+	zap.S().Debugf("load from flag")
 
 	savedConfig = Config{
 		Debug:    *flagDebug,
@@ -119,16 +120,16 @@ func (c *Config) loadFromFlag() {
 }
 
 func (c *Config) loadFromFile(path string) {
-	log.Println("[config] loadFromFile: ", path)
+	zap.S().Debugf("load from file: %v", path)
 
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
-		log.Panicf("[config] loadFromConfig, fail to read %v: %v\n", path, err)
+		zap.S().Panicf("load from config, fail to read %v: %v", path, err)
 	}
 
 	err = yaml.Unmarshal(data, &savedConfig)
 	if err != nil {
-		log.Panicln("[config] loadFromConfig, fail to parse config: ", err)
+		zap.S().Panicf("load from config, fail to parse config: %v", err)
 	}
 }
 
@@ -137,7 +138,7 @@ func (c *Config) completeFromEnv() {
 		return
 	}
 
-	log.Println("[config] loadFromEnv")
+	zap.S().Debugf("load from environment variable")
 	if os.Getenv(envDebug) == "true" {
 		c.Debug = true
 	}

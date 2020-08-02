@@ -1,8 +1,9 @@
 package views
 
 import (
-	"log"
 	"net/http"
+
+	"go.uber.org/zap"
 
 	"github.com/forewing/goldennum/models"
 
@@ -13,11 +14,11 @@ import (
 func getUserByIDOrErr(userid int64, c *gin.Context, caller string) (*models.User, error) {
 	var user models.User
 	if result := models.Db.First(&user, userid); result.RecordNotFound() {
-		log.Printf("Info: [views] getUserByIDOrErr, caller: %v, ID: %v, %v\n", caller, userid, result.Error)
+		zap.S().Warnf("getUserByIDOrErr, caller: %v, ID: %v, %v", caller, userid, result.Error)
 		c.JSON(http.StatusNotFound, "")
 		return nil, result.Error
 	} else if result.Error != nil {
-		log.Printf("Error: [views] getUserByIDOrErr, ID: %v, %v\n", userid, result.Error)
+		zap.S().Errorf("getUserByIDOrErr, ID: %v, %v", userid, result.Error)
 		c.JSON(http.StatusInternalServerError, "")
 		return nil, result.Error
 	}
@@ -34,16 +35,16 @@ type userCreateModel struct {
 func UserCreate(c *gin.Context) {
 	var data userCreateModel
 	if err := c.BindJSON(&data); err != nil {
-		log.Printf("Info: [views] UserCreate, %v\n", err)
+		zap.S().Warnf("UserCreate, %v", err)
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
 	if !models.UserNameValidate(data.Username) {
-		log.Printf("Info: [views] UserCreate, invalid username: %v\n", data.Username)
+		zap.S().Warnf("UserCreate, invalid username: %v", data.Username)
 		c.JSON(http.StatusBadRequest, "invalid username")
 	}
 	if !models.UserPassValidate(data.Password) {
-		log.Printf("Info: [views] UserCreate, invalid password, len: %v\n", len(data.Password))
+		zap.S().Warnf("UserCreate, invalid password, len: %v", len(data.Password))
 		c.JSON(http.StatusBadRequest, "invalid password")
 	}
 
@@ -98,24 +99,26 @@ func UserSubmit(c *gin.Context) {
 	}
 	var data userSubmitModel
 	if err := c.BindJSON(&data); err != nil {
-		log.Printf("Info: [views] UserSubmit, %v\n", err)
+		zap.S().Warnf("UserSubmit, %v", err)
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
 	if err := user.Auth(data.Password); err != nil {
-		log.Printf("Info: [views] UserSubmit, auth: %v\n", err)
+		zap.S().Warnf("UserSubmit, auth: %v", err)
 		c.JSON(http.StatusUnauthorized, "")
 		return
 	}
 	if !models.UserSubmitValidate(data.Submit1) || !models.UserSubmitValidate(data.Submit2) {
-		log.Printf("Info: [views] UserSubmit, submit: %v, %v\n", data.Submit1, data.Submit2)
+		zap.S().Warnf("UserSubmit, submit: %v, %v", data.Submit1, data.Submit2)
 		c.JSON(http.StatusBadRequest, "")
 		return
 	}
 	if err := user.Submit(data.Submit1, data.Submit2); err != nil {
+		zap.S().Warnf("UserSubmit, submit: %v", err)
 		c.JSON(http.StatusNotFound, err.Error())
 		return
 	}
+	zap.S().Infof("UserSubmit, %v, %v", data.Submit1, data.Submit2)
 	c.JSON(http.StatusOK, "")
 }
 
@@ -135,12 +138,12 @@ func UserAuth(c *gin.Context) {
 	}
 	var data userAuthModel
 	if err := c.BindJSON(&data); err != nil {
-		log.Printf("Info: [views] UserAuth, %v\n", err)
+		zap.S().Warnf("UserAuth, %v", err)
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
 	if err := user.Auth(data.Password); err != nil {
-		log.Printf("Info: [views] UserAuth, auth: %v\n", err)
+		zap.S().Warnf("UserAuth, auth: %v", err)
 		c.JSON(http.StatusUnauthorized, "")
 		return
 	}

@@ -2,8 +2,9 @@ version: '3'
 
 services:
   server:
-    build: .
-    command: bash -c 'while !</dev/tcp/db/3306; do sleep 1; done; /app/goldennum'
+    # build: .
+    image: forewing/goldennum
+    command: ""
     env_file:
       .env
     ports:
@@ -23,5 +24,5 @@ services:
       - MYSQL_PASSWORD=goldennum
       - MYSQL_DATABASE=goldennum
     restart: unless-stopped
-    #ports:
+    # ports:
     #  - 3306:3306

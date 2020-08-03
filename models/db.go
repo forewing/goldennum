@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	"net"
 	"time"
 
 	"go.uber.org/zap"
@@ -17,6 +18,9 @@ import (
 var (
 	// Db saves database
 	Db *gorm.DB
+
+	dbRetryTime = time.Second * 1
+	dbMaxRetry  = 120
 
 	mySQLMaxOpenConns    = 150
 	mySQLMaxIdlePrec     = 0.25
@@ -45,6 +49,7 @@ func Load() {
 	case "sqlite3":
 		Db, err = gorm.Open("sqlite3", conf.Db.Path)
 	case "mysql":
+		waitDatabase(conf.Db.Addr)
 		url := fmt.Sprintf("%v:%v@(%v)/%v?charset=utf8mb4&parseTime=True&loc=Local",
 			conf.Db.User, conf.Db.Password, conf.Db.Addr, conf.Db.DbName)
 		Db, err = gorm.Open("mysql", url)
@@ -81,4 +86,23 @@ func Load() {
 // Close Db
 func Close() {
 	Db.Close()
+}
+
+func waitDatabase(addr string) {
+	dial := func() bool {
+		conn, err := net.Dial("tcp", addr)
+		if err != nil {
+			return false
+		}
+		conn.Close()
+		return true
+	}
+	for i := 0; i < dbMaxRetry; i++ {
+		if dial() {
+			return
+		}
+		zap.S().Warnf("database %v down, retrying %v/%v", addr, i, dbMaxRetry)
+		time.Sleep(dbRetryTime)
+	}
+	zap.S().Panicf("database %v still down after %v retries", dbMaxRetry)
 }

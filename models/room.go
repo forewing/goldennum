@@ -96,6 +96,19 @@ func (r *Room) Runner(worker *roomWorker) {
 	}
 }
 
+// RestartAllRooms restart all not disabled rooms
+func RestartAllRooms() {
+	rooms := []Room{}
+	Db.Not("Status", roomStatusDisabled).Find(&rooms)
+	for _, room := range rooms {
+		if room.RoundNow >= room.RoundTotal {
+			continue
+		}
+		zap.S().Infof("RestartAll restarting room: %v", room.String())
+		room.Start()
+	}
+}
+
 // Start the room
 func (r *Room) Start() bool {
 	Db.Model(r).Update("Status", roomStatusDefault)

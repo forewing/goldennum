@@ -8,6 +8,11 @@ import (
 	"go.uber.org/zap"
 )
 
+const (
+	roomStatusDefault  = 0
+	roomStatusDisabled = 1
+)
+
 // Room hold user info
 type Room struct {
 	ID        uint       `gorm:"primary_key"`
@@ -21,6 +26,8 @@ type Room struct {
 	Interval   int
 	RoundNow   int
 	RoundTotal int
+
+	Status int
 }
 
 // RoomHistory holds room history
@@ -91,6 +98,7 @@ func (r *Room) Runner(worker *roomWorker) {
 
 // Start the room
 func (r *Room) Start() bool {
+	Db.Model(r).Update("Status", roomStatusDefault)
 	worker := &roomWorker{
 		ch: make(chan int),
 	}
@@ -106,6 +114,7 @@ func (r *Room) Start() bool {
 
 // Stop the room
 func (r *Room) Stop() bool {
+	Db.Model(r).Update("Status", roomStatusDisabled)
 	if value, ok := roomWorkers.Load(r.ID); ok {
 		defer roomWorkers.Delete(r.ID)
 		if worker, ok := value.(*roomWorker); ok && worker.ch != nil {

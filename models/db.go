@@ -65,11 +65,6 @@ func Load() {
 	Db.DB().SetMaxOpenConns(mySQLMaxOpenConns)
 	Db.DB().SetMaxIdleConns(int(float64(mySQLMaxOpenConns) * mySQLMaxIdlePrec))
 	Db.DB().SetConnMaxLifetime(mySQLConnMaxLifetime)
-	if conf.Db.Type == "sqlite3" {
-		Db.DB().SetMaxOpenConns(sqliteMaxOpenConns)
-		Db.DB().SetMaxIdleConns(sqliteMaxIdleConns)
-		Db.DB().SetConnMaxLifetime(sqliteConnMaxLifetime)
-	}
 	if conf.Db.MaxConns > 0 {
 		Db.DB().SetMaxOpenConns(conf.Db.MaxConns)
 	}
@@ -78,6 +73,11 @@ func Load() {
 	}
 	if conf.Db.ConnLife > 0 {
 		Db.DB().SetConnMaxLifetime(time.Second * time.Duration(conf.Db.ConnLife))
+	}
+	if conf.Db.Type == "sqlite3" {
+		Db.DB().SetMaxOpenConns(sqliteMaxOpenConns)
+		Db.DB().SetMaxIdleConns(sqliteMaxIdleConns)
+		Db.DB().SetConnMaxLifetime(sqliteConnMaxLifetime)
 	}
 
 	Db.AutoMigrate(&User{}, &UserHistory{}, &Room{}, &RoomHistory{})

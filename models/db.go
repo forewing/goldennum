@@ -81,6 +81,7 @@ func Load() {
 	}
 
 	Db.AutoMigrate(&User{}, &UserHistory{}, &Room{}, &RoomHistory{})
+	RestartAllRooms()
 }
 
 // Close Db

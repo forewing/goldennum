@@ -10,12 +10,10 @@ RUN ./build.sh
 
 FROM alpine:3
 RUN apk add --no-cache \
-    bash \
     dumb-init
 
 WORKDIR /app
 COPY --from=builder /build/output /app/
 
 EXPOSE 8080
-ENTRYPOINT [ "dumb-init", "--" ]
-CMD ["/app/goldennum"]
+ENTRYPOINT [ "dumb-init", "--", "/app/goldennum" ]

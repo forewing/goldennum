@@ -120,6 +120,9 @@ func (r *Room) tick() bool {
 		Round:     r.RoundNow,
 		GoldenNum: goldenNum,
 	}
+	worker.historyLock.Lock()
+	defer worker.historyLock.Unlock()
+	worker.savedHistorys.Store([]RoomHistory{})
 
 	if err := Db.Save(&roomHistory).Error; err != nil {
 		zap.S().Errorf("*Room.tick, fail to save roomHistory, %+v", roomHistory)

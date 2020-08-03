@@ -3,6 +3,7 @@ package models
 import (
 	"fmt"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"go.uber.org/zap"
@@ -42,10 +43,13 @@ type RoomHistory struct {
 	GoldenNum float64
 }
 
+// roomWorker must not be copy
 type roomWorker struct {
-	ch       chan int
-	nextTime time.Time
-	submit   sync.Map
+	ch            chan int
+	nextTime      time.Time
+	submit        sync.Map
+	historyLock   sync.RWMutex
+	savedHistorys atomic.Value
 }
 
 const (
@@ -164,8 +168,20 @@ func (r *Room) GetUsers() (users []User) {
 
 // GetHistory return room's history
 func (r *Room) GetHistory() (history []RoomHistory) {
+	worker := getRoomWorker(r.ID)
+	if worker != nil {
+		if historys, ok := worker.savedHistorys.Load().([]RoomHistory); ok && len(history) > 0 {
+			return historys
+		}
+	}
+	if worker != nil {
+		worker.historyLock.RLock()
+		defer worker.historyLock.RUnlock()
+	}
 	if result := Db.Model(r).Related(&history); result.Error != nil {
 		zap.S().Errorf("*Room.GetHistory, %v", result.Error)
+	} else if worker != nil {
+		worker.savedHistorys.Store(history)
 	}
 	return
 }

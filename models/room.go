@@ -56,6 +56,15 @@ var (
 	roomWorkers sync.Map
 )
 
+func getRoomWorker(id uint) (worker *roomWorker) {
+	if value, ok := roomWorkers.Load(id); ok {
+		if worker, ok := value.(*roomWorker); ok {
+			return worker
+		}
+	}
+	return nil
+}
+
 // Runner of room
 func (r *Room) Runner(worker *roomWorker) {
 	for {
@@ -163,12 +172,8 @@ func (r *Room) GetHistory() (history []RoomHistory) {
 
 // RoomUntilNextTick return time until next tick
 func RoomUntilNextTick(id uint) (time.Duration, error) {
-	if value, ok := roomWorkers.Load(id); ok {
-		if worker, ok := value.(*roomWorker); ok {
-			if !worker.nextTime.IsZero() {
-				return time.Until(worker.nextTime), nil
-			}
-		}
+	if worker := getRoomWorker(id); worker != nil && !worker.nextTime.IsZero() {
+		return time.Until(worker.nextTime), nil
 	}
 	return 0, fmt.Errorf("room %v not found or stopped", id)
 }

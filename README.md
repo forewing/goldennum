@@ -17,6 +17,12 @@ There are N players, begin a competition round of Goldennum. Every round, every 
 
 ## Usage
 
+For detail, you may refer to the wiki pages.
+
+- [Deployment Guide](https://github.com/forewing/goldennum/wiki/Deployment)
+
+- [Configuration Guide](https://github.com/forewing/goldennum/wiki/Configuration)
+
 ### Build
 
 1. Install [packr2](https://github.com/gobuffalo/packr/tree/master/v2)
@@ -78,14 +84,18 @@ Usage of ./goldennum:
 
 ## API
 
-TODO
+Players may develop their own AI/Bot to take part in the game, using the API port.
+
+[API Specification](https://github.com/forewing/goldennum/wiki/API-Spec)
 
 ## Development Guide
 
-- When `conf.Debug` is set to `true`, and the program can access `./templates` & `./statics`, it will live reload those files.
+PR welcome!
+
+[Development Guide](https://github.com/forewing/goldennum/wiki/Development-Guide)
 
 ## Thanks
 
 - [Nanjing University Microsoft Student Club](https://github.com/njumsc) for sending me to MSC Summer Camp, 2018, where I met the game.
 
-- [Zhanglv0413](https://github.com/Zhanglv0413) for designing the [logo](./statics/favicon.ico).
+- [Zhanglv0413](https://github.com/Zhanglv0413) for designing the lovely [logo](./statics/favicon.ico).

@@ -188,7 +188,7 @@ Vue.component('dashboard', {
         },
         refreshRoom(data) {
             if (!data) {
-                return;
+                data = [];
             }
             this.roomHistoryChart.data.labels = [];
             this.roomHistoryChart.data.datasets[0].data = [];
@@ -212,7 +212,7 @@ Vue.component('dashboard', {
         },
         refreshUser(data) {
             if (!data) {
-                return;
+                data = [];
             }
             this.userRankChart.data.labels = [];
             this.userRankChart.data.datasets[0].data = [];

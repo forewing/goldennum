@@ -1,6 +1,7 @@
 package views
 
 import (
+	"fmt"
 	"net/http"
 
 	"go.uber.org/zap"
@@ -15,7 +16,7 @@ func getUserByIDOrErr(userid int64, c *gin.Context, caller string) (*models.User
 	var user models.User
 	if result := models.Db.First(&user, userid); result.RecordNotFound() {
 		zap.S().Warnf("getUserByIDOrErr, caller: %v, ID: %v, %v", caller, userid, result.Error)
-		c.JSON(http.StatusNotFound, "")
+		c.JSON(http.StatusNotFound, fmt.Sprintf("User %v", userid))
 		return nil, result.Error
 	} else if result.Error != nil {
 		zap.S().Errorf("getUserByIDOrErr, ID: %v, %v", userid, result.Error)
@@ -132,14 +133,14 @@ func UserAuth(c *gin.Context) {
 	if err != nil {
 		return
 	}
-	user, err := getUserByIDOrErr(userid, c, "UserAuth")
-	if err != nil {
-		return
-	}
 	var data userAuthModel
 	if err := c.BindJSON(&data); err != nil {
 		zap.S().Warnf("UserAuth, %v", err)
 		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+	user, err := getUserByIDOrErr(userid, c, "UserAuth")
+	if err != nil {
 		return
 	}
 	if err := user.Auth(data.Password); err != nil {

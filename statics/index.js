@@ -145,10 +145,14 @@ var app = new Vue({
             this.userPassword = data;
         },
         fillSignInModal() {
+            this.signInModalErrorMessage = "";
+            this.signInModalSuccessMessage = "";
             this.signInModalUserId = localStorage.getItem(KEY_SAVED_USER_ID);
             this.signInModalPassword = localStorage.getItem(KEY_SAVED_PASSWORD);
         },
         fillSignUpModal() {
+            this.signUpModalErrorMessage = "";
+            this.signUpModalSuccessMessage = "";
             this.signUpModalRoomId = this.inputRoomId;
         },
         refreshUserScore() {

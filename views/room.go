@@ -20,7 +20,7 @@ func getRoomByIDOrErr(roomid int64, c *gin.Context, caller string) (*models.Room
 	var room models.Room
 	if result := models.Db.First(&room, roomid); result.RecordNotFound() {
 		zap.S().Warnf("getRoomByIDOrErr, caller: %v, ID: %v, %v", caller, roomid, result.Error)
-		c.JSON(http.StatusNotFound, "")
+		c.JSON(http.StatusNotFound, fmt.Sprintf("Room %v", roomid))
 		return nil, result.Error
 	} else if result.Error != nil {
 		zap.S().Errorf("getRoomByIDOrErr, ID: %v, %v", roomid, result.Error)

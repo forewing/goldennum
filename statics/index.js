@@ -2,6 +2,8 @@ var app = new Vue({
     el: '#app',
     data: {
         inputRoomId: getSavedRoomId(),
+        changeRoomErrorMessage: "",
+
         submitInput1: 0,
         submitInput2: 0,
         signedIn: false,
@@ -28,11 +30,17 @@ var app = new Vue({
             if (id == null) {
                 id = this.inputRoomId;
             }
-            if (!setSavedRoomId(id)) {
-                return;
-            }
-            this.inputRoomId = id;
-            this.$refs.panelDashboard.updateRoomId(id);
+            getRoomInfo(id).then(data => {
+                if (!setSavedRoomId(id)) {
+                    return;
+                }
+                this.inputRoomId = id;
+                this.$refs.panelDashboard.updateRoomId(id);
+                this.changeRoomErrorMessage = "";
+            }).catch(error => {
+                this.changeRoomErrorMessage = `Room ${id} not found`;
+                setTimeout(() => this.changeRoomErrorMessage = "", 3000)
+            });
         },
         submitValidator(num) {
             if (num <= 0 || num >= 100) {

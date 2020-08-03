@@ -44,6 +44,7 @@
         <button class="btn btn-outline-secondary" type="button" v-on:click='updateRoomId(null)'>Set</button>
     </div>
 </div>
+<p class="text-danger px-3">{{ "{{ changeRoomErrorMessage }}" }}</p>
 <div v-if="signedIn">
     <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1">
         <span>Submit</span>

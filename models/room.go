@@ -3,6 +3,7 @@ package models
 import (
 	"fmt"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"go.uber.org/zap"
@@ -42,10 +43,17 @@ type RoomHistory struct {
 	GoldenNum float64
 }
 
+// roomWorker must not be copy
 type roomWorker struct {
 	ch       chan int
 	nextTime time.Time
 	submit   sync.Map
+
+	historyLock   sync.RWMutex
+	savedHistorys atomic.Value // []RoomHistory
+
+	usersLock  sync.Mutex
+	savedUsers atomic.Value // []User
 }
 
 const (
@@ -55,6 +63,15 @@ const (
 var (
 	roomWorkers sync.Map
 )
+
+func getRoomWorker(id uint) (worker *roomWorker) {
+	if value, ok := roomWorkers.Load(id); ok {
+		if worker, ok := value.(*roomWorker); ok {
+			return worker
+		}
+	}
+	return nil
+}
 
 // Runner of room
 func (r *Room) Runner(worker *roomWorker) {
@@ -98,15 +115,18 @@ func (r *Room) Runner(worker *roomWorker) {
 
 // RestartAllRooms restart all not disabled rooms
 func RestartAllRooms() {
-	rooms := []Room{}
-	Db.Not("Status", roomStatusDisabled).Find(&rooms)
-	for _, room := range rooms {
-		if room.RoundNow >= room.RoundTotal {
-			continue
+	go func() {
+		rooms := []Room{}
+		Db.Not("Status", roomStatusDisabled).Find(&rooms)
+		for _, room := range rooms {
+			if room.RoundNow >= room.RoundTotal {
+				continue
+			}
+			zap.S().Infof("RestartAll restarting room: %v", room.String())
+			room.Start()
+			time.Sleep(time.Millisecond * 500)
 		}
-		zap.S().Infof("RestartAll restarting room: %v", room.String())
-		room.Start()
-	}
+	}()
 }
 
 // Start the room
@@ -121,7 +141,8 @@ func (r *Room) Start() bool {
 	}
 
 	zap.S().Infof("*Room.Start, room open, ID: %v", r.ID)
-	go r.Runner(worker)
+	r2 := *r
+	go r2.Runner(worker)
 	return true
 }
 
@@ -153,22 +174,46 @@ func (r *Room) GetUsers() (users []User) {
 	return
 }
 
+// GetUsersWithCache return room's users from room cache
+func (r *Room) GetUsersWithCache() (users []User) {
+	worker := getRoomWorker(r.ID)
+	if worker == nil {
+		return r.GetUsers()
+	}
+	if v, ok := worker.savedUsers.Load().([]User); ok {
+		return v
+	}
+	worker.usersLock.Lock()
+	defer worker.usersLock.Unlock()
+	users = r.GetUsers()
+	worker.savedUsers.Store(users)
+	return
+}
+
 // GetHistory return room's history
 func (r *Room) GetHistory() (history []RoomHistory) {
+	worker := getRoomWorker(r.ID)
+	if worker != nil {
+		if historys, ok := worker.savedHistorys.Load().([]RoomHistory); ok && len(history) > 0 {
+			return historys
+		}
+	}
+	if worker != nil {
+		worker.historyLock.RLock()
+		defer worker.historyLock.RUnlock()
+	}
 	if result := Db.Model(r).Related(&history); result.Error != nil {
 		zap.S().Errorf("*Room.GetHistory, %v", result.Error)
+	} else if worker != nil {
+		worker.savedHistorys.Store(history)
 	}
 	return
 }
 
 // RoomUntilNextTick return time until next tick
 func RoomUntilNextTick(id uint) (time.Duration, error) {
-	if value, ok := roomWorkers.Load(id); ok {
-		if worker, ok := value.(*roomWorker); ok {
-			if !worker.nextTime.IsZero() {
-				return time.Until(worker.nextTime), nil
-			}
-		}
+	if worker := getRoomWorker(id); worker != nil && !worker.nextTime.IsZero() {
+		return time.Until(worker.nextTime), nil
 	}
 	return 0, fmt.Errorf("room %v not found or stopped", id)
 }

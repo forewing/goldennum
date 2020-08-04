@@ -2,10 +2,12 @@ package models
 
 import (
 	"fmt"
+	"strconv"
 	"time"
 
 	"go.uber.org/zap"
 
+	"github.com/patrickmn/go-cache"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -60,6 +62,17 @@ const (
 	userSubmitInvalid = -1.0
 
 	uesrPassBcryptCost = bcrypt.DefaultCost
+
+	bcryptCacheExpireTime = time.Hour * 1
+	bcryptCacheCheckTime  = time.Minute * 10
+
+	userHistoryCacheExpireTime = time.Second * 30
+	userHistoryCacheCheckTime  = time.Second * 60
+)
+
+var (
+	bcryptCache      *cache.Cache = cache.New(bcryptCacheExpireTime, bcryptCacheCheckTime)
+	userHistoryCache *cache.Cache = cache.New(userHistoryCacheExpireTime, userHistoryCacheCheckTime)
 )
 
 // UserNameValidate validate user name
@@ -90,7 +103,19 @@ func UserSubmitValidate(submit float64) bool {
 
 // Auth auth user
 func (u *User) Auth(password string) error {
-	return bcrypt.CompareHashAndPassword([]byte(u.Hashed), []byte(password))
+	if value, ok := bcryptCache.Get(u.Hashed); ok {
+		if p, ok := value.(string); ok {
+			if p == password {
+				return nil
+			}
+		}
+	}
+	err := bcrypt.CompareHashAndPassword([]byte(u.Hashed), []byte(password))
+	if err != nil {
+		return err
+	}
+	bcryptCache.SetDefault(u.Hashed, password)
+	return nil
 }
 
 // String return formatted user info
@@ -105,6 +130,7 @@ func UserNew(roomid uint, name, pass string) (*User, error) {
 		zap.S().Errorf("UserNew, bcrypt: %v", err)
 		return nil, err
 	}
+	bcryptCache.SetDefault(string(hashed), pass)
 	user := User{
 		RoomID: roomid,
 		Name:   name,
@@ -116,9 +142,17 @@ func UserNew(roomid uint, name, pass string) (*User, error) {
 
 // GetHistory return user's history
 func (u *User) GetHistory() (history []UserHistory) {
+	key := strconv.Itoa(int(u.ID))
+	if value, ok := userHistoryCache.Get(key); ok {
+		if h, ok := value.([]UserHistory); ok {
+			return h
+		}
+	}
 	if result := Db.Model(u).Related(&history); result.Error != nil {
 		zap.S().Errorf("*User.GetHistory, %v", result.Error)
+		return
 	}
+	userHistoryCache.SetDefault(key, history)
 	return
 }
 

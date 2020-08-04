@@ -45,11 +45,15 @@ type RoomHistory struct {
 
 // roomWorker must not be copy
 type roomWorker struct {
-	ch            chan int
-	nextTime      time.Time
-	submit        sync.Map
+	ch       chan int
+	nextTime time.Time
+	submit   sync.Map
+
 	historyLock   sync.RWMutex
-	savedHistorys atomic.Value
+	savedHistorys atomic.Value // []RoomHistory
+
+	usersLock  sync.Mutex
+	savedUsers atomic.Value // []User
 }
 
 const (
@@ -163,6 +167,22 @@ func (r *Room) GetUsers() (users []User) {
 	if result := Db.Model(r).Related(&users); result.Error != nil {
 		zap.S().Errorf("*Room.GetUsers, %v", result.Error)
 	}
+	return
+}
+
+// GetUsersWithCache return room's users from room cache
+func (r *Room) GetUsersWithCache() (users []User) {
+	worker := getRoomWorker(r.ID)
+	if worker == nil {
+		return r.GetUsers()
+	}
+	if v, ok := worker.savedUsers.Load().([]User); ok {
+		return v
+	}
+	worker.usersLock.Lock()
+	defer worker.usersLock.Unlock()
+	users = r.GetUsers()
+	worker.savedUsers.Store(users)
 	return
 }
 

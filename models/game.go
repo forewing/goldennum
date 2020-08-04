@@ -115,6 +115,15 @@ func (r *Room) tick() bool {
 		}
 	}
 
+	savedUsers := []User{}
+	worker.usersLock.Lock()
+	defer worker.usersLock.Unlock()
+	if err := Db.Model(r).Related(&savedUsers).Error; err == nil {
+		worker.savedUsers.Store(savedUsers)
+	} else {
+		zap.S().Errorf("*Room.tick, refresh worker users cache failed, %v", err)
+	}
+
 	roomHistory := RoomHistory{
 		RoomID:    r.ID,
 		Round:     r.RoundNow,

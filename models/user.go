@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	"strconv"
 	"time"
 
 	"go.uber.org/zap"
@@ -64,10 +65,14 @@ const (
 
 	bcryptCacheExpireTime = time.Hour * 1
 	bcryptCacheCheckTime  = time.Minute * 10
+
+	userHistoryCacheExpireTime = time.Second * 30
+	userHistoryCacheCheckTime  = time.Second * 60
 )
 
 var (
-	bcryptCache *cache.Cache = cache.New(bcryptCacheExpireTime, bcryptCacheCheckTime)
+	bcryptCache      *cache.Cache = cache.New(bcryptCacheExpireTime, bcryptCacheCheckTime)
+	userHistoryCache *cache.Cache = cache.New(userHistoryCacheExpireTime, userHistoryCacheCheckTime)
 )
 
 // UserNameValidate validate user name
@@ -137,9 +142,17 @@ func UserNew(roomid uint, name, pass string) (*User, error) {
 
 // GetHistory return user's history
 func (u *User) GetHistory() (history []UserHistory) {
+	key := strconv.Itoa(int(u.ID))
+	if value, ok := userHistoryCache.Get(key); ok {
+		if h, ok := value.([]UserHistory); ok {
+			return h
+		}
+	}
 	if result := Db.Model(u).Related(&history); result.Error != nil {
 		zap.S().Errorf("*User.GetHistory, %v", result.Error)
+		return
 	}
+	userHistoryCache.SetDefault(key, history)
 	return
 }
 

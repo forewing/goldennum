@@ -2,6 +2,7 @@ package models
 
 import (
 	"math"
+	"strconv"
 
 	"go.uber.org/zap"
 )
@@ -112,7 +113,9 @@ func (r *Room) tick() bool {
 	for _, history := range userHistorys {
 		if err := Db.Save(history).Error; err != nil {
 			zap.S().Errorf("*Room.tick, fail to save userHistory, %+v", *history)
+			continue
 		}
+		userHistoryCache.Delete(strconv.Itoa(int(history.UserID)))
 	}
 
 	savedUsers := []User{}

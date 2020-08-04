@@ -35,6 +35,11 @@ func calculateScoreGet(min, max, submit, goldenNum float64, userNum int) int {
 }
 
 func (r *Room) tick() bool {
+	defer func() {
+		if r := recover(); r != nil {
+			zap.S().Errorf("*Room.tick recover: %v", r)
+		}
+	}()
 	workerValue, ok := roomWorkers.Load(r.ID)
 	if !ok {
 		return false
@@ -84,7 +89,9 @@ func (r *Room) tick() bool {
 	userHistorys := []*UserHistory{}
 	for _, user := range users {
 		result := calculateScoreGet(minDiff, maxDiff, user.Submit1, goldenNum, userNum)
-		result += calculateScoreGet(minDiff, maxDiff, user.Submit2, goldenNum, userNum)
+		if result2 := calculateScoreGet(minDiff, maxDiff, user.Submit2, goldenNum, userNum); result2 != result {
+			result += result2
+		}
 
 		user.Score += result
 

@@ -218,7 +218,7 @@ Vue.component('dashboard', {
             this.userRankChart.data.datasets[0].data = [];
             data.sort((a, b) => b.Score - a.Score);
             for (const user of data) {
-                if (user.Name == null || user.Score == null) {
+                if (user.Name == null || user.Score == null || user.Score == 0) {
                     continue;
                 }
                 this.userRankChart.data.labels.push(user.Name);

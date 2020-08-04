@@ -84,7 +84,9 @@ func (r *Room) tick() bool {
 	userHistorys := []*UserHistory{}
 	for _, user := range users {
 		result := calculateScoreGet(minDiff, maxDiff, user.Submit1, goldenNum, userNum)
-		result += calculateScoreGet(minDiff, maxDiff, user.Submit2, goldenNum, userNum)
+		if result2 := calculateScoreGet(minDiff, maxDiff, user.Submit2, goldenNum, userNum); result2 != result {
+			result += result2
+		}
 
 		user.Score += result
 

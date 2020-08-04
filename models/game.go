@@ -35,6 +35,11 @@ func calculateScoreGet(min, max, submit, goldenNum float64, userNum int) int {
 }
 
 func (r *Room) tick() bool {
+	defer func() {
+		if r := recover(); r != nil {
+			zap.S().Errorf("*Room.tick recover: %v", r)
+		}
+	}()
 	workerValue, ok := roomWorkers.Load(r.ID)
 	if !ok {
 		return false

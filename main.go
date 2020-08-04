@@ -76,8 +76,8 @@ func main() {
 	// admin API
 	// rAdmin := r.Group("") // for test only
 	rAdmin := r.Group("", gin.BasicAuth(adminAccounts))
+	r.GET("/admin", views.AdminIndex)
 	{
-		rAdmin.GET("/admin", views.AdminIndex)
 		rAdmin.POST("/room", views.RoomCreate)
 		rAdmin.DELETE("/room/:roomid", views.RoomStop)
 		rAdmin.PUT("/room/:roomid", views.RoomStart)

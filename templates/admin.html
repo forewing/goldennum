@@ -1,0 +1,26 @@
+{{ define "admin.html" }}
+<!DOCTYPE html>
+<html>
+
+<head>
+
+	{{ template "header.html" . }}
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.min.js"></script>
+
+	<title>Admin - Go! Goldennum!</title>
+
+</head>
+
+<body>
+	{{ template "navbar.html" . }}
+
+	<div id="app">
+	</div>
+		
+
+	{{ template "footer.html" . }}
+	<script src='{{ template "base_url" . }}/statics/admin.js'></script>
+</body>
+
+</html>
+{{ end }}

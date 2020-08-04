@@ -115,15 +115,18 @@ func (r *Room) Runner(worker *roomWorker) {
 
 // RestartAllRooms restart all not disabled rooms
 func RestartAllRooms() {
-	rooms := []Room{}
-	Db.Not("Status", roomStatusDisabled).Find(&rooms)
-	for _, room := range rooms {
-		if room.RoundNow >= room.RoundTotal {
-			continue
+	go func() {
+		rooms := []Room{}
+		Db.Not("Status", roomStatusDisabled).Find(&rooms)
+		for _, room := range rooms {
+			if room.RoundNow >= room.RoundTotal {
+				continue
+			}
+			zap.S().Infof("RestartAll restarting room: %v", room.String())
+			room.Start()
+			time.Sleep(time.Millisecond * 500)
 		}
-		zap.S().Infof("RestartAll restarting room: %v", room.String())
-		room.Start()
-	}
+	}()
 }
 
 // Start the room
@@ -138,7 +141,8 @@ func (r *Room) Start() bool {
 	}
 
 	zap.S().Infof("*Room.Start, room open, ID: %v", r.ID)
-	go r.Runner(worker)
+	r2 := *r
+	go r2.Runner(worker)
 	return true
 }
 

@@ -31,6 +31,7 @@ const (
 	roomsURL = baseURL + "rooms/"
 	userURL  = baseURL + "user/"
 	usersURL = baseURL + "users/"
+	syncURL  = baseURL + "sync/"
 
 	roomInterval = 15
 	roomRounds   = 60
@@ -136,12 +137,36 @@ func (u *user) submit() {
 	log.Println(u.id, submit1, submit2)
 }
 
-func getInfo() {
+func getRoomInfo() {
 	time.Sleep(time.Millisecond * time.Duration(rand.Intn(roomInterval*500)))
 	ctx, cancel := context.WithTimeout(context.Background(), roomInterval*time.Second/2)
 	defer cancel()
 	if err := limiter.Wait(ctx); err == nil {
 		resp, err := http.Get(fmt.Sprintf(roomURL+"%v", roomID))
+		if err == nil {
+			defer resp.Body.Close()
+		}
+	}
+}
+
+func getUserInfo(id int) {
+	time.Sleep(time.Millisecond * time.Duration(rand.Intn(roomInterval*500)))
+	ctx, cancel := context.WithTimeout(context.Background(), roomInterval*time.Second/2)
+	defer cancel()
+	if err := limiter.Wait(ctx); err == nil {
+		resp, err := http.Get(fmt.Sprintf(userURL+"%v", id))
+		if err == nil {
+			defer resp.Body.Close()
+		}
+	}
+}
+
+func getSync() {
+	time.Sleep(time.Millisecond * time.Duration(rand.Intn(roomInterval*500)))
+	ctx, cancel := context.WithTimeout(context.Background(), roomInterval*time.Second/2)
+	defer cancel()
+	if err := limiter.Wait(ctx); err == nil {
+		resp, err := http.Get(fmt.Sprintf(syncURL+"%v", roomID))
 		if err == nil {
 			defer resp.Body.Close()
 		}
@@ -174,7 +199,9 @@ func main() {
 		next := time.Now().Add(roomInterval * time.Second)
 		for _, u := range users {
 			go u.submit()
-			go getInfo()
+			go getRoomInfo()
+			go getUserInfo(u.id)
+			go getSync()
 		}
 		time.Sleep(time.Until(next))
 	}

@@ -20,14 +20,25 @@
 				<div class="col">
 					<div class="card">
 						<h2 class="card-title pt-3 pl-4 mb-2">Admin Panel</h2>
+						<div class="card-body">
+							<span class="ml-2">Interval(s) / Rounds</span>
+							<div class="input-group">
+								<input type="number" min="1" class="form-control" v-model="inputRoomInterval">
+								<input type="number" min="1" class="form-control" v-model="inputRoomTotalRounds">
+								<div class="input-group-append">
+									<button class="btn btn-outline-secondary" type="button" v-on:click="addRoom">Add</button>
+								</div>
+							</div>
+						</div>
 						<div class="card-body table-responsive">
 							<table class="table">
 								<caption>List of rooms</caption>
 								<thead>
 									<tr>
 										<th scope="col">ID</th>
+										<th scope="col">Status</th>
 										<th scope="col">Users</th>
-										<th scope="col">Interval/s</th>
+										<th scope="col">Interval(s)</th>
 										<th scope="col">Rounds</th>
 										<th scope="col">Operations</th>
 									</tr>

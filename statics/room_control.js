@@ -9,6 +9,7 @@ Vue.component('room-control', {
             roundTotal: 0,
             closed: false,
             invalid: false,
+            color: "",
         }
     },
     methods: {
@@ -34,6 +35,37 @@ Vue.component('room-control', {
             }).catch(error => {
                 this.closed = true;
             })
+        },
+        toggleStatus() {
+            if (this.closed) {
+                this.startRoom();
+                return;
+            }
+            this.stopRoom();
+        },
+        startRoom() {
+            putStartRoom(this.roomid).then(data => {
+                this.blinkSuccess();
+                this.updateRoomSync();
+            }).catch(error => {
+                this.blinkDanger();
+            });
+        },
+        stopRoom() {
+            deleteStopRoom(this.roomid).then(data => {
+                this.blinkSuccess();
+                this.updateRoomSync();
+            }).catch(error => {
+                this.blinkDanger();
+            });
+        },
+        blinkSuccess() {
+            this.color = "table-success";
+            setTimeout(() => this.color = "", 1000);
+        },
+        blinkDanger() {
+            this.color = "table-danger";
+            setTimeout(() => this.color = "", 1000);
         },
     },
     mounted() {

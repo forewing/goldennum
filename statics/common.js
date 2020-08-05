@@ -58,13 +58,16 @@ function setSavedToken(t) {
     localStorage.setItem(KEY_SAVED_TOKEN, b);
 }
 
-const URL_ROOM_LIST = BASE_URL + "/rooms/"
-const URL_ROOM_INFO = BASE_URL + "/room/"
-const URL_ROOM_SYNC = BASE_URL + "/sync/"
-const URL_USER_CREATE = BASE_URL + "/users/"
-const URL_USER_INFO = BASE_URL + "/user/"
-const URL_USER_SUBMIT = BASE_URL + "/user/"
-const URL_USER_AUTH = BASE_URL + "/user/"
+const URL_ROOM_LIST = BASE_URL + "/rooms/";
+const URL_ROOM_INFO = BASE_URL + "/room/";
+const URL_ROOM_SYNC = BASE_URL + "/sync/";
+const URL_USER_CREATE = BASE_URL + "/users/";
+const URL_USER_INFO = BASE_URL + "/user/";
+const URL_USER_SUBMIT = BASE_URL + "/user/";
+const URL_USER_AUTH = BASE_URL + "/user/";
+const URL_ROOM_START = BASE_URL + "/room/";
+const URL_ROOM_STOP = BASE_URL + "/room/";
+const URL_ROOM_CREATE = BASE_URL + "/room/";
 
 function jsonResponseHandler(response) {
     if (!response.ok) {
@@ -105,6 +108,13 @@ async function fetchGetData(url) {
     return jsonResponseHandler(response);
 }
 
+async function fetchDeleteData(url) {
+    const response = await fetch(url, {
+        method: 'DELETE',
+    });
+    return jsonResponseHandler(response);
+}
+
 function getRoomList() {
     return fetchGetData(URL_ROOM_LIST)
 }
@@ -140,4 +150,19 @@ function putUserAuth(userId, password) {
     return fetchPutData(URL_USER_AUTH + parseInt(userId), {
         Password: String(password)
     })
+}
+
+function deleteStopRoom(roomId) {
+    return fetchDeleteData(URL_ROOM_STOP + parseInt(roomId));
+}
+
+function putStartRoom(roomId) {
+    return fetchPutData(URL_ROOM_START + parseInt(roomId));
+}
+
+function postCreateRoom(interval, rounds) {
+    return fetchPostData(URL_ROOM_CREATE, {
+        Interval: interval,
+        RoundTotal: rounds,
+    });
 }

@@ -1,0 +1,12 @@
+{{ define "room_control.html" }}
+<script type="text/x-template" id="room-control-component">
+<tr v-bind:class="closed ? '' : 'table-success'">
+    <th scope="row">{{ "{{ roomid }}" }}</th>
+    <td>{{ "{{ userNum }}" }}</td>
+    <td>{{ "{{ interval }}" }}</td>
+    <td>{{ "{{ roundNow }}" }}/{{ "{{ roundTotal }}" }}</td>
+    <td><a href="#" class="text-dark">Toggle</a></td>
+</tr>
+</script>
+<script src='{{ template "base_url" . }}/statics/room_control.js'></script>
+{{ end }}

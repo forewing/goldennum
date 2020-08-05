@@ -15,10 +15,38 @@
 	{{ template "navbar.html" . }}
 
 	<div id="app">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col">
+					<div class="card">
+						<h2 class="card-title pt-3 pl-4 mb-2">Admin Panel</h2>
+						<div class="card-body table-responsive">
+							<table class="table">
+								<caption>List of rooms</caption>
+								<thead>
+									<tr>
+										<th scope="col">ID</th>
+										<th scope="col">Users</th>
+										<th scope="col">Interval/s</th>
+										<th scope="col">Rounds</th>
+										<th scope="col">Operations</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr is="room-control" v-for="room in rooms" v-bind:key="room" v-bind:roomid="room">
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
-		
 
 	{{ template "footer.html" . }}
+
+	{{ template "room_control.html" . }}
 	<script src='{{ template "base_url" . }}/statics/admin.js'></script>
 </body>
 

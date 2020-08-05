@@ -1,6 +1,6 @@
 const KEY_SAVED_ROOM_ID = "SAVED_ROOM_ID";
 const KEY_SAVED_USER_ID = "SAVED_USER_ID";
-const KEY_SAVED_PASSWORD = "SAVED_PASSWORD";
+const KEY_SAVED_TOKEN = "SAVED_TOKEN";
 const KEY_SAVED_SIGNED_IN = "SAVED_SIGNED_IN";
 const KEY_USER_SCORE_PREFIX = "USER_SCORE_";
 
@@ -20,6 +20,42 @@ function setSavedRoomId(id) {
     }
     console.error(`setSavedRoomId invalid: ${id}`)
     return false;
+}
+
+function strEncode(s) {
+    let a = [];
+    for (const c of s) {
+        a.push(c);
+    }
+    return btoa(JSON.stringify(a));
+}
+
+function strDecode(b) {
+    const a = JSON.parse(atob(b));
+    let s = "";
+    for (const c of a) {
+        s += c;
+    }
+    return s;
+}
+
+function getSavedToken() {
+    const b = localStorage.getItem(KEY_SAVED_TOKEN);
+    let t = "";
+    try {
+        t = strDecode(b);
+    } catch (err) {
+        return "";
+    }
+    return t;
+}
+
+function setSavedToken(t) {
+    if (typeof t !== "string") {
+        return;
+    }
+    const b = strEncode(t);
+    localStorage.setItem(KEY_SAVED_TOKEN, b);
 }
 
 const URL_ROOM_LIST = BASE_URL + "/rooms/"

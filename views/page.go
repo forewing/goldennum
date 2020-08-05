@@ -22,7 +22,8 @@ const (
 	templateUserModals = "user_modals.html"
 	templateAdmin      = "admin.html"
 
-	componentDashboard = "dashboard.html"
+	componentDashboard   = "dashboard.html"
+	componentRoomControl = "room_control.html"
 )
 
 var (
@@ -38,6 +39,7 @@ var (
 		templateAdmin,
 
 		componentDashboard,
+		componentRoomControl,
 	}
 )
 

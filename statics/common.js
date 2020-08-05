@@ -1,6 +1,6 @@
 const KEY_SAVED_ROOM_ID = "SAVED_ROOM_ID";
 const KEY_SAVED_USER_ID = "SAVED_USER_ID";
-const KEY_SAVED_PASSWORD = "SAVED_PASSWORD";
+const KEY_SAVED_TOKEN = "SAVED_TOKEN";
 const KEY_SAVED_SIGNED_IN = "SAVED_SIGNED_IN";
 const KEY_USER_SCORE_PREFIX = "USER_SCORE_";
 
@@ -22,13 +22,52 @@ function setSavedRoomId(id) {
     return false;
 }
 
-const URL_ROOM_LIST = BASE_URL + "/rooms/"
-const URL_ROOM_INFO = BASE_URL + "/room/"
-const URL_ROOM_SYNC = BASE_URL + "/sync/"
-const URL_USER_CREATE = BASE_URL + "/users/"
-const URL_USER_INFO = BASE_URL + "/user/"
-const URL_USER_SUBMIT = BASE_URL + "/user/"
-const URL_USER_AUTH = BASE_URL + "/user/"
+function strEncode(s) {
+    let a = [];
+    for (const c of s) {
+        a.push(c);
+    }
+    return btoa(JSON.stringify(a));
+}
+
+function strDecode(b) {
+    const a = JSON.parse(atob(b));
+    let s = "";
+    for (const c of a) {
+        s += c;
+    }
+    return s;
+}
+
+function getSavedToken() {
+    const b = localStorage.getItem(KEY_SAVED_TOKEN);
+    let t = "";
+    try {
+        t = strDecode(b);
+    } catch (err) {
+        return "";
+    }
+    return t;
+}
+
+function setSavedToken(t) {
+    if (typeof t !== "string") {
+        return;
+    }
+    const b = strEncode(t);
+    localStorage.setItem(KEY_SAVED_TOKEN, b);
+}
+
+const URL_ROOM_LIST = BASE_URL + "/rooms/";
+const URL_ROOM_INFO = BASE_URL + "/room/";
+const URL_ROOM_SYNC = BASE_URL + "/sync/";
+const URL_USER_CREATE = BASE_URL + "/users/";
+const URL_USER_INFO = BASE_URL + "/user/";
+const URL_USER_SUBMIT = BASE_URL + "/user/";
+const URL_USER_AUTH = BASE_URL + "/user/";
+const URL_ROOM_START = BASE_URL + "/room/";
+const URL_ROOM_STOP = BASE_URL + "/room/";
+const URL_ROOM_CREATE = BASE_URL + "/room/";
 
 function jsonResponseHandler(response) {
     if (!response.ok) {
@@ -69,6 +108,13 @@ async function fetchGetData(url) {
     return jsonResponseHandler(response);
 }
 
+async function fetchDeleteData(url) {
+    const response = await fetch(url, {
+        method: 'DELETE',
+    });
+    return jsonResponseHandler(response);
+}
+
 function getRoomList() {
     return fetchGetData(URL_ROOM_LIST)
 }
@@ -104,4 +150,19 @@ function putUserAuth(userId, password) {
     return fetchPutData(URL_USER_AUTH + parseInt(userId), {
         Password: String(password)
     })
+}
+
+function deleteStopRoom(roomId) {
+    return fetchDeleteData(URL_ROOM_STOP + parseInt(roomId));
+}
+
+function putStartRoom(roomId) {
+    return fetchPutData(URL_ROOM_START + parseInt(roomId));
+}
+
+function postCreateRoom(interval, rounds) {
+    return fetchPostData(URL_ROOM_CREATE, {
+        Interval: interval,
+        RoundTotal: rounds,
+    });
 }

@@ -20,8 +20,10 @@ const (
 	templateIndex      = "index.html"
 	templateUserPanel  = "user_panel.html"
 	templateUserModals = "user_modals.html"
+	templateAdmin      = "admin.html"
 
-	componentDashboard = "dashboard.html"
+	componentDashboard   = "dashboard.html"
+	componentRoomControl = "room_control.html"
 )
 
 var (
@@ -34,8 +36,10 @@ var (
 		templateIndex,
 		templateUserPanel,
 		templateUserModals,
+		templateAdmin,
 
 		componentDashboard,
+		componentRoomControl,
 	}
 )
 
@@ -63,4 +67,9 @@ func LoadTemplate() (*template.Template, error) {
 // PageIndex render index
 func PageIndex(c *gin.Context) {
 	c.HTML(http.StatusOK, templateIndex, gin.H{})
+}
+
+// AdminIndex return admin page
+func AdminIndex(c *gin.Context) {
+	c.HTML(http.StatusOK, templateAdmin, gin.H{})
 }

@@ -141,14 +141,14 @@ var app = new Vue({
             this.userId = parseInt(data);
         },
         setUserPassword(data) {
-            localStorage.setItem(KEY_SAVED_PASSWORD, data);
+            setSavedToken(data);
             this.userPassword = data;
         },
         fillSignInModal() {
             this.signInModalErrorMessage = "";
             this.signInModalSuccessMessage = "";
             this.signInModalUserId = localStorage.getItem(KEY_SAVED_USER_ID);
-            this.signInModalPassword = localStorage.getItem(KEY_SAVED_PASSWORD);
+            this.signInModalPassword = getSavedToken();
         },
         fillSignUpModal() {
             this.signUpModalErrorMessage = "";
@@ -164,7 +164,7 @@ var app = new Vue({
         if (localStorage.getItem(KEY_SAVED_SIGNED_IN) == "true") {
             this.signedIn = true;
             this.userId = localStorage.getItem(KEY_SAVED_USER_ID);
-            this.userPassword = localStorage.getItem(KEY_SAVED_PASSWORD);
+            this.userPassword = getSavedToken();
             getUserInfo(this.userId).then(data => {
                 this.userName = data.Name;
                 this.userScore = data.Score;

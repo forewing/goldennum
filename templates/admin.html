@@ -1,0 +1,65 @@
+{{ define "admin.html" }}
+<!DOCTYPE html>
+<html>
+
+<head>
+
+	{{ template "header.html" . }}
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.min.js"></script>
+
+	<title>Admin - Go! Goldennum!</title>
+
+</head>
+
+<body>
+	{{ template "navbar.html" . }}
+
+	<div id="app">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col">
+					<div class="card">
+						<h2 class="card-title pt-3 pl-4 mb-2">Admin Panel</h2>
+						<div class="card-body">
+							<span class="ml-2">Interval(s) / Rounds</span>
+							<div class="input-group">
+								<input type="number" min="1" class="form-control" v-model="inputRoomInterval">
+								<input type="number" min="1" class="form-control" v-model="inputRoomTotalRounds">
+								<div class="input-group-append">
+									<button class="btn btn-outline-secondary" type="button" v-on:click="addRoom">Add</button>
+								</div>
+							</div>
+						</div>
+						<div class="card-body table-responsive">
+							<table class="table">
+								<caption>List of rooms</caption>
+								<thead>
+									<tr>
+										<th scope="col">ID</th>
+										<th scope="col">Status</th>
+										<th scope="col">Users</th>
+										<th scope="col">Interval(s)</th>
+										<th scope="col">Rounds</th>
+										<th scope="col">Operations</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr is="room-control" v-for="room in rooms" v-bind:key="room" v-bind:roomid="room">
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	{{ template "footer.html" . }}
+
+	{{ template "room_control.html" . }}
+	<script src='{{ template "base_url" . }}/statics/admin.js'></script>
+</body>
+
+</html>
+{{ end }}

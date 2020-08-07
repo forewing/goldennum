@@ -126,7 +126,9 @@ Vue.component('dashboard', {
                 this.refreshUser(data.Users);
             }).catch(error => {
                 this.errorMessage = error.error;
-                error.data.then(data => this.errorMessage += data.length > 0 ? ", " + data : "")
+                if (error.data) {
+                    error.data.then(data => this.errorMessage += data.length > 0 ? ", " + data : "")
+                }
                 console.error(error);
             });
         },

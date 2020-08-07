@@ -63,55 +63,7 @@ Vue.component('dashboard', {
                     }
                 },
             },
-            userRankCtx: null,
-            userRankChart: null,
-            userRankData: {
-                type: 'horizontalBar',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: 'Scores',
-                        backgroundColor: 'rgba(120, 213, 215, 0.2)',
-                        borderColor: 'rgba(120, 213, 215, 0.8)',
-                        data: [],
-                        fill: false,
-                    }]
-                },
-                options: {
-                    elements: {
-                        rectangle: {
-                            borderWidth: 1,
-                        }
-                    },
-                    maintainAspectRatio: false,
-                    responsive: true,
-                    legend: false,
-                    title: {
-                        display: true,
-                        text: 'Ranks'
-                    },
-                    scales: {
-                        xAxes: [{
-                            display: true,
-                            scaleLabel: {
-                                display: true,
-                                labelString: 'Score'
-                            },
-                            ticks: {
-                                suggestedMin: 0,
-                                suggestedMax: 20,
-                            }
-                        }],
-                        yAxes: [{
-                            display: true,
-                            scaleLabel: {
-                                display: false,
-                                labelString: 'User'
-                            },
-                        }]
-                    }
-                },
-            },
+            users: [],
         }
     },
     methods: {
@@ -214,34 +166,15 @@ Vue.component('dashboard', {
             if (!data) {
                 data = [];
             }
-            this.userRankChart.data.labels = [];
-            this.userRankChart.data.datasets[0].data = [];
+            data = data.filter(user => user.ID != null && user.Score != null && user.Name != null);
             data.sort((a, b) => b.Score - a.Score);
-            for (const user of data) {
-                if (user.Name == null || user.Score == null || user.Score == 0) {
-                    continue;
-                }
-                this.userRankChart.data.labels.push(user.Name);
-                this.userRankChart.data.datasets[0].data.push(user.Score);
-            }
-            this.updateUserChartSize();
-            this.userRankChart.update();
-        },
-        updateUserChartSize() {
-            let len = this.userRankChart.data.labels.length;
-            if (len <= 0) {
-                len = 1;
-            }
-            this.$refs.userRankDiv.style.height = `${100 + len * 50}px`;
+            this.users = data;
         },
     },
     mounted() {
         this.roomHistoryCtx = this.$refs.roomHistory.getContext('2d')
         this.roomHistoryChart = new Chart(this.roomHistoryCtx, this.roomHistoryData);
-        this.userRankCtx = this.$refs.userRank.getContext('2d');
-        this.userRankChart = new Chart(this.userRankCtx, this.userRankData);
         this.roomId = getSavedRoomId();
-        this.updateUserChartSize();
         this.toggleRefresh();
         this.refreshTimeOut();
     },

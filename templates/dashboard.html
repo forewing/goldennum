@@ -35,10 +35,23 @@
     </div>
     <hr>
     <div class="row">
-        <div class="col">
-            <div style="height:150px;" ref="userRankDiv">
-                <canvas ref="userRank"></canvas>
-            </div>
+        <div class="col table-responsive">
+            <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Score</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="user in users">
+                    <th scope="row">{{ "{{ user.ID }}" }}</th>
+                    <td>{{ "{{ user.Name }}" }}</td>
+                    <td>{{ "{{ user.Score }}" }}</td>
+                  </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

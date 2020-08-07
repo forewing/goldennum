@@ -25,16 +25,16 @@ For detail, you may refer to the wiki pages.
 
 ### Build
 
-1. Install [packr2](https://github.com/gobuffalo/packr/tree/master/v2)
+1. Install [go-bindata](https://github.com/go-bindata/go-bindata)
 
 ```
-go get github.com/gobuffalo/packr/v2/packr2
+go get -u github.com/go-bindata/go-bindata/go-bindata
 ```
 
 2. Build resource files
 
 ```
-packr2
+go-bindata -fs -prefix "statics/" statics/ templates/
 ```
 
 3. Build project

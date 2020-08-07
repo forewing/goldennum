@@ -4,7 +4,6 @@ go 1.14
 
 require (
 	github.com/gin-gonic/gin v1.6.3
-	github.com/gobuffalo/packr/v2 v2.8.0
 	github.com/jinzhu/gorm v1.9.15
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	go.uber.org/zap v1.15.0

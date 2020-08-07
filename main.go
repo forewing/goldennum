@@ -1,24 +1,23 @@
 package main
 
 import (
+	"fmt"
+	"html/template"
 	"os"
 
 	"github.com/forewing/goldennum/config"
 	"github.com/forewing/goldennum/models"
 	"github.com/forewing/goldennum/views"
 	"github.com/gin-gonic/gin"
-	"github.com/gobuffalo/packr/v2"
 	"go.uber.org/zap"
 )
 
 const (
-	staticsPath   = "./statics"
-	templatesPath = "./templates"
+	staticsPath   = "statics"
+	templatesPath = "templates"
 )
 
 var (
-	staticsBox = packr.New("statics", staticsPath)
-
 	adminAccounts gin.Accounts = gin.Accounts{}
 )
 
@@ -43,7 +42,7 @@ func main() {
 		zap.S().Debugf("templates use live reload")
 		r.LoadHTMLGlob(templatesPath + "/*")
 	} else {
-		t, err := views.LoadTemplate()
+		t, err := loadTemplate()
 		if err != nil {
 			panic(err)
 		}
@@ -58,7 +57,7 @@ func main() {
 		zap.S().Debugf("statics use live reload")
 		r.Static("/statics", staticsPath)
 	} else {
-		r.StaticFS("/statics", staticsBox)
+		r.StaticFS("/statics", AssetFile())
 	}
 
 	// public API
@@ -108,4 +107,22 @@ func setLogger() func() error {
 	}
 	zap.ReplaceGlobals(logger)
 	return logger.Sync
+}
+
+// LoadTemplate reutrn templates
+func loadTemplate() (*template.Template, error) {
+	t := template.New("")
+	for _, name := range views.Templates {
+		data, err := Asset(templatesPath + "/" + name)
+		if err != nil {
+			return nil, err
+		}
+		t, err = t.New(name).Parse(string(data))
+		if err != nil {
+			return nil, err
+		}
+	}
+	return t.New(views.TemplateBaseURL).Parse(
+		fmt.Sprintf("{{ define \"%v\" }}%v{{ end }}", views.TemplateBaseURL, config.Load().BaseURL),
+	)
 }

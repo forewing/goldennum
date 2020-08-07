@@ -25,5 +25,5 @@ conf/config.yml
 sqlite3.db
 db
 
-# Packr
-*-packr.go
+# Bindata
+bindata.go

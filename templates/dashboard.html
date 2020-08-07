@@ -37,11 +37,13 @@
     <div class="row">
         <div class="col table-responsive">
             <table class="table table-striped">
+				<caption>List of users</caption>
                 <thead>
                   <tr>
                     <th scope="col">ID</th>
                     <th scope="col">Name</th>
                     <th scope="col">Score</th>
+                    <th scope="col">History</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -49,9 +51,44 @@
                     <th scope="row">{{ "{{ user.ID }}" }}</th>
                     <td>{{ "{{ user.Name }}" }}</td>
                     <td>{{ "{{ user.Score }}" }}</td>
+                    <td><a href="#/" class="text-dark" v-bind:userid="user.ID" v-on:click="showUserHistory">Show</a></td>
                   </tr>
                 </tbody>
             </table>
+        </div>
+    </div>
+
+    <div class="modal fade" id="userHistoryModal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog"
+        aria-labelledby="userHistoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-body table-responsive">
+                    <table class="table table-striped">
+						<caption>List of user history</caption>
+                        <thead>
+                          <tr>
+                            <th scope="col">Round</th>
+                            <th scope="col">Score</th>
+                            <th scope="col">Get</th>
+                            <th scope="col">Submit1</th>
+                            <th scope="col">Submit2</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr v-for="history in userHistory">
+                            <th scope="row">{{ "{{ history.Round }}" }}</th>
+                            <td>{{ "{{ history.Score }}" }}</td>
+                            <td>{{ "{{ history.ScoreGet }}" }}</td>
+                            <td>{{ "{{ history.Submit1 }}" }}</td>
+                            <td>{{ "{{ history.Submit2 }}" }}</td>
+                          </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>

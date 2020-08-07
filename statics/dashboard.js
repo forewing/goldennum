@@ -64,6 +64,7 @@ Vue.component('dashboard', {
                 },
             },
             users: [],
+            userHistory: [],
         }
     },
     methods: {
@@ -171,6 +172,24 @@ Vue.component('dashboard', {
             data = data.filter(user => user.ID != null && user.Score != null && user.Name != null);
             data.sort((a, b) => b.Score - a.Score);
             this.users = data;
+        },
+        showUserHistory(event) {
+            if (!event) {
+                return;
+            }
+            const userId = event.target.attributes.userid.value;
+            getUserInfo(userId).then(data => {
+                if (!data.UserHistorys) {
+                    data.UserHistorys = [];
+                }
+                this.userHistory = data.UserHistorys;
+                $("#userHistoryModal").modal('show');
+            }).catch(error => {
+                console.error(error);
+                if (error.data) {
+                    error.data.then(data => console.error(data));
+                }
+            });
         },
     },
     mounted() {

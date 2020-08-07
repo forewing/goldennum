@@ -62,9 +62,9 @@ var app = new Vue({
                 })
                 .catch(error => {
                     this.errorMessages = [error.error];
-                    error.data.then(
-                        data => this.errorMessages.push(data)
-                    );
+                    if (error.data) {
+                        error.data.then(data => this.errorMessages.push(data));
+                    }
                 });
         },
         modalSignIn() {
@@ -90,7 +90,9 @@ var app = new Vue({
                 this.updateRoomId(data.RoomID);
             }).catch(error => {
                 this.signInModalErrorMessage = error.error;
-                error.data.then(data => this.signInModalErrorMessage += " " + data);
+                if (error.data) {
+                    error.data.then(data => this.signInModalErrorMessage += " " + data);
+                }
             })
         },
         modalSignUp() {
@@ -126,7 +128,9 @@ var app = new Vue({
                 this.updateRoomId(data.RoomID);
             }).catch(error => {
                 this.signUpModalErrorMessage = error.error;
-                error.data.then(data => this.signUpModalErrorMessage += " " + data);
+                if (error.data){
+                    error.data.then(data => this.signUpModalErrorMessage += " " + data);
+                }
             })
         },
         signOut() {

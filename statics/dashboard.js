@@ -66,6 +66,7 @@ Vue.component('dashboard', {
             },
             users: [],
             userHistory: [],
+            userHistoryUser: 0,
         }
     },
     methods: {
@@ -183,7 +184,8 @@ Vue.component('dashboard', {
                 if (!data.UserHistorys) {
                     data.UserHistorys = [];
                 }
-                this.userHistory = data.UserHistorys;
+                this.userHistoryUser = userId;
+                this.userHistory = data.UserHistorys.reverse();
                 $("#userHistoryModal").modal('show');
             }).catch(error => {
                 console.error(error);

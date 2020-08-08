@@ -18,15 +18,15 @@
             <tbody>
                 <tr>
                     <th scope="row">ID</th>
-                    <td>{{ "{{ userId }}" }}</td>
+                    <td>[[ userId ]]</td>
                 </tr>
                 <tr>
                     <th scope="row">Name</th>
-                    <td>{{ "{{ userName }}" }}</td>
+                    <td>[[ userName ]]</td>
                 </tr>
                 <tr>
                     <th scope="row">Score</th>
-                    <td>{{ "{{ userScore }}" }}</td>
+                    <td>[[ userScore ]]</td>
                 </tr>
             </tbody>
         </table>
@@ -44,7 +44,7 @@
         <button class="btn btn-outline-secondary" type="button" v-on:click='updateRoomId(null)'>Set</button>
     </div>
 </div>
-<p class="text-danger px-3">{{ "{{ changeRoomErrorMessage }}" }}</p>
+<p class="text-danger px-3">[[ changeRoomErrorMessage ]]</p>
 <div v-if="signedIn">
     <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1">
         <span>Submit</span>
@@ -60,7 +60,7 @@
             <button type="button" class="btn btn-outline-success btn-block" v-on:click="submitUserInput">Submit</button>
         </li>
         <li class="nav-item mb-2 mx-2 text-danger" v-for="error in errorMessages">
-            {{ "{{ error }}" }}
+            [[ error ]]
         </li>
     </ul>
 </div>

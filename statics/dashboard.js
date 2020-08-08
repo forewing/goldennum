@@ -1,4 +1,5 @@
 Vue.component('dashboard', {
+    delimiters: ['[[', ']]'],
     props: [],
     template: "#dashboard-component",
     data: function () {

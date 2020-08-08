@@ -1,4 +1,5 @@
 var app = new Vue({
+    delimiters: ['[[', ']]'],
     el: '#app',
     data: {
         inputRoomId: getSavedRoomId(),
@@ -128,7 +129,7 @@ var app = new Vue({
                 this.updateRoomId(data.RoomID);
             }).catch(error => {
                 this.signUpModalErrorMessage = error.error;
-                if (error.data){
+                if (error.data) {
                     error.data.then(data => this.signUpModalErrorMessage += " " + data);
                 }
             })

@@ -1,4 +1,5 @@
 Vue.component('room-control', {
+    delimiters: ['[[', ']]'],
     props: ['roomid'],
     template: "#room-control-component",
     data: function () {

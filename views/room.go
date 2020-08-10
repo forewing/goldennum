@@ -139,5 +139,5 @@ func RoomSync(c *gin.Context) {
 		c.JSON(http.StatusNotFound, err.Error())
 		return
 	}
-	c.JSON(http.StatusOK, fmt.Sprintf("%.0f", duration.Seconds()))
+	c.JSON(http.StatusOK, fmt.Sprintf("%.3f", duration.Seconds()))
 }

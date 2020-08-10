@@ -110,7 +110,7 @@ Vue.component('dashboard', {
             }
             this.refreshWorker();
             getRoomSync(this.roomId).then(data => {
-                const time = parseInt(data) + 1;
+                const time = parseFloat(data) + 1;
                 this.setTimeout(this.syncRefresh, time * 1000);
             }).catch(error => {
                 this.setTimeout(this.syncRefresh, 5000);

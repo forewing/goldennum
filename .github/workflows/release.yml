@@ -1,6 +1,9 @@
 name: Create Release
 
-on: push
+on:
+  push:
+    tags:
+      - 'v*'
 
 env:
   go-version: "1.15"
@@ -46,3 +49,47 @@ jobs:
         with:
           name: ${{ env.OUTPUT_NAME_WINDOWS }}
           path: ${{ env.OUTPUT_FILE_WINDOWS }}
+
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs: [build_linux, build_windows]
+    steps:
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      - name: Download Linux Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ env.OUTPUT_NAME_LINUX }}
+      - name: Upload Linux Artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./${{ env.OUTPUT_FILE_LINUX }}
+          asset_name: ${{ env.OUTPUT_FILE_LINUX }}
+          asset_content_type: application/gzip
+
+      - name: Download Windows Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ env.OUTPUT_NAME_WINDOWS }}
+      - name: Upload Windows Artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./${{ env.OUTPUT_FILE_WINDOWS }}
+          asset_name: ${{ env.OUTPUT_FILE_WINDOWS }}
+          asset_content_type: application/zip

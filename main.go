@@ -21,6 +21,7 @@ var (
 	adminAccounts gin.Accounts = gin.Accounts{}
 )
 
+//go:generate go run generate/main.go
 func main() {
 	defer setLogger()()
 

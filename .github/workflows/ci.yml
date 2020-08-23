@@ -30,8 +30,7 @@ jobs:
           ${{ runner.os }}-go-
     - name: Build
       run: |
-        chmod +x build.sh
-        ./build.sh
+        bash build.sh
     - name: Upload reports
       uses: actions/upload-artifact@v2
       with:

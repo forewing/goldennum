@@ -1,0 +1,95 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  go-version: "1.15"
+  OUTPUT_NAME_LINUX: goldennum_linux
+  OUTPUT_FILE_LINUX: goldennum_linux.tar.gz
+  OUTPUT_NAME_WINDOWS: goldennum_windows
+  OUTPUT_FILE_WINDOWS: goldennum_windows.zip
+
+jobs:
+  build_linux:
+    name: Build Linux
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{ env.go-version }}
+      - name: Build
+        run: |
+          bash build.sh
+          tar caf ${OUTPUT_FILE_LINUX} -C output .
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.OUTPUT_NAME_LINUX }}
+          path: ${{ env.OUTPUT_FILE_LINUX }}
+  build_windows:
+    name: Build Windows
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{ env.go-version }}
+      - name: Build
+        run: |
+          bash build.sh
+          Compress-Archive -Path .\output\* -Update -DestinationPath $env:OUTPUT_FILE_WINDOWS
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.OUTPUT_NAME_WINDOWS }}
+          path: ${{ env.OUTPUT_FILE_WINDOWS }}
+
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs: [build_linux, build_windows]
+    steps:
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      - name: Download Linux Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ env.OUTPUT_NAME_LINUX }}
+      - name: Upload Linux Artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./${{ env.OUTPUT_FILE_LINUX }}
+          asset_name: ${{ env.OUTPUT_FILE_LINUX }}
+          asset_content_type: application/gzip
+
+      - name: Download Windows Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ env.OUTPUT_NAME_WINDOWS }}
+      - name: Upload Windows Artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./${{ env.OUTPUT_FILE_WINDOWS }}
+          asset_name: ${{ env.OUTPUT_FILE_WINDOWS }}
+          asset_content_type: application/zip

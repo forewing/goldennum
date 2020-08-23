@@ -27,16 +27,16 @@ For detail, you may refer to the wiki pages.
 
 ### Build
 
-1. Install [go-bindata](https://github.com/go-bindata/go-bindata)
+1. Make sure you have `GO111MODULE` set to `on`
 
 ```
-go get -u github.com/go-bindata/go-bindata/go-bindata
+go env -w GO111MODULE=on
 ```
 
-2. Build resource files
+2. Generate resource files
 
 ```
-go-bindata -fs -prefix "statics/" statics/ templates/
+go generate
 ```
 
 3. Build project

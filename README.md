@@ -33,6 +33,10 @@ For detail, you may refer to the wiki pages.
 go env -w GO111MODULE=on
 ```
 
+> You may need to setup [GOPROXY](https://github.com/goproxyio/goproxy) if you live in countries without international network connections.
+>
+> To set it up, simply run `go env -w GOPROXY=https://goproxy.io,direct`.
+
 2. Generate resource files
 
 ```

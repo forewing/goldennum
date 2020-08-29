@@ -20,6 +20,8 @@ const (
 
 	componentDashboard   = "dashboard.html"
 	componentRoomControl = "room_control.html"
+
+	versionInfo = "version.html"
 )
 
 var (
@@ -35,6 +37,8 @@ var (
 
 		componentDashboard,
 		componentRoomControl,
+
+		versionInfo,
 	}
 )
 

@@ -27,5 +27,6 @@ db
 
 # Generated files
 /config/version.go
+/templates/version.html
 /statics/bindata.go
 /templates/bindata.go

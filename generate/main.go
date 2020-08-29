@@ -3,70 +3,52 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
-	"runtime"
 
 	"github.com/go-bindata/go-bindata/v3"
 )
 
 const (
-	output = "./bindata.go"
-)
+	outputName = "bindata.go"
+	ignoreFile = `.*\.go`
 
-var (
-	config = bindata.Config{
-		Package: "main",
-		Output:  output,
-
-		Prefix: "statics/",
-		Input: []bindata.InputConfig{
-			bindata.InputConfig{
-				Path:      filepath.Clean("statics/"),
-				Recursive: false,
-			},
-			bindata.InputConfig{
-				Path:      filepath.Clean("templates/"),
-				Recursive: false,
-			},
-		},
-
-		HttpFileSystem: true,
-	}
+	staticsName   = "statics"
+	templatesName = "templates"
 )
 
 func main() {
 	generate()
-	if runtime.GOOS == "windows" {
-		fixWindowsPathDelimiter()
-	}
 }
 
 // Generate bindata.go
 func generate() {
-	err := bindata.Translate(&config)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "bindata: %v\n", err)
-		os.Exit(1)
-	}
+	mustGenerate(staticsName, true)
+	mustGenerate(templatesName, false)
 }
 
-// Fix go-bindata's BUG on windows
-func fixWindowsPathDelimiter() {
-	data, err := ioutil.ReadFile(output)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "fix: %v\n", err)
-		os.Exit(1)
+func mustGenerate(path string, fs bool) {
+	cleanPath := filepath.Clean(path)
+	config := bindata.Config{
+		Package: cleanPath,
+		Output:  filepath.Join(cleanPath, outputName),
+		Prefix:  cleanPath + "/",
+		Input: []bindata.InputConfig{
+			bindata.InputConfig{
+				Path:      cleanPath,
+				Recursive: false,
+			},
+		},
+		Ignore: []*regexp.Regexp{
+			regexp.MustCompile(ignoreFile),
+		},
+		HttpFileSystem: fs,
 	}
-	text := string(data)
 
-	text = regexp.MustCompile(`templates\\{1,2}`).ReplaceAllString(text, "templates/")
-
-	err = ioutil.WriteFile(output, []byte(text), 0644)
+	err := bindata.Translate(&config)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "fix: %v\n", err)
+		fmt.Fprintf(os.Stderr, "bindata %v, %v: %v\n", path, fs, err)
 		os.Exit(1)
 	}
 }

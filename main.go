@@ -7,6 +7,8 @@ import (
 
 	"github.com/forewing/goldennum/config"
 	"github.com/forewing/goldennum/models"
+	"github.com/forewing/goldennum/statics"
+	"github.com/forewing/goldennum/templates"
 	"github.com/forewing/goldennum/views"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -58,7 +60,7 @@ func main() {
 		zap.S().Debugf("statics use live reload")
 		r.Static("/statics", staticsPath)
 	} else {
-		r.StaticFS("/statics", AssetFile())
+		r.StaticFS("/statics", statics.AssetFile())
 	}
 
 	// public API
@@ -114,7 +116,7 @@ func setLogger() func() error {
 func loadTemplate() (*template.Template, error) {
 	t := template.New("")
 	for _, name := range views.Templates {
-		data, err := Asset(templatesPath + "/" + name)
+		data, err := templates.Asset(name)
 		if err != nil {
 			return nil, err
 		}

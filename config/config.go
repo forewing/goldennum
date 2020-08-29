@@ -2,8 +2,10 @@ package config
 
 import (
 	"flag"
+	"fmt"
 	"io/ioutil"
 	"os"
+	"runtime"
 	"strconv"
 
 	"go.uber.org/zap"
@@ -59,6 +61,7 @@ const (
 )
 
 var (
+	flagVersion  = flag.Bool("version", false, "Display version information.")
 	flagConf     = flag.String("conf", "", "Config file path. If set, load config from file instead.")
 	flagDebug    = flag.Bool("debug", false, "Set debug mode.")
 	flagBind     = flag.String("bind", "0.0.0.0:8080", "Bind address.")
@@ -85,6 +88,10 @@ func Load() *Config {
 	}
 
 	flag.Parse()
+	if *flagVersion {
+		displayVersion()
+		os.Exit(0)
+	}
 
 	if len(*flagConf) > 0 {
 		savedConfig.loadFromFile(*flagConf)
@@ -191,4 +198,11 @@ func (c *Config) complete() {
 			panic(err)
 		}
 	}
+}
+
+func displayVersion() {
+	fmt.Printf(`github.com/forewing/goldennum (%v)
+Build time (%v)
+Go runtime (%v)
+`, BuildSHA1, BuildTime, runtime.Version())
 }

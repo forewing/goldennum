@@ -25,5 +25,7 @@ conf/config.yml
 sqlite3.db
 db
 
-# Bindata
-bindata.go
+# Generated files
+/config/version.go
+/statics/bindata.go
+/templates/bindata.go

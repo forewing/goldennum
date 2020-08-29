@@ -23,7 +23,7 @@ var (
 	adminAccounts gin.Accounts = gin.Accounts{}
 )
 
-//go:generate go run generate/main.go
+//go:generate go run ./generate
 func main() {
 	defer setLogger()()
 

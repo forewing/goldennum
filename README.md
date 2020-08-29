@@ -37,7 +37,7 @@ go env -w GO111MODULE=on
 >
 > To set it up, simply run `go env -w GOPROXY=https://goproxy.io,direct`.
 
-2. Generate resource files
+2. Generate resource files & version info
 
 ```
 go generate

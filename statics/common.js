@@ -162,7 +162,7 @@ function putStartRoom(roomId) {
 
 function postCreateRoom(interval, rounds) {
     return fetchPostData(URL_ROOM_CREATE, {
-        Interval: interval,
-        RoundTotal: rounds,
+        Interval: parseInt(interval, 10),
+        RoundTotal: parseInt(rounds, 10),
     });
 }

@@ -40,16 +40,16 @@
 				<caption>List of users</caption>
                 <thead>
                   <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Name</th>
+                    <th scope="col">Rank</th>
+                    <th scope="col">User</th>
                     <th scope="col">Score</th>
                     <th scope="col">History</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="user in users">
-                    <th scope="row">[[ user.ID ]]</th>
-                    <td>[[ user.Name ]]</td>
+                  <tr v-for="(user, index) in users">
+                    <th scope="row">#[[ index + 1 ]]</th>
+                    <td>[[ user.ID ]]/[[ user.Name ]]</td>
                     <td>[[ user.Score ]]</td>
                     <td><a href="#/" class="text-dark" v-bind:userid="user.ID" v-on:click="showUserHistory">Show</a></td>
                   </tr>
@@ -75,7 +75,6 @@
                           <tr>
                             <th scope="col">Round</th>
                             <th scope="col">Score</th>
-                            <th scope="col">Get</th>
                             <th scope="col">Submit1</th>
                             <th scope="col">Submit2</th>
                           </tr>
@@ -83,9 +82,8 @@
                         <tbody>
                           <tr v-for="history in userHistory"
                             v-bind:class="history.ScoreGet > 0 ? 'table-success' : (history.ScoreGet < 0 ? 'table-danger' : '')">
-                            <th scope="row">[[ history.Round ]]</th>
-                            <td>[[ history.Score ]]</td>
-                            <td>[[ history.ScoreGet ]]</td>
+                            <th scope="row">#[[ history.Round ]]</th>
+                            <td>[[ history.Score ]]<span v-if="history.ScoreGet != 0">(<span v-if="history.ScoreGet > 0">+</span>[[ history.ScoreGet ]])</span></td>
                             <td>[[ history.Submit1.toFixed(2) ]]</td>
                             <td>[[ history.Submit2.toFixed(2) ]]</td>
                           </tr>

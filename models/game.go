@@ -129,7 +129,7 @@ func (r *Room) tick() bool {
 	worker.usersLock.Lock()
 	defer worker.usersLock.Unlock()
 
-	if err := Models.Model(r).Association(UsersName).Find(&savedUsers).Error; err == nil {
+	if err := Models.Model(r).Association(UsersName).Find(&savedUsers); err == nil {
 		worker.savedUsers.Store(savedUsers)
 	} else {
 		zap.S().Errorf("*Room.tick, refresh worker users cache failed, %v", err)

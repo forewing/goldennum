@@ -16,7 +16,7 @@ func testNewUser(t *testing.T, roomID uint, score int, submit1, submit2 float64)
 		Submit2: submit2,
 	}
 
-	if err := Db.Create(u).Error; err != nil {
+	if err := Models.Create(u).Error; err != nil {
 		t.Fatalf("fail to create User, %v", err)
 	}
 
@@ -33,7 +33,7 @@ func testNewUserHistory(t *testing.T, userID uint, round, score, scoreGet int, s
 		Submit2:  submit2,
 	}
 
-	if err := Db.Create(uh).Error; err != nil {
+	if err := Models.Create(uh).Error; err != nil {
 		t.Fatalf("fail to create UserHistory, %v", err)
 	}
 

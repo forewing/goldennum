@@ -1,19 +1,20 @@
 package models
 
 import (
-	"github.com/jinzhu/gorm"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
 func init() {
-	if Db != nil {
+	if Models != nil {
 		return
 	}
 
 	var err error
-	Db, err = gorm.Open("sqlite3", "file::memory:?cache=shared")
+	Models, err = gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{})
 	if err != nil {
 		panic("fail to init database")
 	}
 
-	Db.AutoMigrate(&User{}, &UserHistory{}, &Room{}, &RoomHistory{})
+	Models.AutoMigrate(&User{}, &UserHistory{}, &Room{}, &RoomHistory{})
 }

@@ -14,6 +14,13 @@ const (
 	roomStatusDisabled = 1
 )
 
+const (
+	// UsersName is the col name of Users
+	UsersName = "Users"
+	// RoomHistorysName is the col name of RoomHistorys
+	RoomHistorysName = "RoomHistorys"
+)
+
 // Room hold user info
 type Room struct {
 	ID        uint       `gorm:"primary_key"`
@@ -97,7 +104,7 @@ func (r *Room) Runner(worker *roomWorker) {
 			ok := r.tick()
 
 			var r2 Room
-			if result := Db.First(&r2, r.ID); result.Error != nil {
+			if result := Models.First(&r2, r.ID); result.Error != nil {
 				zap.S().Errorf("*Room.Runner, load: %v", result.Error)
 			} else {
 				*r = r2
@@ -106,7 +113,7 @@ func (r *Room) Runner(worker *roomWorker) {
 			if ok {
 				r.RoundNow++
 			}
-			if result := Db.Save(r); result.Error != nil {
+			if result := Models.Save(r); result.Error != nil {
 				zap.S().Errorf("*Room.Runner, save: %v", result.Error)
 			}
 		}
@@ -117,7 +124,7 @@ func (r *Room) Runner(worker *roomWorker) {
 func RestartAllRooms() {
 	go func() {
 		rooms := []Room{}
-		Db.Not("Status", roomStatusDisabled).Find(&rooms)
+		Models.Not("Status", roomStatusDisabled).Find(&rooms)
 		for _, room := range rooms {
 			if room.RoundNow >= room.RoundTotal {
 				continue
@@ -131,7 +138,7 @@ func RestartAllRooms() {
 
 // Start the room
 func (r *Room) Start() bool {
-	Db.Model(r).Update("Status", roomStatusDefault)
+	Models.Model(r).Update("Status", roomStatusDefault)
 	worker := &roomWorker{
 		ch: make(chan int),
 	}
@@ -148,7 +155,7 @@ func (r *Room) Start() bool {
 
 // Stop the room
 func (r *Room) Stop() bool {
-	Db.Model(r).Update("Status", roomStatusDisabled)
+	Models.Model(r).Update("Status", roomStatusDisabled)
 	if value, ok := roomWorkers.Load(r.ID); ok {
 		defer roomWorkers.Delete(r.ID)
 		if worker, ok := value.(*roomWorker); ok && worker.ch != nil {
@@ -168,8 +175,8 @@ func (r *Room) String() string {
 
 // GetUsers return room's users
 func (r *Room) GetUsers() (users []User) {
-	if result := Db.Model(r).Related(&users); result.Error != nil {
-		zap.S().Errorf("*Room.GetUsers, %v", result.Error)
+	if result := Models.Model(r).Association(UsersName).Find(&users); result != nil {
+		zap.S().Errorf("*Room.GetUsers, %v", result)
 	}
 	return
 }
@@ -202,8 +209,8 @@ func (r *Room) GetHistory() (history []RoomHistory) {
 		worker.historyLock.RLock()
 		defer worker.historyLock.RUnlock()
 	}
-	if result := Db.Model(r).Related(&history); result.Error != nil {
-		zap.S().Errorf("*Room.GetHistory, %v", result.Error)
+	if result := Models.Model(r).Association(RoomHistorysName).Find(&history); result != nil {
+		zap.S().Errorf("*Room.GetHistory, %v", result)
 	} else if worker != nil {
 		worker.savedHistorys.Store(history)
 	}

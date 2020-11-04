@@ -1,10 +1,12 @@
 package views
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 
 	"go.uber.org/zap"
+	"gorm.io/gorm"
 
 	"github.com/forewing/goldennum/models"
 	"github.com/forewing/goldennum/utils"
@@ -18,7 +20,7 @@ type roomCreateModel struct {
 
 func getRoomByIDOrErr(roomid int64, c *gin.Context, caller string) (*models.Room, error) {
 	var room models.Room
-	if result := models.Db.First(&room, roomid); result.RecordNotFound() {
+	if result := models.Models.First(&room, roomid); errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		zap.S().Warnf("getRoomByIDOrErr, caller: %v, ID: %v, %v", caller, roomid, result.Error)
 		c.JSON(http.StatusNotFound, fmt.Sprintf("Room %v", roomid))
 		return nil, result.Error
@@ -45,7 +47,7 @@ func RoomCreate(c *gin.Context) {
 		RoundNow:   0,
 		RoundTotal: data.RoundTotal,
 	}
-	if err := models.Db.Create(&room).Error; err != nil {
+	if err := models.Models.Create(&room).Error; err != nil {
 		zap.S().Errorf("RoomCreate, %v", err)
 		c.JSON(http.StatusInternalServerError, "")
 		return
@@ -55,7 +57,7 @@ func RoomCreate(c *gin.Context) {
 	room.Start()
 
 	// user, _ := models.UserNew(room.ID, fmt.Sprintf("u%v", rand.Uint32()), "12345678")
-	// models.Db.Save(user)
+	// models.Models.Save(user)
 
 	c.JSON(http.StatusOK, room)
 }
@@ -63,7 +65,7 @@ func RoomCreate(c *gin.Context) {
 // RoomList list all rooms
 func RoomList(c *gin.Context) {
 	rooms := []models.Room{}
-	if err := models.Db.Find(&rooms).Error; err != nil {
+	if err := models.Models.Find(&rooms).Error; err != nil {
 		zap.S().Errorf("RoomList, %v", err)
 		c.JSON(http.StatusInternalServerError, "")
 		return

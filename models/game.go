@@ -112,13 +112,13 @@ func (r *Room) tick() bool {
 	}
 
 	for _, user := range users {
-		if err := Db.Save(user).Error; err != nil {
+		if err := Models.Save(user).Error; err != nil {
 			zap.S().Errorf("*Room.tick, fail to save user: %v", user.String())
 		}
 	}
 
 	for _, history := range userHistorys {
-		if err := Db.Save(history).Error; err != nil {
+		if err := Models.Save(history).Error; err != nil {
 			zap.S().Errorf("*Room.tick, fail to save userHistory, %+v", *history)
 			continue
 		}
@@ -128,7 +128,8 @@ func (r *Room) tick() bool {
 	savedUsers := []User{}
 	worker.usersLock.Lock()
 	defer worker.usersLock.Unlock()
-	if err := Db.Model(r).Related(&savedUsers).Error; err == nil {
+
+	if err := Models.Model(r).Association(UsersName).Find(&savedUsers).Error; err == nil {
 		worker.savedUsers.Store(savedUsers)
 	} else {
 		zap.S().Errorf("*Room.tick, refresh worker users cache failed, %v", err)
@@ -143,7 +144,7 @@ func (r *Room) tick() bool {
 	defer worker.historyLock.Unlock()
 	worker.savedHistorys.Store([]RoomHistory{})
 
-	if err := Db.Save(&roomHistory).Error; err != nil {
+	if err := Models.Save(&roomHistory).Error; err != nil {
 		zap.S().Errorf("*Room.tick, fail to save roomHistory, %+v", roomHistory)
 	}
 

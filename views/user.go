@@ -1,10 +1,12 @@
 package views
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 
 	"go.uber.org/zap"
+	"gorm.io/gorm"
 
 	"github.com/forewing/goldennum/models"
 
@@ -14,7 +16,7 @@ import (
 
 func getUserByIDOrErr(userid int64, c *gin.Context, caller string) (*models.User, error) {
 	var user models.User
-	if result := models.Db.First(&user, userid); result.RecordNotFound() {
+	if result := models.Models.First(&user, userid); errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		zap.S().Warnf("getUserByIDOrErr, caller: %v, ID: %v, %v", caller, userid, result.Error)
 		c.JSON(http.StatusNotFound, fmt.Sprintf("User %v", userid))
 		return nil, result.Error
@@ -63,7 +65,7 @@ func UserCreate(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, "fail to create user")
 		return
 	}
-	models.Db.Save(&user)
+	models.Models.Save(&user)
 	c.JSON(http.StatusOK, user)
 }
 

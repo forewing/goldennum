@@ -10,7 +10,7 @@ func testNewRoom(t *testing.T, interval int, roundTotal int) *Room {
 		RoundTotal: roundTotal,
 	}
 
-	if err := Db.Create(r).Error; err != nil {
+	if err := Models.Create(r).Error; err != nil {
 		t.Fatalf("fail to create Room, %v", err)
 	}
 

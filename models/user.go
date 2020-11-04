@@ -11,6 +11,11 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+const (
+	// UserHistorysName is the col name of UserHistorys
+	UserHistorysName = "UserHistorys"
+)
+
 // User hold user info
 type User struct {
 	ID        uint       `gorm:"primary_key"`
@@ -148,8 +153,8 @@ func (u *User) GetHistory() (history []UserHistory) {
 			return h
 		}
 	}
-	if result := Db.Model(u).Related(&history); result.Error != nil {
-		zap.S().Errorf("*User.GetHistory, %v", result.Error)
+	if result := Models.Model(u).Association(UserHistorysName).Find(&history); result != nil {
+		zap.S().Errorf("*User.GetHistory, %v", result)
 		return
 	}
 	userHistoryCache.SetDefault(key, history)

@@ -87,8 +87,10 @@ func main() {
 	}
 
 	if len(conf.Bind) == 0 {
+		zap.S().Info("Listening on http://127.0.0.1:8080")
 		r.Run(":8080")
 	} else {
+		zap.S().Info("Listening on http://", conf.Bind)
 		r.Run(conf.Bind)
 	}
 }

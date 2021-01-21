@@ -27,6 +27,8 @@ For detail, you may refer to the wiki pages.
 
 ### Build
 
+> Require Go 1.16+
+
 1. Make sure you have `GO111MODULE` set to `on`
 
 ```
@@ -37,13 +39,7 @@ go env -w GO111MODULE=on
 >
 > To set it up, simply run `go env -w GOPROXY=https://goproxy.io,direct`.
 
-2. Generate resource files
-
-```
-go generate
-```
-
-3. Build project
+2. Build project
 
 ```
 go build

@@ -24,6 +24,3 @@ conf/config.yml
 # database
 sqlite3.db
 db
-
-# Bindata
-bindata.go

@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"html/template"
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	"github.com/forewing/goldennum/config"
@@ -105,7 +105,7 @@ func mustLoadTemplate() *template.Template {
 		if err != nil {
 			panic(err)
 		}
-		data, err := ioutil.ReadAll(file)
+		data, err := io.ReadAll(file)
 		if err != nil {
 			panic(err)
 		}

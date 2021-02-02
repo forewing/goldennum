@@ -2,7 +2,6 @@ package config
 
 import (
 	"flag"
-	"io/ioutil"
 	"os"
 	"strconv"
 
@@ -122,7 +121,7 @@ func (c *Config) loadFromFlag() {
 func (c *Config) loadFromFile(path string) {
 	zap.S().Debugf("load from file: %v", path)
 
-	data, err := ioutil.ReadFile(path)
+	data, err := os.ReadFile(path)
 	if err != nil {
 		zap.S().Panicf("load from config, fail to read %v: %v", path, err)
 	}

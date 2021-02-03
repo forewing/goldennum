@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"html/template"
-	"io"
 	"net/http"
 
 	"github.com/forewing/goldennum/config"
@@ -15,8 +14,9 @@ import (
 )
 
 const (
-	staticsPath   = "statics"
-	templatesPath = "templates"
+	staticsPath     = "statics"
+	templatesPath   = "templates"
+	templateBaseURL = "base_url"
 )
 
 var (
@@ -96,25 +96,17 @@ func setLogger() func() error {
 }
 
 func mustLoadTemplate() *template.Template {
-	t := template.New("")
 	templates := resources.GetTemplates()
 
-	// load templates
-	for _, name := range views.Templates {
-		file, err := templates.Open(name)
-		if err != nil {
-			panic(err)
-		}
-		data, err := io.ReadAll(file)
-		if err != nil {
-			panic(err)
-		}
-		t, err = t.New(name).Parse(string(data))
+	// load general templates
+	t, err := template.ParseFS(templates, "*.html")
+	if err != nil {
+		panic(err)
 	}
 
 	// generate BaseURL template
-	t, err := t.New(views.TemplateBaseURL).Parse(
-		fmt.Sprintf("{{ define \"%v\" }}%v{{ end }}", views.TemplateBaseURL, config.Load().BaseURL),
+	t, err = t.New(templateBaseURL).Parse(
+		fmt.Sprintf("{{ define \"%v\" }}%v{{ end }}", templateBaseURL, config.Load().BaseURL),
 	)
 	if err != nil {
 		panic(err)

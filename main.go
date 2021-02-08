@@ -9,6 +9,7 @@ import (
 	"github.com/forewing/goldennum/models"
 	"github.com/forewing/goldennum/resources"
 	"github.com/forewing/goldennum/views"
+	"github.com/forewing/goldennum/views/i18n"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
@@ -38,6 +39,9 @@ func main() {
 	} else {
 		gin.SetMode(gin.ReleaseMode)
 	}
+
+	// load i18n
+	i18n.Load()
 
 	r := gin.Default()
 

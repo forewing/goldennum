@@ -36,6 +36,10 @@ dashboard_score_2: Score
 dashboard_submit1: Submit1
 dashboard_submit2: Submit2
 dashboard_close: Close
+dashboard_DATA_LABEL_GOLDENNUM: "Goldennum"
+dashboard_TITLE_NUMBER_HISTORY: "Number History"
+dashboard_SCALE_LABEL_ROUNDS: "Rounds"
+dashboard_SCALE_LABEL_GOLDENNUM: "Goldennum"
 
 # footer.html
 
@@ -43,6 +47,16 @@ dashboard_close: Close
 
 # index.html
 index_control_panel: Control Panel
+index_CHANGE_ROOM_ERROR_MESSAGE_1: "Room "
+index_CHANGE_ROOM_ERROR_MESSAGE_2: " not found"
+index_SUBMIT_ERROR_MESSAGE: "Submits should be 2 float numbers in the open interval (0, 100)"
+index_SUBMIT_SUCCESS_MESSAGE: "Submit success"
+index_SIGN_IN_ERROR_MESSAGE_PASSWORD_LENGTH: "Password length should be greater than 8"
+index_SIGN_IN_SUCCESS_MESSAGE: "Sign in success. Close in 1 second."
+index_SIGN_UP_ERROR_MESSAGE_PASSWORD_TWICE: "Please input the same password twice"
+index_SIGN_UP_ERROR_MESSAGE_PASSWORD_LENGTH: "Password length should be greater than 8"
+index_SIGN_UP_ERROR_MESSAGE_USERNAME_LENGTH: "Username length should be greater than 1"
+index_SIGN_UP_SUCCESS_MESSAGE: "Sign up success. Close in 1 second."
 
 # navbar.html
 navbar_go_goldennum: Go! Goldennum!

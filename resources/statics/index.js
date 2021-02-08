@@ -50,10 +50,11 @@ var app = new Vue({
             return true;
         },
         submitUserInput() {
-            s1 = parseFloat(this.submitInput1);
-            s2 = parseFloat(this.submitInput2);
+            let s1 = parseFloat(this.submitInput1);
+            let s2 = parseFloat(this.submitInput2);
             if (!this.submitValidator(s1) || !this.submitValidator(s2)) {
-                this.errorMessages.push("Submits should be 2 float numbers in the open interval (0, 100)");
+                this.errorMessages = ["Submits should be 2 float numbers in the open interval (0, 100)"];
+                setTimeout(() => this.errorMessages = [], 5000)
                 return;
             }
             postUserSubmit(this.userId, this.userPassword, this.submitInput1, this.submitInput2)
@@ -66,6 +67,7 @@ var app = new Vue({
                     if (error.data) {
                         error.data.then(data => this.errorMessages.push(data));
                     }
+                    setTimeout(() => this.errorMessages = [], 5000)
                 });
         },
         modalSignIn() {

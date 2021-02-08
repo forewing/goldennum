@@ -7,7 +7,7 @@ Vue.component('dashboard', {
             data: null,
             roomId: 1,
             intervalId: null,
-            startStopButtonText: "Start",
+            isButtonStart: true,
             nextTick: Date.now(),
             countDown: 0,
             errorMessage: "",
@@ -87,12 +87,12 @@ Vue.component('dashboard', {
             setTimeout(this.refreshTimeOut, 1000);
         },
         setTimeout(func, timeout) {
-            this.startStopButtonText = "Stop";
+            this.isButtonStart = false;
             this.intervalId = setTimeout(func, timeout);
             this.nextTick = Date.now() + timeout;
         },
         clearTimeout() {
-            this.startStopButtonText = "Start";
+            this.isButtonStart = true;
             clearInterval(this.intervalId);
             this.intervalId = null;
         },

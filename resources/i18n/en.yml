@@ -63,6 +63,8 @@ navbar_go_goldennum: Go! Goldennum!
 navbar_help: Help
 navbar_admin: Admin
 navbar_star_on_github: Star On GitHub
+navbar_language: Language
+navbar_default: System Default
 navbar_help_about_the_game: Help & About the Game
 navbar_help_brief: "
 There are N players, begin a competition round of Goldennum. Every round, every player submits 2

@@ -15,6 +15,7 @@ type LanguageConfig gin.H
 
 const (
 	acceptLanguageHeaderKey = "Accept-Language"
+	langCookieKey           = "lang"
 )
 
 var (
@@ -74,7 +75,8 @@ func parseI18nConfig(path string) LanguageConfig {
 
 // GetI18nData returns target language data
 func GetI18nData(c *gin.Context) LanguageConfig {
+	lang, _ := c.Cookie(langCookieKey)
 	accept := c.GetHeader(acceptLanguageHeaderKey)
-	_, i := language.MatchStrings(i18nMatcher, accept)
+	_, i := language.MatchStrings(i18nMatcher, lang, accept)
 	return i18nCachedData[i]
 }

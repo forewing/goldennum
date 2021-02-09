@@ -28,7 +28,7 @@ func TestCombineLanguageConfig(t *testing.T) {
 	}
 }
 
-func TestGetI18nDate(t *testing.T) {
+func TestGetI18nData(t *testing.T) {
 	Load()
 	languageHeaderMap := map[language.Tag]string{
 		language.English:            "en",
@@ -47,7 +47,7 @@ func TestGetI18nDate(t *testing.T) {
 		data := GetI18nData(c)
 		t.Log(i18nCachedData, i, languageHeaderMap[l])
 		if !reflect.DeepEqual(data, i18nCachedData[i]) {
-			t.Errorf("not equal: %v %v", i, i18nConfigPath[i])
+			t.Errorf("%v not equal: %v %v", acceptLanguageHeaderKey, i, i18nConfigPath[i])
 		}
 	}
 }

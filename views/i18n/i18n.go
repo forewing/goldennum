@@ -1,7 +1,7 @@
 package i18n
 
 import (
-	"io"
+	"io/fs"
 
 	"github.com/forewing/goldennum/resources"
 	"github.com/gin-gonic/gin"
@@ -57,11 +57,7 @@ func combineLanguageConfig(base LanguageConfig, override LanguageConfig) Languag
 }
 
 func parseI18nConfig(path string) LanguageConfig {
-	file, err := resources.GetI18n().Open(path)
-	if err != nil {
-		panic(err)
-	}
-	data, err := io.ReadAll(file)
+	data, err := fs.ReadFile(resources.GetI18n(), path)
 	if err != nil {
 		panic(err)
 	}

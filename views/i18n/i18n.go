@@ -13,6 +13,10 @@ import (
 // LanguageConfig configs for all pages
 type LanguageConfig gin.H
 
+const (
+	acceptLanguageHeaderKey = "Accept-Language"
+)
+
 var (
 	i18nLanguages = []language.Tag{
 		language.English,
@@ -71,7 +75,7 @@ func parseI18nConfig(path string) LanguageConfig {
 
 // GetI18nData returns target language data
 func GetI18nData(c *gin.Context) LanguageConfig {
-	accept := c.GetHeader("Accept-Language")
+	accept := c.GetHeader(acceptLanguageHeaderKey)
 	_, i := language.MatchStrings(i18nMatcher, accept)
 	return i18nCachedData[i]
 }

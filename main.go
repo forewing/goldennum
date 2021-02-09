@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-	"html/template"
 	"net/http"
 
 	"github.com/forewing/goldennum/config"
@@ -15,9 +13,8 @@ import (
 )
 
 const (
-	staticsPath     = "statics"
-	templatesPath   = "templates"
-	templateBaseURL = "base_url"
+	staticsPath   = "statics"
+	templatesPath = "templates"
 )
 
 var (
@@ -47,7 +44,7 @@ func main() {
 
 	// pages
 	{
-		t := mustLoadTemplate()
+		t := views.MustLoadTemplate()
 		r.SetHTMLTemplate(t)
 		r.GET("/", views.PageIndex)
 		r.GET("/admin", views.AdminIndex)
@@ -97,23 +94,4 @@ func setLogger() func() error {
 	}
 	zap.ReplaceGlobals(logger)
 	return logger.Sync
-}
-
-func mustLoadTemplate() *template.Template {
-	templates := resources.GetTemplates()
-
-	// load general templates
-	t, err := template.ParseFS(templates, "*.html")
-	if err != nil {
-		panic(err)
-	}
-
-	// generate BaseURL template
-	t, err = t.New(templateBaseURL).Parse(
-		fmt.Sprintf("{{ define \"%v\" }}%v{{ end }}", templateBaseURL, config.Load().BaseURL),
-	)
-	if err != nil {
-		panic(err)
-	}
-	return t
 }

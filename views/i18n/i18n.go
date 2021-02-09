@@ -46,7 +46,6 @@ func Load() {
 		i18nCachedData = append(i18nCachedData, i18nLoadData)
 		zap.S().Infof("[i18n] Load %v success", path)
 	}
-	zap.S().Debug(i18nCachedData)
 }
 
 func combineLanguageConfig(base LanguageConfig, override LanguageConfig) LanguageConfig {

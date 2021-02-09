@@ -21,7 +21,7 @@ var (
 	i18nLanguages = []language.Tag{
 		language.English,
 		language.SimplifiedChinese,
-		language.TraditionalChinese,
+		// language.TraditionalChinese,
 		language.Chinese,
 	}
 	i18nMatcher = language.NewMatcher(i18nLanguages)
@@ -29,7 +29,7 @@ var (
 	i18nConfigPath = []string{
 		"en.yml", // The first is the fallback config
 		"zh-Hans.yml",
-		"zh-Hant.yml",
+		// "zh-Hant.yml",
 		"zh-Hans.yml",
 	}
 

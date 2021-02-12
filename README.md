@@ -58,7 +58,7 @@ go env -w GO111MODULE=on
 You can install with a single command
 
 ```
-go install github.com/forewing/goldennum
+go install github.com/forewing/goldennum@latest
 ```
 
 Or get the source code and build manually

@@ -13,6 +13,8 @@ There are N players, begin a competition round of Goldennum. Every round, every 
 
 For players, take a look at our [Participation Guide](https://github.com/forewing/goldennum/wiki/Participation-Guide)!
 
+> If you want to host a game but having trouble deploying on your server, feel free to contact me. I am glad to open a lobby on my server for you.
+
 ## Preview
 
 ![preview](https://github.com/forewing/images/raw/master/goldennum-desktop.png)
@@ -25,9 +27,25 @@ For detail, you may refer to the wiki pages.
 
 - [Configuration Guide](https://github.com/forewing/goldennum/wiki/Configuration)
 
-### Build
+## Install
 
-1. Make sure you have `GO111MODULE` set to `on`
+### Docker
+
+You can get the docker image at [forewing/goldennum](https://hub.docker.com/r/forewing/goldennum).
+
+See [docker-compose.yml](docker-compose.yml) for example config.
+
+### Pre-Built Binary
+
+Download it from [GitHub Action CI](https://github.com/forewing/goldennum/actions?query=workflow%3ACI+is%3Asuccess), latest successful build is recommended.
+
+Or from [Latest Release](https://github.com/forewing/goldennum/releases/tag/v0.3.8) page.
+
+### Build From Source
+
+> Require Go 1.16+
+
+Make sure you have `GO111MODULE` set to `on`
 
 ```
 go env -w GO111MODULE=on
@@ -37,19 +55,21 @@ go env -w GO111MODULE=on
 >
 > To set it up, simply run `go env -w GOPROXY=https://goproxy.io,direct`.
 
-2. Generate resource files
+You can install with a single command
 
 ```
-go generate
+go install github.com/forewing/goldennum@latest
 ```
 
-3. Build project
+Or get the source code and build manually
 
 ```
+git clone https://github.com/forewing/goldennum.git
+cd goldennum
 go build
 ```
 
-### Run
+## Run
 
 ```
 ./goldennum -h
@@ -92,7 +112,7 @@ Usage of ./goldennum:
 
 Players may develop their own AI/Bot to take part in the game, using the API port.
 
-[API Specification](https://github.com/forewing/goldennum/wiki/API-Spec)
+[API Specification](https://github.com/forewing/goldennum/wiki/API-Specification)
 
 ## Development Guide
 
@@ -102,6 +122,8 @@ PR welcome!
 
 ## Thanks
 
-- [Nanjing University Microsoft Student Club](https://github.com/njumsc) for sending me to MSC Summer Camp, 2018, where I met the game.
+- [Nanjing University Microsoft Student Club](https://github.com/njumsc) for supporting this project!
 
-- [Zhanglv0413](https://github.com/Zhanglv0413) for designing the lovely [logo](./statics/favicon.ico).
+- [Zhanglv0413](https://github.com/Zhanglv0413) for designing the lovely logo!
+
+    [![logo](resources/statics/favicon.ico)](resources/statics/favicon.ico)

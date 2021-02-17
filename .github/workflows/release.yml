@@ -6,7 +6,7 @@ on:
       - 'v*'
 
 env:
-  go-version: "1.15"
+  go-version: "1.16"
   OUTPUT_NAME_LINUX: goldennum_linux
   OUTPUT_FILE_LINUX: goldennum_linux.tar.gz
   OUTPUT_NAME_WINDOWS: goldennum_windows

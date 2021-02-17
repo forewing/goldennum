@@ -7,35 +7,8 @@ import (
 )
 
 const (
-	// TemplateBaseURL is the base URL template name
-	TemplateBaseURL = "base_url"
-
-	templateHeader     = "header.html"
-	templateFooter     = "footer.html"
-	templateNavbar     = "navbar.html"
-	templateIndex      = "index.html"
-	templateUserPanel  = "user_panel.html"
-	templateUserModals = "user_modals.html"
-	templateAdmin      = "admin.html"
-
-	componentDashboard   = "dashboard.html"
-	componentRoomControl = "room_control.html"
-)
-
-var (
-	// Templates is the template names
-	Templates []string = []string{
-		templateHeader,
-		templateFooter,
-		templateNavbar,
-		templateIndex,
-		templateUserPanel,
-		templateUserModals,
-		templateAdmin,
-
-		componentDashboard,
-		componentRoomControl,
-	}
+	templateIndex = "index.html"
+	templateAdmin = "admin.html"
 )
 
 // PageIndex render index

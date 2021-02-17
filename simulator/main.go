@@ -5,7 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"math/rand"
 	"net/http"
@@ -73,9 +73,9 @@ func mustPostJSON(url string, body interface{}, auth bool) map[string]interface{
 	}
 
 	jsonMap := make(map[string]interface{})
-	jsonStr, err := ioutil.ReadAll(resp.Body)
+	jsonStr, err := io.ReadAll(resp.Body)
 	if err != nil {
-		log.Panicf("ioutil.ReadAll fail: %v", err)
+		log.Panicf("io.ReadAll fail: %v", err)
 	}
 
 	err = json.Unmarshal([]byte(jsonStr), &jsonMap)

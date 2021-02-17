@@ -2,11 +2,11 @@
 <script type="text/x-template" id="room-control-component">
 <tr v-bind:class="color.length == 0 ? '' : color">
     <th scope="row">[[ roomid ]]</th>
-    <td>[[ closed ? 'down' : 'up' ]]</td>
+    <td>[[ closed ? '{{ .i18n.room_control_down }}' : '{{ .i18n.room_control_up }}' ]]</td>
     <td>[[ userNum ]]</td>
     <td>[[ interval ]]</td>
     <td>[[ roundNow ]]/[[ roundTotal ]]</td>
-    <td><a href="#" class="text-dark" v-on:click="toggleStatus">Toggle</a></td>
+    <td><a href="#" class="text-dark" v-on:click="toggleStatus">{{ .i18n.room_control_toggle }}</a></td>
 </tr>
 </script>
 <script src='{{ template "base_url" . }}/statics/room_control.js'></script>

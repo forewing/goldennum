@@ -6,7 +6,8 @@
 
 	{{ template "header.html" . }}
 
-	<title>Go! Goldennum!</title>
+	<title>{{ .i18n.global_title }}</title>
+
 
 </head>
 
@@ -20,14 +21,14 @@
 				<nav class="col-md-2 d-none d-md-block bg-light sidebar">
 					<div class="sidebar-sticky">
 						<h4 class="d-flex justify-content-between align-items-center px-2 mt-4 mb-2">
-							<span>Control Panel</span>
+							<span>{{ .i18n.index_control_panel }}</span>
 						</h4>
 						{{ template "user_panel.html" . }}
 					</div>
 				</nav>
 				<div class="d-md-none col">
 					<div class="card">
-						<h3 class="card-title pt-3 pl-4 mb-2">Control Panel</h3>
+						<h3 class="card-title pt-3 pl-4 mb-2">{{ .i18n.index_control_panel }}</h3>
 						<div class=" card-body">
 							{{ template "user_panel.html" . }}
 						</div>
@@ -44,6 +45,19 @@
 	<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 
 	{{ template "dashboard.html" . }}
+
+	<script>
+		const CHANGE_ROOM_ERROR_MESSAGE_1 = "{{ .i18n.index_CHANGE_ROOM_ERROR_MESSAGE_1 }}";
+		const CHANGE_ROOM_ERROR_MESSAGE_2 = "{{ .i18n.index_CHANGE_ROOM_ERROR_MESSAGE_2 }}";
+		const SUBMIT_ERROR_MESSAGE = "{{ .i18n.index_SUBMIT_ERROR_MESSAGE }}";
+		const SUBMIT_SUCCESS_MESSAGE = "{{ .i18n.index_SUBMIT_SUCCESS_MESSAGE }}";
+		const SIGN_IN_ERROR_MESSAGE_PASSWORD_LENGTH = "{{ .i18n.index_SIGN_IN_ERROR_MESSAGE_PASSWORD_LENGTH }}";
+		const SIGN_IN_SUCCESS_MESSAGE = "{{ .i18n.index_SIGN_IN_SUCCESS_MESSAGE }}";
+		const SIGN_UP_ERROR_MESSAGE_PASSWORD_TWICE = "{{ .i18n.index_SIGN_UP_ERROR_MESSAGE_PASSWORD_TWICE }}";
+		const SIGN_UP_ERROR_MESSAGE_PASSWORD_LENGTH = "{{ .i18n.index_SIGN_UP_ERROR_MESSAGE_PASSWORD_LENGTH }}";
+		const SIGN_UP_ERROR_MESSAGE_USERNAME_LENGTH = "{{ .i18n.index_SIGN_UP_ERROR_MESSAGE_USERNAME_LENGTH }}";
+		const SIGN_UP_SUCCESS_MESSAGE = "{{ .i18n.index_SIGN_UP_SUCCESS_MESSAGE }}";
+	</script>
 	<script src='{{ template "base_url" . }}/statics/index.js'></script>
 </body>
 

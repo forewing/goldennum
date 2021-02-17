@@ -4,7 +4,7 @@
         <div class="container-fluid">
             <a class="navbar-brand" href='{{ template "base_url" . }}/'>
                 <img src='{{ template "base_url" . }}/statics/favicon.ico' style="height: 30px;" class="mr-2">
-                <span>Go! Goldennum!</span>
+                <span>{{ .i18n.navbar_go_goldennum }}</span>
             </a>
             <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
                 data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -17,7 +17,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#helpModal" data-toggle="modal" data-target="#helpModal">
                             <span class="oi oi-info" title="info" aria-hidden="true"></span>
-                            Help
+                            {{ .i18n.navbar_help }}
                         </a>
                     </li>
                 </ul>
@@ -25,14 +25,27 @@
                     <li class="nav-item text-muted">
                         <a class="nav-link" href='{{ template "base_url" . }}/admin'>
                             <span class="oi oi-wrench" title="wrench" aria-hidden="true"></span>
-                            Admin
+                            {{ .i18n.navbar_admin }}
                         </a>
                     </li>
                     <li class="nav-item text-muted">
                         <a class="nav-link" href="https://github.com/forewing/goldennum" target="_blank">
                             <span class="oi oi-star" title="star" aria-hidden="true"></span>
-                            Star On GitHub
+                            {{ .i18n.navbar_star_on_github }}
                         </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarLanguageDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="oi oi-globe" title="globe" aria-hidden="true"></span>
+                            {{ .i18n.navbar_language }}
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarLanguageDropdown">
+                            <a class="dropdown-item" href="#" onclick="setLanguage('en')">English</a>
+                            <a class="dropdown-item" href="#" onclick="setLanguage('zh-Hans')">简体中文</a>
+                            <a class="dropdown-item" href="#" onclick="setLanguage('zh-Hant')">繁體中文</a>
+                            <a class="dropdown-item" href="#" onclick="setLanguage('')">{{ .i18n.navbar_default }}</a>
+                        </div>
                     </li>
                 </ul>
             </div>
@@ -45,29 +58,23 @@
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="helpModalLabel">Help & About the Game</h5>
+                <h5 class="modal-title" id="helpModalLabel">{{ .i18n.navbar_help_about_the_game }}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <p>
-                    There are N players, begin a competition round of Goldennum. Every round, every player submits 2
-                    float numbers in the open interval (0, 100) to the server. At the end of the round, the server will
-                    calculate the average of the numbers submitted during this round as AVG. Then the Goldennum of the
-                    round is calculated as AVG * 0.618. For every submitted number, if it is the closest number to the
-                    Goldennum, the submitter gets N-2 points, if it is the furthest number from the Goldennum, the
-                    submitter gets -2 points, otherwise, the submitter gets no points. After the rounds ends, player
-                    with the most points wins the game.
+                    {{ .i18n.navbar_help_brief }}
                 </p>
                 <p>
-                    For detailed guide, please refer to our
+                    {{ .i18n.navbar_help_detail_pre }}
                     <a href="https://github.com/forewing/goldennum/wiki/Participation-Guide" target="_blank">
-                        Participation Guide</a>.
+                        {{ .i18n.navbar_help_detail_post }}</a>{{ .i18n.global_period }}
                 </p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-dismiss="modal">Got it!</button>
+                <button type="button" class="btn btn-success" data-dismiss="modal">{{ .i18n.navbar_got_it }}</button>
             </div>
         </div>
     </div>

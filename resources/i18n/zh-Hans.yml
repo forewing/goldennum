@@ -1,0 +1,107 @@
+# global
+global_title: 进击！黄金点游戏！
+global_period: 。
+
+# admin.html
+admin_admin: 管理
+admin_admin_panel: 管理面板
+admin_intervals_rounds: 回合长度（秒） / 总局数
+admin_add: 添加房间
+admin_list_of_rooms: 房间列表
+admin_id: ID
+admin_status: 状态
+admin_users: 用户数量
+admin_intervals: 回合长度（秒）
+admin_rounds: 总局数
+admin_Operations: 操作
+
+# dashboard.html
+dashboard_current_room: "当前房间:"
+dashboard_next_tick: "下一回合:"
+dashboard_start: 启用同步
+dashboard_stop: 停止同步
+dashboard_refresh: 手动刷新
+dashboard_history_range: 显示局数
+dashboard_all: 全部
+dashboard_list_of_users: 用户列表
+dashboard_rank: 排名
+dashboard_user: 用户
+dashboard_score_1: 分数
+dashboard_history: 历史
+dashboard_show: 显示
+dashboard_history_of_user: "用户历史:"
+dashboard_list_of_user_history: 用户历史列表
+dashboard_round: 局数
+dashboard_score_2: 分数
+dashboard_submit1: 提交 1
+dashboard_submit2: 提交 2
+dashboard_close: 关闭
+dashboard_DATA_LABEL_GOLDENNUM: "黄金点"
+dashboard_TITLE_NUMBER_HISTORY: "黄金点历史"
+dashboard_SCALE_LABEL_ROUNDS: "局数"
+dashboard_SCALE_LABEL_GOLDENNUM: "黄金点"
+
+# footer.html
+
+# header.html
+
+# index.html
+index_control_panel: 控制面板
+index_CHANGE_ROOM_ERROR_MESSAGE_1: "房间 "
+index_CHANGE_ROOM_ERROR_MESSAGE_2: " 不存在"
+index_SUBMIT_ERROR_MESSAGE: "提交应为 2 个 (0, 100) 区间内的数（不含0、100）"
+index_SUBMIT_SUCCESS_MESSAGE: "提交成功"
+index_SIGN_IN_ERROR_MESSAGE_PASSWORD_LENGTH: "密码长度应大于 8"
+index_SIGN_IN_SUCCESS_MESSAGE: "登陆成功，一秒后关闭。"
+index_SIGN_UP_ERROR_MESSAGE_PASSWORD_TWICE: "请输入相同密码两次"
+index_SIGN_UP_ERROR_MESSAGE_PASSWORD_LENGTH: "密码长度应大于 8"
+index_SIGN_UP_ERROR_MESSAGE_USERNAME_LENGTH: "用户名长度应大于 1"
+index_SIGN_UP_SUCCESS_MESSAGE: "注册成功，一秒后关闭。"
+
+# navbar.html
+navbar_go_goldennum: 进击！黄金点游戏！
+navbar_help: 帮助
+navbar_admin: 管理
+navbar_star_on_github: 在 GitHub 上关注
+navbar_language: 语言
+navbar_default: 系统默认
+navbar_help_about_the_game: 游戏帮助
+navbar_help_brief: "
+一共有 N 名玩家进行黄金点游戏。每回合，每名玩家提交 2 个位于 (0, 100) 区间内的整数或小数（不含0、100）。
+当前回合结算时，服务器会计算每个人提交的所有数字的平均数，称之为 AVG。黄金点计算公式为 AVG * 0.618。
+对每位玩家的每个提交，如果它离黄金点是所有人的所有数字中最近的，该名玩家获得 N-2 分；如果是最远的，则扣掉 2 分；
+否则，分数不变（注：可以同时既加分又扣分，做差后加入总分）。所有回合结束后，总分最高的玩家赢得游戏。
+"
+navbar_help_detail_pre: 若想获得相信帮助信息，请访问
+navbar_help_detail_post: 游戏参与指导
+navbar_got_it: 了解
+
+# room_control.html
+room_control_down: 已关闭
+room_control_up: 已开启
+room_control_toggle: 切换
+
+# user_modals.html
+user_modals_user_id: 用户 ID
+user_modals_password_1: 密码
+user_modals_close1: 关闭
+user_modals_sign_in: 登录
+user_modals_room_id: 房间 ID
+user_modals_username: 用户名
+user_modals_password_2: 密码
+user_modals_password_repeat: 密码（重复）
+user_modals_close2: 关闭
+user_modals_sign_up: 注册
+
+# user_panel.html
+user_panel_sign_in: 登录
+user_panel_sign_up: 注册
+user_panel_user_info: 用户信息
+user_panel_id: ID
+user_panel_name: 用户名
+user_panel_score: 分数
+user_panel_sign_out: 注销
+user_panel_room: 房间
+user_panel_set: 切换
+user_panel_submit_1: 提交
+user_panel_submit_2: 提交

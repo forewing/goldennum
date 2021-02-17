@@ -39,7 +39,7 @@ var app = new Vue({
                 this.$refs.panelDashboard.updateRoomId(id);
                 this.changeRoomErrorMessage = "";
             }).catch(error => {
-                this.changeRoomErrorMessage = `Room ${id} not found`;
+                this.changeRoomErrorMessage = CHANGE_ROOM_ERROR_MESSAGE_1 + `${id}` + CHANGE_ROOM_ERROR_MESSAGE_2;
                 setTimeout(() => this.changeRoomErrorMessage = "", 3000)
             });
         },
@@ -50,15 +50,16 @@ var app = new Vue({
             return true;
         },
         submitUserInput() {
-            s1 = parseFloat(this.submitInput1);
-            s2 = parseFloat(this.submitInput2);
+            let s1 = parseFloat(this.submitInput1);
+            let s2 = parseFloat(this.submitInput2);
             if (!this.submitValidator(s1) || !this.submitValidator(s2)) {
-                this.errorMessages.push("Submits should be 2 float numbers in the open interval (0, 100)");
+                this.errorMessages = [SUBMIT_ERROR_MESSAGE];
+                setTimeout(() => this.errorMessages = [], 5000)
                 return;
             }
             postUserSubmit(this.userId, this.userPassword, this.submitInput1, this.submitInput2)
                 .then(data => {
-                    this.errorMessages = ["Submit success"];
+                    this.errorMessages = [SUBMIT_SUCCESS_MESSAGE];
                     setTimeout(() => this.errorMessages = [], 1000)
                 })
                 .catch(error => {
@@ -66,19 +67,20 @@ var app = new Vue({
                     if (error.data) {
                         error.data.then(data => this.errorMessages.push(data));
                     }
+                    setTimeout(() => this.errorMessages = [], 5000)
                 });
         },
         modalSignIn() {
             if (this.signInModalPassword.length < 8) {
-                this.signInModalErrorMessage = "Password length should be greater than 8"
+                this.signInModalErrorMessage = SIGN_IN_ERROR_MESSAGE_PASSWORD_LENGTH;
                 return;
             }
             putUserAuth(
                 this.signInModalUserId,
                 this.signInModalPassword
             ).then(data => {
-                this.signInModalErrorMessage = ""
-                this.signInModalSuccessMessage = "Sign in success. Close in 1 second."
+                this.signInModalErrorMessage = "";
+                this.signInModalSuccessMessage = SIGN_IN_SUCCESS_MESSAGE
                 setTimeout(
                     () => {
                         $("#userSignInModal").modal('hide');
@@ -98,15 +100,15 @@ var app = new Vue({
         },
         modalSignUp() {
             if (this.signUpModalPassword1 != this.signUpModalPassword2) {
-                this.signUpModalErrorMessage = "Please input the same password twice";
+                this.signUpModalErrorMessage = SIGN_UP_ERROR_MESSAGE_PASSWORD_TWICE;
                 return;
             }
             if (this.signUpModalPassword1.length < 8) {
-                this.signUpModalErrorMessage = "Password length should be greater than 8"
+                this.signUpModalErrorMessage = SIGN_UP_ERROR_MESSAGE_PASSWORD_LENGTH;
                 return;
             }
             if (this.signUpModalUserName.length < 1) {
-                this.signUpModalErrorMessage = "Username length should be greater than 1";
+                this.signUpModalErrorMessage = SIGN_UP_ERROR_MESSAGE_USERNAME_LENGTH;
                 return;
             }
             postUserCreate(
@@ -115,7 +117,7 @@ var app = new Vue({
                 this.signUpModalPassword1
             ).then(data => {
                 this.signUpModalErrorMessage = "";
-                this.signUpModalSuccessMessage = "Sign up success. Close in 1 second.";
+                this.signUpModalSuccessMessage = SIGN_UP_SUCCESS_MESSAGE;
                 setTimeout(
                     () => {
                         $("#userSignUpModal").modal('hide');

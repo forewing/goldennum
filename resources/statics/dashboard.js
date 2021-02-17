@@ -7,7 +7,7 @@ Vue.component('dashboard', {
             data: null,
             roomId: 1,
             intervalId: null,
-            startStopButtonText: "Start",
+            isButtonStart: true,
             nextTick: Date.now(),
             countDown: 0,
             errorMessage: "",
@@ -19,7 +19,7 @@ Vue.component('dashboard', {
                 data: {
                     labels: [],
                     datasets: [{
-                        label: 'Goldennum',
+                        label: DATA_LABEL_GOLDENNUM,
                         backgroundColor: 'rgba(151, 216, 178, 0.2)',
                         borderColor: 'rgba(151, 216, 178, 1)',
                         pointHitRadius: 10,
@@ -36,7 +36,7 @@ Vue.component('dashboard', {
                     responsive: true,
                     title: {
                         display: true,
-                        text: 'Number History'
+                        text: TITLE_NUMBER_HISTORY
                     },
                     tooltips: {
                         mode: 'index',
@@ -47,14 +47,14 @@ Vue.component('dashboard', {
                             display: true,
                             scaleLabel: {
                                 display: true,
-                                labelString: 'Rounds'
+                                labelString: SCALE_LABEL_ROUNDS
                             }
                         }],
                         yAxes: [{
                             display: true,
                             scaleLabel: {
                                 display: true,
-                                labelString: 'Goldennum'
+                                labelString: SCALE_LABEL_GOLDENNUM
                             },
                             ticks: {
                                 suggestedMin: 0,
@@ -87,12 +87,12 @@ Vue.component('dashboard', {
             setTimeout(this.refreshTimeOut, 1000);
         },
         setTimeout(func, timeout) {
-            this.startStopButtonText = "Stop";
+            this.isButtonStart = false;
             this.intervalId = setTimeout(func, timeout);
             this.nextTick = Date.now() + timeout;
         },
         clearTimeout() {
-            this.startStopButtonText = "Start";
+            this.isButtonStart = true;
             clearInterval(this.intervalId);
             this.intervalId = null;
         },

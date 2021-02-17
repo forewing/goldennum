@@ -13,28 +13,29 @@ const (
 	packagePath   = "resources"
 	staticsPath   = "statics"
 	templatesPath = "templates"
+	i18nPath      = "i18n"
 )
 
 var (
 	//go:embed statics/*
 	staticsEmbed embed.FS
-	statics      fs.FS
+	statics      = mustStripPrefix(staticsEmbed, staticsPath)
 
 	//go:embed templates/*
 	templatesEmbed embed.FS
-	templates      fs.FS
-)
+	templates      = mustStripPrefix(templatesEmbed, templatesPath)
 
-func init() {
-	statics = mustStripPrefix(staticsEmbed, staticsPath)
-	templates = mustStripPrefix(templatesEmbed, templatesPath)
-}
+	//go:embed i18n/*
+	i18nEmbed embed.FS
+	i18n      = mustStripPrefix(i18nEmbed, i18nPath)
+)
 
 // SetLiveReload make resources load from disk
 // if avaliable, instead of from embedded files
 func SetLiveReload() {
 	setLiveReload(&statics, staticsPath)
 	setLiveReload(&templates, templatesPath)
+	setLiveReload(&i18n, i18nPath)
 }
 
 // GetStatics return statics
@@ -45,6 +46,11 @@ func GetStatics() fs.FS {
 // GetTemplates return templates
 func GetTemplates() fs.FS {
 	return templates
+}
+
+// GetI18n return i18n configs
+func GetI18n() fs.FS {
+	return i18n
 }
 
 func mustStripPrefix(sfs fs.FS, prefix string) fs.FS {

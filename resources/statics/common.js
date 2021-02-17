@@ -166,3 +166,19 @@ function postCreateRoom(interval, rounds) {
         RoundTotal: parseInt(rounds, 10),
     });
 }
+
+// cookies
+function createCookie(name, value, days) {
+    let expires = "";
+    if (days) {
+        let date = new Date();
+        date.setDate(date.getDate() + days)
+        expires = date.toUTCString();
+    }
+    document.cookie = `${name}=${value}; expires=${expires}; path=/`;
+}
+
+function setLanguage(lang) {
+    createCookie("lang", lang, 30);
+    location.reload();
+}

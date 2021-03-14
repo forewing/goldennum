@@ -72,7 +72,7 @@ navbar_help_brief: "
 对每位玩家的每个提交，如果它离黄金点是所有人的所有数字中最近的，该名玩家获得 N-2 分；如果是最远的，则扣掉 2 分；
 否则，分数不变（注：可以同时既加分又扣分，做差后加入总分）。所有回合结束后，总分最高的玩家赢得游戏。
 "
-navbar_help_detail_pre: 若想获得相信帮助信息，请访问
+navbar_help_detail_pre: 若想获得详细帮助信息，请访问
 navbar_help_detail_post: 游戏参与指导
 navbar_got_it: 了解
 

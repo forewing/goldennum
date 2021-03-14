@@ -48,6 +48,7 @@ func TestUserNameValidate(t *testing.T) {
 		{"user", true},
 		{"", false},
 		{strings.Repeat("x", 33), false},
+		{"你好", false},
 	}
 
 	for _, test := range tests {

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strconv"
 	"time"
+	"unicode"
 
 	"go.uber.org/zap"
 
@@ -80,6 +81,11 @@ func UserNameValidate(name string) bool {
 	l := len(name)
 	if l < userNameMinLength || l > userNameMaxLength {
 		return false
+	}
+	for i := range name {
+		if name[i] > unicode.MaxASCII {
+			return false
+		}
 	}
 	return true
 }

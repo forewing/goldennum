@@ -43,10 +43,12 @@ func UserCreate(c *gin.Context) {
 	if !models.UserNameValidate(data.Username) {
 		zap.S().Warnf("UserCreate, invalid username: %v", data.Username)
 		c.JSON(http.StatusBadRequest, "invalid username")
+		return
 	}
 	if !models.UserPassValidate(data.Password) {
 		zap.S().Warnf("UserCreate, invalid password, len: %v", len(data.Password))
 		c.JSON(http.StatusBadRequest, "invalid password")
+		return
 	}
 
 	roomid, err := utils.ParseInt64FromParamOrErr(c, "roomid", "UserCreate")

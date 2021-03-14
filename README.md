@@ -17,7 +17,7 @@ For players, take a look at our [Participation Guide](https://github.com/forewin
 
 ## Preview
 
-![preview](https://github.com/forewing/images/raw/master/goldennum-desktop.png)
+![preview](https://user-images.githubusercontent.com/13747187/111075793-92043c00-8524-11eb-8a34-18ae0684a418.jpg)
 
 ## Usage
 

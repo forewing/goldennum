@@ -16,6 +16,7 @@ admin_rounds: Rounds
 admin_Operations: Operations
 
 # dashboard.html
+dashboard_dashboard: Dashboard
 dashboard_current_room: "Current Room:"
 dashboard_next_tick: "Next Tick:"
 dashboard_start: Start

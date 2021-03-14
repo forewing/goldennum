@@ -16,6 +16,7 @@ admin_rounds: 總局數
 admin_Operations: 操作
 
 # dashboard.html
+dashboard_dashboard: 歷史資料
 dashboard_current_room: "當前房間:"
 dashboard_next_tick: "下一回合:"
 dashboard_start: 啟用同步

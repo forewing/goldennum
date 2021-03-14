@@ -16,6 +16,7 @@ admin_rounds: 总局数
 admin_Operations: 操作
 
 # dashboard.html
+dashboard_dashboard: 历史数据
 dashboard_current_room: "当前房间:"
 dashboard_next_tick: "下一回合:"
 dashboard_start: 启用同步

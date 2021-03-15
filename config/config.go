@@ -7,7 +7,6 @@ import (
 
 	"go.uber.org/zap"
 
-	"github.com/forewing/goldennum/utils"
 	"gopkg.in/yaml.v2"
 )
 
@@ -185,7 +184,7 @@ func (c *Config) completeFromEnv() {
 func (c *Config) complete() {
 	if len(c.Password) == 0 {
 		var err error
-		c.Password, err = utils.RandomString(16)
+		c.Password, err = randomString(16)
 		if err != nil {
 			panic(err)
 		}

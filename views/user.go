@@ -8,7 +8,6 @@ import (
 
 	"github.com/forewing/goldennum/models"
 
-	"github.com/forewing/goldennum/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -51,7 +50,7 @@ func UserCreate(c *gin.Context) {
 		return
 	}
 
-	roomid, err := utils.ParseInt64FromParamOrErr(c, "roomid", "UserCreate")
+	roomid, err := parseInt64FromParamOrErr(c, "roomid", "UserCreate")
 	if err != nil {
 		return
 	}
@@ -71,7 +70,7 @@ func UserCreate(c *gin.Context) {
 
 // UserInfo show user info
 func UserInfo(c *gin.Context) {
-	userid, err := utils.ParseInt64FromParamOrErr(c, "userid", "UserInfo")
+	userid, err := parseInt64FromParamOrErr(c, "userid", "UserInfo")
 	if err != nil {
 		return
 	}
@@ -92,7 +91,7 @@ type userSubmitModel struct {
 
 // UserSubmit submit user action
 func UserSubmit(c *gin.Context) {
-	userid, err := utils.ParseInt64FromParamOrErr(c, "userid", "UserSubmit")
+	userid, err := parseInt64FromParamOrErr(c, "userid", "UserSubmit")
 	if err != nil {
 		return
 	}
@@ -131,7 +130,7 @@ type userAuthModel struct {
 
 // UserAuth check user credential
 func UserAuth(c *gin.Context) {
-	userid, err := utils.ParseInt64FromParamOrErr(c, "userid", "UserAuth")
+	userid, err := parseInt64FromParamOrErr(c, "userid", "UserAuth")
 	if err != nil {
 		return
 	}

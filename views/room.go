@@ -7,7 +7,6 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/forewing/goldennum/models"
-	"github.com/forewing/goldennum/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -78,7 +77,7 @@ func RoomList(c *gin.Context) {
 
 // RoomInfo show room info
 func RoomInfo(c *gin.Context) {
-	roomid, err := utils.ParseInt64FromParamOrErr(c, "roomid", "RoomInfo")
+	roomid, err := parseInt64FromParamOrErr(c, "roomid", "RoomInfo")
 	if err != nil {
 		return
 	}
@@ -93,7 +92,7 @@ func RoomInfo(c *gin.Context) {
 
 // RoomStart start the room
 func RoomStart(c *gin.Context) {
-	roomid, err := utils.ParseInt64FromParamOrErr(c, "roomid", "RoomInfo")
+	roomid, err := parseInt64FromParamOrErr(c, "roomid", "RoomInfo")
 	if err != nil {
 		return
 	}
@@ -110,7 +109,7 @@ func RoomStart(c *gin.Context) {
 
 // RoomStop stop the room
 func RoomStop(c *gin.Context) {
-	roomid, err := utils.ParseInt64FromParamOrErr(c, "roomid", "RoomInfo")
+	roomid, err := parseInt64FromParamOrErr(c, "roomid", "RoomInfo")
 	if err != nil {
 		return
 	}
@@ -132,7 +131,7 @@ func RoomUpdate(c *gin.Context) {
 
 // RoomSync return time until next tick
 func RoomSync(c *gin.Context) {
-	roomid, err := utils.ParseInt64FromParamOrErr(c, "roomid", "RoomInfo")
+	roomid, err := parseInt64FromParamOrErr(c, "roomid", "RoomInfo")
 	if err != nil {
 		zap.S().Warnf("RoomSync, %v", err)
 		return

@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/forewing/goldennum/workflows/CI/badge.svg)](https://github.com/forewing/goldennum/actions?query=workflow%3ACI)
 [![Docker](https://github.com/forewing/goldennum/workflows/Docker/badge.svg)](https://hub.docker.com/r/forewing/goldennum)
+[![Go Report Card](https://goreportcard.com/badge/github.com/forewing/goldennum)](https://goreportcard.com/report/github.com/forewing/goldennum)
 
 ## Ideas
 

@@ -12,11 +12,6 @@ import (
 	"go.uber.org/zap"
 )
 
-const (
-	staticsPath   = "statics"
-	templatesPath = "templates"
-)
-
 var (
 	adminAccounts gin.Accounts = gin.Accounts{}
 )

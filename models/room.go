@@ -16,8 +16,11 @@ const (
 )
 
 var (
+	// ErrRoomNotFound when room does not exist
 	ErrRoomNotFound = errors.New("room not found")
-	ErrRoomStopped  = errors.New("room stopped")
+
+	// ErrRoomStopped when room is stopped
+	ErrRoomStopped = errors.New("room stopped")
 )
 
 // Room hold user info

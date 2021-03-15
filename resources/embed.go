@@ -31,7 +31,7 @@ var (
 )
 
 // SetLiveReload make resources load from disk
-// if avaliable, instead of from embedded files
+// if available, instead of from embedded files
 func SetLiveReload() {
 	setLiveReload(&statics, staticsPath)
 	setLiveReload(&templates, templatesPath)

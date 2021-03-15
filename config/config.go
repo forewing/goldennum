@@ -35,10 +35,6 @@ type Db struct {
 }
 
 const (
-	defaultConfigPath = "conf/config.yml"
-)
-
-const (
 	envUseEnvConfig = "USE_ENV_CONFIG"
 	envDebug        = "DEBUG"
 	envBind         = "BIND"

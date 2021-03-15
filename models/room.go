@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"fmt"
 	"sync"
 	"sync/atomic"
@@ -12,6 +13,11 @@ import (
 const (
 	roomStatusDefault  = 0
 	roomStatusDisabled = 1
+)
+
+var (
+	ErrRoomNotFound = errors.New("room not found")
+	ErrRoomStopped  = errors.New("room stopped")
 )
 
 // Room hold user info
@@ -210,10 +216,18 @@ func (r *Room) GetHistory() (history []RoomHistory) {
 	return
 }
 
-// RoomUntilNextTick return time until next tick
+// RoomUntilNextTick return time until next tick if room open;
+// if room is stopped, 0, ErrRoomStopped will be returned;
+// if room not found, 0, ErrRoomNotFound will be returned
 func RoomUntilNextTick(id uint) (time.Duration, error) {
 	if worker := getRoomWorker(id); worker != nil && !worker.nextTime.IsZero() {
 		return time.Until(worker.nextTime), nil
 	}
-	return 0, fmt.Errorf("room %v not found or stopped", id)
+
+	var room Room
+	if result := Db.First(&room, id); result.RecordNotFound() {
+		return 0, ErrRoomNotFound
+	}
+
+	return 0, ErrRoomStopped
 }

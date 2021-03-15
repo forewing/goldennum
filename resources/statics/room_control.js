@@ -32,7 +32,7 @@ Vue.component('room-control', {
         },
         updateRoomSync() {
             getRoomSync(this.roomid).then(data => {
-                this.closed = false;
+                this.closed = parseFloat(data) < 0;
             }).catch(error => {
                 this.closed = true;
             })

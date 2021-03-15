@@ -11,6 +11,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+const (
+	roomStoppedMagic = -1
+)
+
 type roomCreateModel struct {
 	Interval   int `json:"Interval" binding:"required"`
 	RoundTotal int `json:"RoundTotal" binding:"required"`
@@ -134,10 +138,14 @@ func RoomSync(c *gin.Context) {
 		return
 	}
 	duration, err := models.RoomUntilNextTick(uint(roomid))
-	if err != nil {
+
+	switch err {
+	case nil:
+		c.JSON(http.StatusOK, fmt.Sprintf("%.3f", duration.Seconds()))
+	case models.ErrRoomStopped:
+		c.JSON(http.StatusOK, fmt.Sprintf("%v", roomStoppedMagic))
+	case models.ErrRoomNotFound:
 		zap.S().Warnf("RoomSync, %v", err)
 		c.JSON(http.StatusNotFound, err.Error())
-		return
 	}
-	c.JSON(http.StatusOK, fmt.Sprintf("%.3f", duration.Seconds()))
 }

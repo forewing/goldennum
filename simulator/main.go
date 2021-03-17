@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io"
 	"log"
@@ -22,23 +23,27 @@ type user struct {
 	pass string
 }
 
-const (
-	authUser = "admin"
-	authPass = "password"
+// configs
+var (
+	userTotal    = flag.Int("player", 50, "player number")
+	roomRounds   = flag.Int("rounds", 40, "game rounds")
+	roomInterval = flag.Int("interval", 15, "game interval(seconds)")
 
-	baseURL  = "http://127.0.0.1:8080/"
-	roomURL  = baseURL + "room/"
-	roomsURL = baseURL + "rooms/"
-	userURL  = baseURL + "user/"
-	usersURL = baseURL + "users/"
-	syncURL  = baseURL + "sync/"
+	roomIntervalDuration time.Duration
 
-	roomInterval = 15
-	roomRounds   = 60
+	authUser = flag.String("admin-user", "admin", "admin username")
+	authPass = flag.String("admin-pass", "password", "admin password")
 
-	userTotal = 400
+	baseURL = flag.String("url", "http://127.0.0.1:8080/", "base url")
+
+	roomURL string
+	// roomsURL string
+	userURL  string
+	usersURL string
+	syncURL  string
 )
 
+// local
 var (
 	roomID    int
 	userCount int64
@@ -46,8 +51,20 @@ var (
 	limiter *rate.Limiter = rate.NewLimiter(80, 5)
 )
 
+func init() {
+	flag.Parse()
+
+	roomIntervalDuration = time.Duration(*roomInterval)
+
+	roomURL = *baseURL + "room/"
+	// roomsURL = *baseURL + "rooms/"
+	userURL = *baseURL + "user/"
+	usersURL = *baseURL + "users/"
+	syncURL = *baseURL + "sync/"
+}
+
 func mustPostJSON(url string, body interface{}, auth bool) map[string]interface{} {
-	ctx, cancel := context.WithTimeout(context.Background(), roomInterval*time.Second/2)
+	ctx, cancel := context.WithTimeout(context.Background(), roomIntervalDuration*time.Second/2)
 	defer cancel()
 	if err := limiter.Wait(ctx); err != nil {
 		log.Panicf("limiter.Wait failed:%v", err)
@@ -61,7 +78,7 @@ func mustPostJSON(url string, body interface{}, auth bool) map[string]interface{
 	req, _ := http.NewRequest("POST", url, bytes.NewBuffer([]byte(str)))
 	req.Header.Set("Content-Type", "application/json")
 	if auth {
-		req.SetBasicAuth(authUser, authPass)
+		req.SetBasicAuth(*authUser, *authPass)
 	}
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
@@ -88,8 +105,8 @@ func mustPostJSON(url string, body interface{}, auth bool) map[string]interface{
 
 func roomCreate() {
 	body := map[string]interface{}{
-		"Interval":   roomInterval,
-		"RoundTotal": roomRounds,
+		"Interval":   *roomInterval,
+		"RoundTotal": *roomRounds,
 	}
 	resp := mustPostJSON(roomURL, body, true)
 
@@ -138,8 +155,8 @@ func (u *user) submit() {
 }
 
 func getRoomInfo() {
-	time.Sleep(time.Millisecond * time.Duration(rand.Intn(roomInterval*500)))
-	ctx, cancel := context.WithTimeout(context.Background(), roomInterval*time.Second/2)
+	time.Sleep(time.Millisecond * time.Duration(rand.Intn(*roomInterval*500)))
+	ctx, cancel := context.WithTimeout(context.Background(), roomIntervalDuration*time.Second/2)
 	defer cancel()
 	if err := limiter.Wait(ctx); err == nil {
 		resp, err := http.Get(fmt.Sprintf(roomURL+"%v", roomID))
@@ -150,8 +167,8 @@ func getRoomInfo() {
 }
 
 func getUserInfo(id int) {
-	time.Sleep(time.Millisecond * time.Duration(rand.Intn(roomInterval*500)))
-	ctx, cancel := context.WithTimeout(context.Background(), roomInterval*time.Second/2)
+	time.Sleep(time.Millisecond * time.Duration(rand.Intn(*roomInterval*500)))
+	ctx, cancel := context.WithTimeout(context.Background(), roomIntervalDuration*time.Second/2)
 	defer cancel()
 	if err := limiter.Wait(ctx); err == nil {
 		resp, err := http.Get(fmt.Sprintf(userURL+"%v", id))
@@ -162,8 +179,8 @@ func getUserInfo(id int) {
 }
 
 func getSync() {
-	time.Sleep(time.Millisecond * time.Duration(rand.Intn(roomInterval*500)))
-	ctx, cancel := context.WithTimeout(context.Background(), roomInterval*time.Second/2)
+	time.Sleep(time.Millisecond * time.Duration(rand.Intn(*roomInterval*500)))
+	ctx, cancel := context.WithTimeout(context.Background(), roomIntervalDuration*time.Second/2)
 	defer cancel()
 	if err := limiter.Wait(ctx); err == nil {
 		resp, err := http.Get(fmt.Sprintf(syncURL+"%v", roomID))
@@ -179,7 +196,7 @@ func main() {
 	users := make(map[int]*user)
 	usersLock := sync.Mutex{}
 	var usersWg sync.WaitGroup
-	for i := 0; i < userTotal; i++ {
+	for i := 0; i < *userTotal; i++ {
 		usersWg.Add(1)
 		go func() {
 			defer usersWg.Done()
@@ -195,8 +212,8 @@ func main() {
 	}
 	usersWg.Wait()
 
-	for i := 0; i < roomRounds; i++ {
-		next := time.Now().Add(roomInterval * time.Second)
+	for i := 0; i < *roomRounds; i++ {
+		next := time.Now().Add(roomIntervalDuration * time.Second)
 		for _, u := range users {
 			go u.submit()
 			go getRoomInfo()

@@ -5,6 +5,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/forewing/goldennum/version"
 	"go.uber.org/zap"
 
 	"gopkg.in/yaml.v2"
@@ -65,6 +66,8 @@ var (
 	flagDbUser   = flag.String("db-user", "goldennum", "Database username.")
 	flagDbPass   = flag.String("db-pass", "goldennum", "Database password.")
 	flagDbName   = flag.String("db-name", "goldennum", "Database name.")
+
+	flagVersion = flag.Bool("version", false, "Display versions.")
 )
 
 var (
@@ -79,6 +82,10 @@ func Load() *Config {
 	}
 
 	flag.Parse()
+	if *flagVersion {
+		version.Display()
+		os.Exit(0)
+	}
 
 	if len(*flagConf) > 0 {
 		savedConfig.loadFromFile(*flagConf)

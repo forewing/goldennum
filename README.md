@@ -99,6 +99,8 @@ Usage of ./goldennum:
         Set debug mode.
   -password string
         Admin password. Random if empty.
+  -version
+        Display versions.
 ```
 
 1. By default, server read all configs from command line flags.

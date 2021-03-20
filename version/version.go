@@ -5,9 +5,14 @@ import (
 	"runtime"
 )
 
+const (
+	VersionDefault = "dev"
+	HashDefault    = "unknown"
+)
+
 var (
-	Version = "dev"
-	Hash    = "unknown"
+	Version = VersionDefault
+	Hash    = HashDefault
 )
 
 // Display version

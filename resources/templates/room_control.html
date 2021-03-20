@@ -9,5 +9,5 @@
     <td><a href="#" class="text-dark" v-on:click="toggleStatus">{{ .i18n.room_control_toggle }}</a></td>
 </tr>
 </script>
-<script src='{{ template "base_url" . }}/statics/room_control.js'></script>
+<script src='{{ generateStaticURL "/statics/room_control.js" }}'></script>
 {{ end }}

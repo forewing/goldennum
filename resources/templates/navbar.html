@@ -3,7 +3,7 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light shadow">
         <div class="container-fluid">
             <a class="navbar-brand" href='{{ template "base_url" . }}/'>
-                <img src='{{ template "base_url" . }}/statics/favicon.ico' style="height: 30px;" class="mr-2">
+                <img src='{{ generateStaticURL "/statics/favicon.ico" }}' style="height: 30px;" class="mr-2">
                 <span>{{ .i18n.navbar_go_goldennum }}</span>
             </a>
             <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"

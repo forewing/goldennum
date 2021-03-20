@@ -58,7 +58,7 @@
 		const SIGN_UP_ERROR_MESSAGE_USERNAME_LENGTH = "{{ .i18n.index_SIGN_UP_ERROR_MESSAGE_USERNAME_LENGTH }}";
 		const SIGN_UP_SUCCESS_MESSAGE = "{{ .i18n.index_SIGN_UP_SUCCESS_MESSAGE }}";
 	</script>
-	<script src='{{ template "base_url" . }}/statics/index.js'></script>
+	<script src='{{ generateStaticURL "/statics/index.js" }}'></script>
 </body>
 
 </html>

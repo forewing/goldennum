@@ -58,7 +58,7 @@
 	{{ template "footer.html" . }}
 
 	{{ template "room_control.html" . }}
-	<script src='{{ template "base_url" . }}/statics/admin.js'></script>
+	<script src='{{ generateStaticURL "/statics/admin.js" }}'></script>
 </body>
 
 </html>

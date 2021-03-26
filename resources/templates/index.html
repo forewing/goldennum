@@ -18,7 +18,7 @@
 		{{ template "user_modals.html" . }}
 		<div class="container-fluid">
 			<div class="row">
-				<nav class="col-md-2 d-none d-md-block bg-light sidebar">
+				<nav class="col-lg-2 d-none d-lg-block bg-light sidebar">
 					<div class="sidebar-sticky">
 						<h4 class="d-flex justify-content-between align-items-center px-2 mt-4 mb-2">
 							<span>{{ .i18n.index_control_panel }}</span>
@@ -26,7 +26,7 @@
 						{{ template "user_panel.html" . }}
 					</div>
 				</nav>
-				<div class="d-md-none col">
+				<div class="d-lg-none col">
 					<div class="card">
 						<h3 class="card-title pt-3 pl-4 mb-2">{{ .i18n.index_control_panel }}</h3>
 						<div class=" card-body">
@@ -34,7 +34,7 @@
 						</div>
 					</div>
 				</div>
-				<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+				<main role="main" class="col-lg-10 ml-sm-auto px-4">
 					<dashboard ref="panelDashboard"></dashboard>
 				</main>
 			</div>

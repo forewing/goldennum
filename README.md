@@ -105,7 +105,7 @@ Usage of ./goldennum:
 
 1. By default, server read all configs from command line flags.
 
-2. If flag `-conf={FILE}` is set, server will load configs from `{FILE}` instead of flags. Refer to `conf/config.example.yml` for detail.
+2. If flag `-conf={FILE}` is set, server will load configs from `{FILE}` instead of flags. Refer to `./config.example.yml` for detail.
 
 3. If environment variable `USE_ENV_CONFIG=true` is set, non-empty environment variable will override corresponding fields. Refer to `example.env` for detail.
 

@@ -18,7 +18,7 @@ output/
 # vendor/
 
 # Config
-conf/config.yml
+config.yml
 .env
 
 # database

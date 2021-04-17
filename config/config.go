@@ -143,44 +143,31 @@ func (c *Config) completeFromEnv() {
 	if os.Getenv(envDebug) == "true" {
 		c.Debug = true
 	}
-	if s := os.Getenv(envBind); len(s) > 0 {
-		c.Bind = s
+	fillEnvString(envBind, &c.Bind)
+	fillEnvString(envAdmin, &c.Admin)
+	fillEnvString(envPassword, &c.Password)
+	fillEnvString(envBaseURL, &c.BaseURL)
+	fillEnvString(envDbType, &c.Db.Type)
+	fillEnvString(envDbPath, &c.Db.Path)
+	fillEnvString(envDbAddr, &c.Db.Addr)
+	fillEnvString(envDbUser, &c.Db.User)
+	fillEnvString(envDbPassword, &c.Db.Password)
+	fillEnvString(envDbDbName, &c.Db.DbName)
+	fillEnvInt(envDbMaxConns, &c.Db.MaxConns)
+	fillEnvInt(envDbMaxIdles, &c.Db.MaxIdles)
+	fillEnvInt(envDbConnLife, &c.Db.ConnLife)
+}
+
+func fillEnvString(key string, field *string) {
+	if s := os.Getenv(key); len(s) > 0 {
+		zap.S().Debug(key, s)
+		*field = s
 	}
-	if s := os.Getenv(envAdmin); len(s) > 0 {
-		c.Admin = s
-	}
-	if s := os.Getenv(envPassword); len(s) > 0 {
-		c.Password = s
-	}
-	if s := os.Getenv(envBaseURL); len(s) > 0 {
-		c.BaseURL = s
-	}
-	if s := os.Getenv(envDbType); len(s) > 0 {
-		c.Db.Type = s
-	}
-	if s := os.Getenv(envDbPath); len(s) > 0 {
-		c.Db.Path = s
-	}
-	if s := os.Getenv(envDbAddr); len(s) > 0 {
-		c.Db.Addr = s
-	}
-	if s := os.Getenv(envDbUser); len(s) > 0 {
-		c.Db.User = s
-	}
-	if s := os.Getenv(envDbPassword); len(s) > 0 {
-		c.Db.Password = s
-	}
-	if s := os.Getenv(envDbDbName); len(s) > 0 {
-		c.Db.DbName = s
-	}
-	if n, err := strconv.ParseInt(os.Getenv(envDbMaxConns), 10, 64); err == nil {
-		c.Db.MaxConns = int(n)
-	}
-	if n, err := strconv.ParseInt(os.Getenv(envDbMaxIdles), 10, 64); err == nil {
-		c.Db.MaxIdles = int(n)
-	}
-	if n, err := strconv.ParseInt(os.Getenv(envDbConnLife), 10, 64); err == nil {
-		c.Db.ConnLife = int(n)
+}
+
+func fillEnvInt(key string, field *int) {
+	if n, err := strconv.ParseInt(os.Getenv(key), 10, 64); err == nil {
+		*field = int(n)
 	}
 }
 

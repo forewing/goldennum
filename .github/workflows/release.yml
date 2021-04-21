@@ -71,7 +71,6 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          name: Release ${{ github.ref }}
           files: |
             ./${{ env.OUTPUT_FILE_LINUX }}
             ./${{ env.OUTPUT_FILE_WINDOWS }}

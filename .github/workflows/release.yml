@@ -7,72 +7,37 @@ on:
 
 env:
   go-version: "1.16"
-  OUTPUT_NAME_LINUX: goldennum_linux
-  OUTPUT_FILE_LINUX: goldennum_linux.tar.gz
-  OUTPUT_NAME_WINDOWS: goldennum_windows
-  OUTPUT_FILE_WINDOWS: goldennum_windows.zip
 
 jobs:
-  build_linux:
-    name: Build Linux
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Setup Go
-        uses: actions/setup-go@v2
-        with:
-          go-version: ${{ env.go-version }}
-      - name: Build
-        run: |
-          bash build.sh
-          tar caf ${OUTPUT_FILE_LINUX} -C output .
-      - uses: actions/upload-artifact@v2
-        with:
-          name: ${{ env.OUTPUT_NAME_LINUX }}
-          path: ${{ env.OUTPUT_FILE_LINUX }}
-  build_windows:
-    name: Build Windows
-    runs-on: windows-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Setup Go
-        uses: actions/setup-go@v2
-        with:
-          go-version: ${{ env.go-version }}
-      - name: Build
-        run: |
-          bash build.sh
-          Compress-Archive -Path .\output\* -Update -DestinationPath $env:OUTPUT_FILE_WINDOWS
-      - uses: actions/upload-artifact@v2
-        with:
-          name: ${{ env.OUTPUT_NAME_WINDOWS }}
-          path: ${{ env.OUTPUT_FILE_WINDOWS }}
-
   release:
-    name: Create Release
+    name: Build & Release
     runs-on: ubuntu-latest
-    needs: [build_linux, build_windows]
     steps:
-      - name: Download Linux Artifact
-        uses: actions/download-artifact@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
         with:
-          name: ${{ env.OUTPUT_NAME_LINUX }}
-      - name: Download Windows Artifact
-        uses: actions/download-artifact@v2
+          fetch-depth: 0
+
+      - name: Setup Go
+        uses: actions/setup-go@v2
         with:
-          name: ${{ env.OUTPUT_NAME_WINDOWS }}
+          go-version: ${{ env.go-version }}
+
+      - name: Setup MinGW
+        uses: egor-tensin/setup-mingw@v2
+        with:
+          platform: x64
+          cc: 0
+
+      - name: Build
+        run: |
+          bash build.sh all
 
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            ./${{ env.OUTPUT_FILE_LINUX }}
-            ./${{ env.OUTPUT_FILE_WINDOWS }}
+            output/*.tar.gz
+            output/*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

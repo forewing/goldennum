@@ -9,8 +9,8 @@ github.com/denisenkom/go-mssqldb v0.0.0-20191124224453-732737034ffd h1:83Wprp6RO
 github.com/denisenkom/go-mssqldb v0.0.0-20191124224453-732737034ffd/go.mod h1:xbL0rPBG9cCiLr28tMa8zpbdarY27NDyej4t/EjAShU=
 github.com/erikstmartin/go-testdb v0.0.0-20160219214506-8d10e4a1bae5 h1:Yzb9+7DPaBjB8zlTR87/ElzFsnQfuHnVUVqpZZIcV5Y=
 github.com/erikstmartin/go-testdb v0.0.0-20160219214506-8d10e4a1bae5/go.mod h1:a2zkGnVExMxdzMo3M0Hi/3sEU+cWnZpSni0O6/Yb/P0=
-github.com/forewing/gobuild v0.1.1 h1:Dui4kWRpC5jd/NsRBtGdQXvDgCmXIXWh8N/iWmPSrJY=
-github.com/forewing/gobuild v0.1.1/go.mod h1:pZMq10dwLYO0OHm/+y9Tr/MyCM9a1fzQzaS/e0qDvLU=
+github.com/forewing/gobuild v0.2.0 h1:SHJwgJCFmnJMP7G1RvQygaoXK932PilMbWU/cy9JmtQ=
+github.com/forewing/gobuild v0.2.0/go.mod h1:pZMq10dwLYO0OHm/+y9Tr/MyCM9a1fzQzaS/e0qDvLU=
 github.com/gin-contrib/sse v0.1.0 h1:Y/yl/+YNO8GZSjAhjMsSuLt29uWRFHdHYUb5lYOV9qE=
 github.com/gin-contrib/sse v0.1.0/go.mod h1:RHrZQHXnP2xjPF+u1gW/2HnVO7nvIa9PG3Gm+fLHvGI=
 github.com/gin-gonic/gin v1.7.1 h1:qC89GU3p8TvKWMAVhEpmpB2CIb1hnqt2UdKZaP93mS8=

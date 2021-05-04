@@ -17,7 +17,7 @@ if GIT_HASH=$(git rev-parse HEAD); then
     LDFLAGS="$LDFLAGS -X '$VERSION_PACKAGE.Hash=$GIT_HASH'"
 fi
 
-CMD_BASE="CGO_ENABLED=1 go build -ldflags \"${LDFLAGS}\""
+CMD_BASE="CGO_ENABLED=1 go build -trimpath -ldflags \"${LDFLAGS}\""
 
 if [ ! -n "$1" ] || [ ! $1 = "all" ]; then
     eval ${CMD_BASE}

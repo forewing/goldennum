@@ -23,6 +23,7 @@ var (
 
 		Cgo: true,
 
+		ExtraFlags:   []string{"-trimpath"},
 		ExtraLdFlags: "-s -w",
 
 		VersionPath: module + "/version.Version",

@@ -4,7 +4,7 @@
 *.dll
 *.so
 *.dylib
-goldennum
+/goldennum
 
 output/
 
@@ -13,14 +13,3 @@ output/
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
-
-# Dependency directories (remove the comment below to include it)
-# vendor/
-
-# Config
-config.yml
-.env
-
-# database
-sqlite3.db
-db

@@ -10,6 +10,7 @@ Vue.component('dashboard', {
             isButtonStart: true,
             nextTick: Date.now(),
             countDown: 0,
+            retryCount: 0,
             errorMessage: "",
             historyLength: 0,
             roomHistoryCtx: null,
@@ -104,6 +105,9 @@ Vue.component('dashboard', {
             clearInterval(this.intervalId);
             this.clearTimeout();
         },
+        manuallyRefresh() {
+            window.location.reload();
+        },
         syncRefresh() {
             if (this.intervalId == null) {
                 return;
@@ -112,13 +116,24 @@ Vue.component('dashboard', {
             getRoomSync(this.roomId).then(data => {
                 const seconds = parseFloat(data);
                 if (seconds < 0) {
-                    this.setTimeout(this.syncRefresh, 5000);
+                    this.setTimeout(this.syncRefresh, this.getRetryTimeout());
                 } else {
+                    this.clearRetryTimeout();
                     this.setTimeout(this.syncRefresh, (seconds + 1) * 1000);
                 }
             }).catch(error => {
-                this.setTimeout(this.syncRefresh, 5000);
+                this.setTimeout(this.syncRefresh, this.getRetryTimeout());
             })
+        },
+        clearRetryTimeout() {
+            this.retryCount = 0;
+        },
+        getRetryTimeout() {
+            if (this.retryCount < 0)
+                this.retryCount = 0;
+            let ret = Math.pow(2, Math.min(this.retryCount, 6)) * 1000;
+            this.retryCount += 1;
+            return ret;
         },
         refreshWorker() {
             const roomId = parseInt(this.roomId);

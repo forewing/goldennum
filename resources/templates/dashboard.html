@@ -7,7 +7,7 @@
         <div class="btn-toolbar mb-2 mb-lg-0">
             <div class="btn-group mr-2">
                 <button class="btn btn-sm btn-outline-secondary" v-on:click="toggleRefresh">[[ isButtonStart ? "{{ .i18n.dashboard_start }}" : "{{ .i18n.dashboard_stop }}"]]</button>
-                <button class="btn btn-sm btn-outline-secondary" v-on:click="refreshWorker">{{ .i18n.dashboard_refresh }}</button>
+                <button class="btn btn-sm btn-outline-secondary" v-on:click="manuallyRefresh">{{ .i18n.dashboard_refresh }}</button>
             </div>
             <div class="btn-group">
                 <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-toggle="dropdown"

@@ -81,7 +81,6 @@ Vue.component('dashboard', {
         },
         updateNextTick(nextTick) {
             this.nextTick = nextTick;
-            this.refreshTimeOut();
         },
         refreshTimeOut() {
             if (this.nextTick > Date.now()) {
@@ -92,10 +91,13 @@ Vue.component('dashboard', {
         },
         scheduleRefreshTimeOut() {
             this.refreshTimeOut();
-            setTimeout(this.scheduleRefreshTimeOut, 500);
+            setTimeout(this.scheduleRefreshTimeOut, 1000);
         },
         setTimeout(func, timeout) {
             this.isButtonStart = false;
+            if (this.intervalId != null) {
+                clearInterval(this.intervalId)
+            }
             this.intervalId = setTimeout(func, timeout);
             this.updateNextTick(Date.now() + timeout);
         },
@@ -228,7 +230,6 @@ Vue.component('dashboard', {
         this.roomHistoryCtx = this.$refs.roomHistory.getContext('2d')
         this.roomHistoryChart = new Chart(this.roomHistoryCtx, this.roomHistoryData);
         this.roomId = getSavedRoomId();
-        this.toggleRefresh();
         this.scheduleRefreshTimeOut();
     },
 })

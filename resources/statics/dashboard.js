@@ -73,11 +73,15 @@ Vue.component('dashboard', {
     methods: {
         updateRoomId(id) {
             this.roomId = id;
-            this.refreshWorker();
+            this.manuallyRefresh();
         },
         updateHistoryLength(len) {
             this.historyLength = len;
             this.refreshRoom(this.data.RoomHistorys);
+        },
+        updateNextTick(nextTick) {
+            this.nextTick = nextTick;
+            this.refreshTimeOut();
         },
         refreshTimeOut() {
             if (this.nextTick > Date.now()) {
@@ -85,12 +89,15 @@ Vue.component('dashboard', {
             } else {
                 this.countDown = 0;
             }
-            setTimeout(this.refreshTimeOut, 1000);
+        },
+        scheduleRefreshTimeOut() {
+            this.refreshTimeOut();
+            setTimeout(this.scheduleRefreshTimeOut, 500);
         },
         setTimeout(func, timeout) {
             this.isButtonStart = false;
             this.intervalId = setTimeout(func, timeout);
-            this.nextTick = Date.now() + timeout;
+            this.updateNextTick(Date.now() + timeout);
         },
         clearTimeout() {
             this.isButtonStart = true;
@@ -98,15 +105,18 @@ Vue.component('dashboard', {
             this.intervalId = null;
         },
         toggleRefresh() {
+            this.clearRetryTimeout();
             if (this.intervalId == null) {
                 this.setTimeout(this.syncRefresh, 100);
                 return;
             }
-            clearInterval(this.intervalId);
+            this.updateNextTick(Date.now());
             this.clearTimeout();
         },
         manuallyRefresh() {
-            window.location.reload();
+            this.clearTimeout();
+            this.clearRetryTimeout();
+            this.setTimeout(this.syncRefresh, 100);
         },
         syncRefresh() {
             if (this.intervalId == null) {
@@ -219,6 +229,6 @@ Vue.component('dashboard', {
         this.roomHistoryChart = new Chart(this.roomHistoryCtx, this.roomHistoryData);
         this.roomId = getSavedRoomId();
         this.toggleRefresh();
-        this.refreshTimeOut();
+        this.scheduleRefreshTimeOut();
     },
 })

@@ -81,8 +81,8 @@ navbar_help_detail_post: Participation Guide
 navbar_got_it: Got it!
 
 # room_control.html
-room_control_down: down
-room_control_up: up
+room_control_down: Stopped
+room_control_up: Running
 room_control_toggle: Toggle
 
 # user_modals.html

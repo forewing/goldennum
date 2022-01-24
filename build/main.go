@@ -42,7 +42,7 @@ func main() {
 			gobuild.PlaceholderVersion,
 			gobuild.PlaceholderOS,
 			gobuild.PlaceholderArch)
-		target.Compress = gobuild.CompressAuto
+		target.Compress = gobuild.CompressZip
 		target.Platforms = []gobuild.Platform{
 			{OS: gobuild.OSWindows, Arch: gobuild.ArchAmd64, CC: "x86_64-w64-mingw32-gcc"},
 			{OS: gobuild.OSLinux, Arch: gobuild.ArchAmd64},

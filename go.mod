@@ -3,7 +3,7 @@ module github.com/forewing/goldennum
 go 1.16
 
 require (
-	github.com/forewing/gobuild v0.4.0
+	github.com/forewing/gobuild v1.1.0
 	github.com/gin-gonic/gin v1.7.7
 	github.com/jinzhu/gorm v1.9.16
 	github.com/patrickmn/go-cache v2.1.0+incompatible

@@ -17,50 +17,49 @@ jobs:
   ci:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
-    - name: Set up QEMU
-      uses: docker/setup-qemu-action@v1
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
 
-    - name: Docker meta
-      id: docker_meta
-      uses: crazy-max/ghaction-docker-meta@v1
-      if: ${{ github.event_name != 'pull_request' }}
-      with:
-        images: |
-          ${{ secrets.DOCKER_REPO }}
-        tag-semver: |
-          {{raw}}
+      - name: Docker meta
+        id: docker_meta
+        uses: crazy-max/ghaction-docker-meta@v1
+        with:
+          images: |
+            ${{ secrets.DOCKER_REPO }}
+          tag-semver: |
+            {{raw}}
 
-    - name: Login to DockerHub
-      uses: docker/login-action@v1
-      if: ${{ github.event_name != 'pull_request' }}
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        if: ${{ github.event_name == 'push' }}
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Build and push (amd64 only)
-      uses: docker/build-push-action@v2
-      if: ${{ ! startsWith(github.ref, 'refs/tags/v') }}
-      with:
-        context: .
-        platforms: linux/amd64
-        push: ${{ github.event_name == 'push' }}
-        tags: ${{ steps.docker_meta.outputs.tags }}
-        labels: ${{ steps.docker_meta.outputs.labels }}
+      - name: Test build (amd64)
+        uses: docker/build-push-action@v2
+        if: ${{ github.event_name == 'pull_request' }}
+        with:
+          context: .
+          platforms: linux/amd64
+          push: false
+          tags: ${{ steps.docker_meta.outputs.tags }}
+          labels: ${{ steps.docker_meta.outputs.labels }}
 
-    - name: Build and push (amd64 and arm64)
-      uses: docker/build-push-action@v2
-      if: ${{ startsWith(github.ref, 'refs/tags/v') }}
-      with:
-        context: .
-        platforms: linux/amd64,linux/arm64
-        push: true
-        tags: ${{ steps.docker_meta.outputs.tags }}
-        labels: ${{ steps.docker_meta.outputs.labels }}
+      - name: Build and push (amd64 and arm64)
+        uses: docker/build-push-action@v2
+        if: ${{ github.event_name == 'push' }}
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.docker_meta.outputs.tags }}
+          labels: ${{ steps.docker_meta.outputs.labels }}

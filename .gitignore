@@ -24,3 +24,7 @@ config.yml
 # database
 sqlite3.db
 db
+
+# Go Workspace
+go.work
+go.work.sum
